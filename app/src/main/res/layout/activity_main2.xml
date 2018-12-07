@@ -1,26 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:openDrawer="start">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".Main2Activity"
+              android:fitsSystemWindows="true">
 
-    <include
-            layout="@layout/app_bar_main2"
+    <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:background="#FFAE00"
+            android:id="@+id/toolbar"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:title="Kanapeczka"/>
 
-    <android.support.design.widget.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
+    <android.support.v4.widget.DrawerLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/nav_header_main2"
-            app:menu="@menu/activity_main2_drawer"/>
+            android:id="@+id/drawerLayout">
 
-</android.support.v4.widget.DrawerLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/containerView"
+            android:orientation="vertical"/>
+        <android.support.design.widget.NavigationView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/navView"
+                app:menu="@menu/activity_main2_drawer"
+                android:layout_marginTop="2dp"
+                android:layout_gravity="start"/>
+
+    </android.support.v4.widget.DrawerLayout>
+
+</LinearLayout>
