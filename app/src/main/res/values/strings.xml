@@ -10,4 +10,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="planetsName">Name</string>
+    <string name="planetRotation">Rotation Peroid</string>
+    <string name="planetsOrbital">Orbital Peroid</string>
 </resources>
