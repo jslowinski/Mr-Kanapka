@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.swapi.swapikotlin.view.HomeFragment
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
 
@@ -30,6 +31,8 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+        //domyslny ekran czyli odpali się default
+        displayScreen(-1)
     }
 
     override fun onBackPressed() {
@@ -56,28 +59,25 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-        when (item.itemId) {
+    fun displayScreen(id: Int) {
+       val fragment  = when (id) {
             R.id.nav_camera -> {
-                // Handle the camera action
+                TabFragment()
             }
-            R.id.nav_gallery -> {
-
-            }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
+            else -> {
+                HomeFragment()
             }
         }
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.relativeLayout, fragment)
+            .commit()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+        displayScreen(item.itemId)
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
