@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.swapi.swapikotlin.view.HomeFragment
 
 class TabFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -24,7 +25,7 @@ class TabFragment : Fragment(){
     internal inner class MyAdapter (fm : FragmentManager) : FragmentPagerAdapter(fm){
         override fun getItem(position: Int): Fragment? {
             when(position){
-                0 -> return FirstFragment()
+                0 -> return HomeFragment()
                 1 -> return SecondFragment()
                 2 -> return ThirdFragment()
             }
