@@ -34,7 +34,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         nav_view.setNavigationItemSelectedListener(this)
 
         //domyslny ekran czyli odpali się default
-//        displayScreen(-1)
+        displayScreen(R.id.nav_camera)
     }
 
     override fun onBackPressed() {
