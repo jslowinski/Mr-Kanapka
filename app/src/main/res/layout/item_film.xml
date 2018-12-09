@@ -43,7 +43,7 @@
             app:layout_constraintVertical_bias="0"/>
 
     <TextView
-            android:id="@+id/rotation"
+            android:id="@+id/director"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -75,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@+id/producerLabel"
-            app:layout_constraintTop_toBottomOf="@+id/rotation"
+            app:layout_constraintTop_toBottomOf="@+id/director"
             app:layout_constraintVertical_bias="0"/>
 
   </android.support.constraint.ConstraintLayout>

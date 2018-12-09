@@ -2,24 +2,18 @@ package com.swapi.swapikotlin.view
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-
 import android.util.Log
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
-
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.SwapiClient
-import com.swapi.swapikotlin.api.model.FilmDto
 import com.swapi.swapikotlin.api.model.PlanetDto
-import com.swapi.swapikotlin.view.list.FilmListItem
 import com.swapi.swapikotlin.view.list.PlanetListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -58,7 +52,7 @@ class PlanetFragment  : Fragment() {
                 .doFinally { hideProgress() }
                 .subscribe(
                     { result -> handleFetchPlanetsSuccess(result) },
-                    { throwable -> handleFetchFilmsError(throwable) }
+                    { throwable -> handleFetchPlanetsError(throwable) }
                 )
         )
     }
@@ -82,7 +76,7 @@ class PlanetFragment  : Fragment() {
         adapter.setNewList(items)
     }
 
-    private fun handleFetchFilmsError(throwable: Throwable) {
+    private fun handleFetchPlanetsError(throwable: Throwable) {
 
         // Log an error.
         Log.e(TAG, "An error occurred while fetching films.")

@@ -30,7 +30,7 @@ class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, Fi
   class FilmListItemViewHolder(itemView: View) : ViewHolder<FilmListItem>(itemView) {
 
     private val titleText: TextView = itemView.findViewById(R.id.title)
-    private val directorText: TextView = itemView.findViewById(R.id.rotation)
+    private val directorText: TextView = itemView.findViewById(R.id.director)
     private val producerText: TextView = itemView.findViewById(R.id.producer)
 
     override fun bindView(item: FilmListItem, payloads: MutableList<Any>) {
