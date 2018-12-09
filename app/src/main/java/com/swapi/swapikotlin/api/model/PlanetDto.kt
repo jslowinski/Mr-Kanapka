@@ -7,9 +7,9 @@ data class PlanetDto (
     @SerializedName("name")
     var name: String,
 
-    @SerializedName("climate")
-    var climate: String,
+    @SerializedName("rotation_period")
+    var rotation_period: String,
 
-    @SerializedName("orbital_preoid")
-    var orbital_preoid: String
+    @SerializedName("orbital_period")
+    var orbital_period: String
 )

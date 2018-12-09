@@ -41,8 +41,8 @@ class PlanetListItem(model: PlanetDto) : ModelAbstractItem<PlanetDto, PlanetList
 
       // Update view.
       nameText.text = model.name
-      rotation_peroidText.text = model.climate
-      orbital_preoidText.text = model.orbital_preoid
+      rotation_peroidText.text = model.rotation_period
+      orbital_preoidText.text = model.orbital_period
     }
 
     override fun unbindView(item: PlanetListItem) {
