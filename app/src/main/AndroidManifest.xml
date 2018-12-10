@@ -14,7 +14,6 @@
         <activity
                 android:name=".view.MainActivity"
                 android:screenOrientation="portrait">
-
         </activity>
         <activity
                 android:name=".Main2Activity"
@@ -27,6 +26,8 @@
 
                 <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".view.CartActivity">
         </activity>
     </application>
 

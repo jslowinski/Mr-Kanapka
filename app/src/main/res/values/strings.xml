@@ -13,4 +13,7 @@
     <string name="planetsName">Name</string>
     <string name="planetRotation">Rotation Peroid</string>
     <string name="planetsOrbital">Orbital Peroid</string>
+    <string name="koszyk">Koszyk</string>
+    <string name="kanapeczka">Kanapeczka</string>
+    <string name="email">zespol9.mat.umk@gmail.com</string>
 </resources>
