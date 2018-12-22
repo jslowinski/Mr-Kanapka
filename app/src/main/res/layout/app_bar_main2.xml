@@ -18,7 +18,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="#FFAE00"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="Kanapeczka"/>
+                app:title="@string/app_name"/>
 
     </android.support.design.widget.AppBarLayout>
 

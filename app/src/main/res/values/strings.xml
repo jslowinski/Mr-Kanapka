@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SwapiKotlin</string>
+    <string name="app_name">Mr Kanapka</string>
     <string name="fetchError">An error occurred while fetching films.</string>
     <string name="filmDirector">Director:</string>
     <string name="filmProducer">Producer:</string>
