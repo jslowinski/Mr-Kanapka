@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Mr Kanapka</string>
     <string name="fetchError">An error occurred while fetching films.</string>
-    <string name="filmDirector">Director:</string>
-    <string name="filmProducer">Producer:</string>
+    <string name="sandDescritpion">Opis:</string>
+    <string name="sandPrice">(Cena za 1 sztukę):</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
