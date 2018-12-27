@@ -19,6 +19,7 @@ class CartActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
+        overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left)
         return true
     }
 }

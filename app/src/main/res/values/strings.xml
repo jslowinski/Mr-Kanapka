@@ -16,4 +16,6 @@
     <string name="koszyk">Koszyk</string>
     <string name="kanapeczka">Kanapeczka</string>
     <string name="email">zespol9.mat.umk@gmail.com</string>
+    <string name="nav_menu">Menu</string>
+    <string name="nav_cart">Koszyk</string>
 </resources>
