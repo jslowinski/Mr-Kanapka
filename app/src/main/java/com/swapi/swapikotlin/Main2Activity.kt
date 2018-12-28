@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.swapi.swapikotlin.view.CartActivity
 import com.swapi.swapikotlin.view.HomeFragment
+import com.swapi.swapikotlin.view.ThirdFragment
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
 
@@ -78,13 +79,15 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 TabFragment()
             }
            else -> {
-                HomeFragment()
+                ThirdFragment()
             }
         }
 
+
+
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.relativeLayout, fragment)
+            .replace(R.id.relativeLayout, fragment, "" + fragment)
             .commit()
     }
 

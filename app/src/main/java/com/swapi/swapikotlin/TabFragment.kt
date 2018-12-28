@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.swapi.swapikotlin.view.HomeFragment
 import com.swapi.swapikotlin.view.PlanetFragment
+import com.swapi.swapikotlin.view.ThirdFragment
 
 class TabFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -20,6 +21,10 @@ class TabFragment : Fragment(){
 
         viewPager.adapter = MyAdapter(childFragmentManager)
         tabLayout.post { (tabLayout.setupWithViewPager(viewPager)) }
+
+
+        // TO DZIADOWSTWO TRZEBA BYŁO DODAC ABY NIE ODSWIEZALO CIAGLE PIREWSZEGO FRAGMENTU W TABIE
+        viewPager.offscreenPageLimit = 3
 
         return x
     }

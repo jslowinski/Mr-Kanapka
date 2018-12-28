@@ -1,6 +1,7 @@
 package com.swapi.swapikotlin.view
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -18,10 +19,14 @@ import com.swapi.swapikotlin.view.list.PlanetListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_planet.*
 
 
 class PlanetFragment  : Fragment() {
+
+    //to swipe refresh
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
 
     private val adapter: FastItemAdapter<PlanetListItem> = FastItemAdapter()
     //region Tag
@@ -42,19 +47,7 @@ class PlanetFragment  : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        disposables.add(
-            swapiService
-                .fetchPlanets()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { response -> response.results }
-                .doOnSubscribe { showProgress() }
-                .doFinally { hideProgress() }
-                .subscribe(
-                    { result -> handleFetchPlanetsSuccess(result) },
-                    { throwable -> handleFetchPlanetsError(throwable) }
-                )
-        )
+
     }
 
     override fun onPause() {
@@ -65,7 +58,7 @@ class PlanetFragment  : Fragment() {
     private fun handleFetchPlanetsSuccess(planets: List<PlanetDto>) {
 
         // Log the fact.
-        Log.i(TAG, "Successfully fetched films.")
+        Log.i(TAG, "Successfully fetched planets.")
 
         // Convert to list items.
         val items = planets.map {
@@ -74,18 +67,56 @@ class PlanetFragment  : Fragment() {
 
         // Display result.
         adapter.setNewList(items)
+        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+        swipe_refresh_layout.isRefreshing = false
     }
 
     private fun handleFetchPlanetsError(throwable: Throwable) {
 
         // Log an error.
-        Log.e(TAG, "An error occurred while fetching films.")
+        Log.e(TAG, "An error occurred while fetching planets.")
         Log.e(TAG, throwable.localizedMessage)
 
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
+        swipe_refresh_layout.isRefreshing = false
     }
 
     //endregion
+
+    fun addAndFetchPlanets(progressbar: Boolean)
+    {
+        if(progressbar)
+        {
+            disposables.add(
+                swapiService
+                    .fetchPlanets()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { response -> response.results }
+                    .doOnSubscribe { showProgress() }
+                    .doFinally { hideProgress() }
+                    .subscribe(
+                        { result -> handleFetchPlanetsSuccess(result) },
+                        { throwable -> handleFetchPlanetsError(throwable) }
+                    )
+            )
+        }
+        else
+        {
+            disposables.add(
+                swapiService
+                    .fetchPlanets()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { response -> response.results }
+                    .subscribe(
+                        { result -> handleFetchPlanetsSuccess(result) },
+                        { throwable -> handleFetchPlanetsError(throwable) }
+                    )
+            )
+        }
+
+    }
 
     private fun initializeRecyclerView() {
         //TU TRZEBA BYŁO ZMIENIC THIS NA CONTEXT
@@ -142,6 +173,24 @@ class PlanetFragment  : Fragment() {
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeRecyclerView()
+        mHandler = Handler()
+
+
+        // Set an on refresh listener for swipe refresh layout
+        swipe_refresh_layout.setOnRefreshListener {
+            // Initialize a new Runnable
+            mRunnable = Runnable {
+
+                addAndFetchPlanets(false)
+                // Hide swipe to refresh icon animation
+                //swipe_refresh_layout.isRefreshing = false
+                //chowane jest w handleFetchSucces/false
+            }
+
+            // Execute the task
+            mHandler.post(mRunnable)
+        }
+        addAndFetchPlanets(true)
     }
 
 }

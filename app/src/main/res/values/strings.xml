@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Mr Kanapka</string>
-    <string name="fetchError">An error occurred while fetching films.</string>
+    <string name="fetchError">Wystąpił błąd podczas pobierania elementów.</string>
+    <string name="fetchSuccess">Pomyślnie pobrano elementy.</string>
     <string name="sandDescritpion">Opis:</string>
     <string name="sandPrice">(Cena za 1 sztukę):</string>
     <string name="title_activity_main2">Main2Activity</string>

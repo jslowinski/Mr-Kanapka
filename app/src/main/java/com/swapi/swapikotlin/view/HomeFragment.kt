@@ -1,21 +1,17 @@
 package com.swapi.swapikotlin.view
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
-
 import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-
 import android.util.Log
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
-
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.SwapiClient
 import com.swapi.swapikotlin.api.model.FilmDto
@@ -24,9 +20,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
 
 
 class HomeFragment  : Fragment() {
+
+    //to swipe refresh
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
 
     private val adapter: FastItemAdapter<FilmListItem> = FastItemAdapter()
     //region Tag
@@ -45,21 +46,10 @@ class HomeFragment  : Fragment() {
 
     //endregion
 
+
     override fun onResume() {
         super.onResume()
-        disposables.add(
-            swapiService
-                .fetchFilms()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { response -> response.results }
-                .doOnSubscribe { showProgress() }
-                .doFinally { hideProgress() }
-                .subscribe(
-                    { result -> handleFetchFilmsSuccess(result) },
-                    { throwable -> handleFetchFilmsError(throwable) }
-                )
-        )
+        //Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
@@ -79,6 +69,8 @@ class HomeFragment  : Fragment() {
 
         // Display result.
         adapter.setNewList(items)
+        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+        swipe_refresh_layout.isRefreshing = false
     }
 
     private fun handleFetchFilmsError(throwable: Throwable) {
@@ -88,6 +80,7 @@ class HomeFragment  : Fragment() {
         Log.e(TAG, throwable.localizedMessage)
 
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
+        swipe_refresh_layout.isRefreshing = false
     }
 
     //endregion
@@ -99,6 +92,8 @@ class HomeFragment  : Fragment() {
         recyclerView.adapter = adapter
 
         adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+
+
     }
 
     private fun onItemClicked(item: FilmListItem): Boolean {
@@ -138,15 +133,73 @@ class HomeFragment  : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
-        return rootView
+
+        return inflater.inflate(R.layout.fragment_home, container, false)
+
+
     }
 
+    fun addAndFetchFilms(progressbar: Boolean)
+    {
+        if(progressbar)
+        {
+            disposables.add(
+                swapiService
+                    .fetchFilms()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { response -> response.results }
+                    .doOnSubscribe { showProgress() }
+                    .doFinally { hideProgress() }
+                    .subscribe(
+                        { result -> handleFetchFilmsSuccess(result) },
+                        { throwable -> handleFetchFilmsError(throwable) }
+                    )
+            )
+        }
+        else
+        {
+            disposables.add(
+                swapiService
+                    .fetchFilms()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { response -> response.results }
+                    .subscribe(
+                        { result -> handleFetchFilmsSuccess(result) },
+                        { throwable -> handleFetchFilmsError(throwable) }
+                    )
+            )
+        }
+
+    }
 
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeRecyclerView()
+
+        // Initialize the handler instance
+        mHandler = Handler()
+
+
+        // Set an on refresh listener for swipe refresh layout
+        swipe_refresh_layout.setOnRefreshListener {
+            // Initialize a new Runnable
+            mRunnable = Runnable {
+
+                addAndFetchFilms(false)
+                // Hide swipe to refresh icon animation
+                //swipe_refresh_layout.isRefreshing = false
+                //chowane jest w handleFetchSucces/false
+            }
+
+            // Execute the task
+            mHandler.post(mRunnable)
+        }
+
+        addAndFetchFilms(true)
+
     }
 
 }
