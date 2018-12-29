@@ -87,7 +87,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.relativeLayout, fragment, "" + fragment)
+            .replace(R.id.relativeLayout, fragment)
             .commit()
     }
 

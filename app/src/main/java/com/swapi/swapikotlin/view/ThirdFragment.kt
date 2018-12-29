@@ -11,8 +11,7 @@ class ThirdFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_third, container, false)
+        return inflater.inflate(R.layout.fragment_third, container, false)
 
-        return rootView
     }
 }
