@@ -118,7 +118,8 @@ class HomeFragment  : Fragment() {
 //        // Return true to indicate adapter that event was consumed.
 
         val foodDetail = Intent(context, FoodDetail::class.java)
-        foodDetail.putExtra(EXTRA_MESSAGE, film.openingCrawl)
+        foodDetail.putExtra("OpeningCrawl", film.openingCrawl)
+        foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
 
        return true

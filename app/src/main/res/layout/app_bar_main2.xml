@@ -12,10 +12,12 @@
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay">
 
+
         <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
                 style="@style/HeaderBar"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:title="@string/app_name"
