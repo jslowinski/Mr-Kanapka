@@ -1,7 +1,9 @@
 package com.swapi.swapikotlin.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -12,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.SwapiClient
 import com.swapi.swapikotlin.api.model.FilmDto
@@ -100,20 +103,25 @@ class HomeFragment  : Fragment() {
 
         // Retrieve model.
         val film = item.model
+//
+//
+//        //TU JAKAŚ MAGIĄ Z ALT+ENTER ALE DZIAŁA XD
+//        // Show crawl.
+//        this!!.context?.let {
+//            AlertDialog.Builder(it)
+//                .setPositiveButton("OK", null)
+//                .setTitle(film.title)
+//                .setMessage(film.openingCrawl)
+//                .show()
+//        }
+//
+//        // Return true to indicate adapter that event was consumed.
 
+        val foodDetail = Intent(context, FoodDetail::class.java)
+        foodDetail.putExtra(EXTRA_MESSAGE, film.openingCrawl)
+        startActivity(foodDetail)
 
-        //TU JAKAŚ MAGIĄ Z ALT+ENTER ALE DZIAŁA XD
-        // Show crawl.
-        this!!.context?.let {
-            AlertDialog.Builder(it)
-                .setPositiveButton("OK", null)
-                .setTitle(film.title)
-                .setMessage(film.openingCrawl)
-                .show()
-        }
-
-        // Return true to indicate adapter that event was consumed.
-        return true
+       return true
     }
 
     //endregion

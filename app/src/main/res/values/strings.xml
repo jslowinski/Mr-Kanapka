@@ -19,4 +19,5 @@
     <string name="email">zespol9.mat.umk@gmail.com</string>
     <string name="nav_menu">Menu</string>
     <string name="nav_cart">Koszyk</string>
+    <string name="food_name">Food Name</string>
 </resources>
