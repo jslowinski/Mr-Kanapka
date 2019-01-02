@@ -12,10 +12,13 @@ class FoodDetail : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_food_detail)
-
+        val actionBar = supportActionBar
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true)
+        }
         val message = intent.getStringExtra(EXTRA_MESSAGE)
 
-        val textView = findViewById<TextView>(R.id.food_description).apply {
+        findViewById<TextView>(R.id.food_description).apply {
             text = message
         }
 
