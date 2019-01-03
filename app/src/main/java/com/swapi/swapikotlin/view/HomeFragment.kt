@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
+import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.SwapiClient
 import com.swapi.swapikotlin.api.model.FilmDto
 import com.swapi.swapikotlin.view.list.FilmListItem
@@ -24,6 +25,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
+
+
 
 
 class HomeFragment  : Fragment() {
@@ -47,6 +50,10 @@ class HomeFragment  : Fragment() {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
 
+    val itemOnClick: (View, Int, Int) -> Unit = { view, position, type ->
+        Log.d(TAG, "test")
+    }
+
     //endregion
 
 
@@ -64,7 +71,6 @@ class HomeFragment  : Fragment() {
 
         // Log the fact.
         Log.i(TAG, "Successfully fetched films.")
-
         // Convert to list items.
         val items = films.map {
             FilmListItem(it)
@@ -95,9 +101,12 @@ class HomeFragment  : Fragment() {
         recyclerView.adapter = adapter
 
         adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+        //adapter.withOnClickListener{ _, _, item, _ -> onItemButtonClicked(item)}
 
 
     }
+
+
 
     private fun onItemClicked(item: FilmListItem): Boolean {
 
@@ -116,7 +125,9 @@ class HomeFragment  : Fragment() {
 //        }
 //
 //        // Return true to indicate adapter that event was consumed.
-
+        //Cart.info
+        Cart.setInfoFilm(film.title)
+        Cart.InfoFilm()
         val foodDetail = Intent(context, FoodDetail::class.java)
         foodDetail.putExtra("OpeningCrawl", film.openingCrawl)
         foodDetail.putExtra("Name",film.title)
@@ -142,11 +153,7 @@ class HomeFragment  : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-
-
         return inflater.inflate(R.layout.fragment_home, container, false)
-
-
     }
 
     fun addAndFetchFilms(progressbar: Boolean)
@@ -187,28 +194,20 @@ class HomeFragment  : Fragment() {
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeRecyclerView()
-
         // Initialize the handler instance
         mHandler = Handler()
-
-
         // Set an on refresh listener for swipe refresh layout
         swipe_refresh_layout.setOnRefreshListener {
             // Initialize a new Runnable
             mRunnable = Runnable {
-
                 addAndFetchFilms(false)
                 // Hide swipe to refresh icon animation
                 //swipe_refresh_layout.isRefreshing = false
                 //chowane jest w handleFetchSucces/false
             }
-
             // Execute the task
             mHandler.post(mRunnable)
         }
-
         addAndFetchFilms(true)
-
     }
-
 }

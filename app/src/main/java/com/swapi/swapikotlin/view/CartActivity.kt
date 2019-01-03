@@ -3,6 +3,7 @@ package com.swapi.swapikotlin.view
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.swapi.swapikotlin.R
+import kotlinx.android.synthetic.main.activity_cart.*
 
 class CartActivity : AppCompatActivity() {
 
