@@ -36,7 +36,6 @@ class PlanetFragment  : Fragment() {
     //endregion
 
     //region API
-
     private val swapiService by lazy {
         SwapiClient.create()
     }
@@ -89,7 +88,7 @@ class PlanetFragment  : Fragment() {
         {
             disposables.add(
                 swapiService
-                    .fetchPlanets()
+                    .fetchPlanets("planets/?page=1")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { response -> response.results }
@@ -105,7 +104,7 @@ class PlanetFragment  : Fragment() {
         {
             disposables.add(
                 swapiService
-                    .fetchPlanets()
+                    .fetchPlanets("planets/?page=1")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { response -> response.results }

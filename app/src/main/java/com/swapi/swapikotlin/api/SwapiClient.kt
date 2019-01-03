@@ -12,8 +12,10 @@ class SwapiClient {
 
     private val retrofit by lazy {
       Retrofit.Builder()
-          .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-          .addConverterFactory(GsonConverterFactory.create())
+          .addCallAdapterFactory(
+              RxJava2CallAdapterFactory.create())
+          .addConverterFactory(
+              GsonConverterFactory.create())
           .baseUrl(BASE_URL)
           .build()
     }
@@ -23,5 +25,4 @@ class SwapiClient {
     }
 
   }
-//testowy komentarz
 }
