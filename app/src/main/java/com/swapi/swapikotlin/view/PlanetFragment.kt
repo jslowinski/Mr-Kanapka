@@ -189,7 +189,8 @@ class PlanetFragment  : Fragment() {
             // Execute the task
             mHandler.post(mRunnable)
         }
-        addAndFetchPlanets(true)
+        if(savedInstanceState == null)
+            addAndFetchPlanets(true)
     }
 
 }

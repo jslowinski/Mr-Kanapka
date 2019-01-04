@@ -208,6 +208,7 @@ class HomeFragment  : Fragment() {
             // Execute the task
             mHandler.post(mRunnable)
         }
-        addAndFetchFilms(true)
+        if(savedInstanceState == null)
+            addAndFetchFilms(true)
     }
 }
