@@ -2,4 +2,5 @@
 <resources>
   <item name="film_type_id" type="id"/>
   <item name="planet_type_id" type="id"/>
+  <item name="cart_type_id" type="id"/>
 </resources>

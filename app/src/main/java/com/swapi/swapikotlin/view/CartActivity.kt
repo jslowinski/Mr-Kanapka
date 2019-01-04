@@ -1,11 +1,30 @@
 package com.swapi.swapikotlin.view
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
+import com.swapi.swapikotlin.api.Cart
+import com.swapi.swapikotlin.view.list.CartListItem
 import kotlinx.android.synthetic.main.activity_cart.*
+import java.util.*
+import java.util.Collections.swap
+
+
 
 class CartActivity : AppCompatActivity() {
+
+    private val adapter: FastItemAdapter<CartListItem> = FastItemAdapter()
+
+    private val items = Cart.infoItem().map { CartListItem(it) }.toMutableList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,7 +34,65 @@ class CartActivity : AppCompatActivity() {
         actionBar!!.title = "Koszyk"
         actionBar.setDisplayHomeAsUpEnabled(true)
 
+        initializeRecyclerView()
+    }
 
+
+
+    private fun initializeRecyclerView() {
+
+        // Convert to list items.
+        //items = Cart.infoItem().map { CartListItem(it) }.toMutableList()
+
+
+        adapter.setNewList(items)
+        //TU TRZEBA BYŁO ZMIENIC THIS NA CONTEXT
+        recyclerView.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.adapter = adapter
+
+        adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+        setRecyclerViewItemTouchListener()
+    }
+
+    private fun setRecyclerViewItemTouchListener() {
+
+        //1
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
+                //2
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                //3
+                val position = viewHolder.adapterPosition
+                Log.i("USUWANIE Z KOSZYKA: ", "$position")
+                Cart.deleteItem(position)
+                items.removeAt(position)
+                //recyclerView.adapter!!.notifyItemRemoved(position)
+                //recyclerView.adapter!!.notifyDataSetChanged()
+                initializeRecyclerView()
+                Snackbar.make(root1, R.string.cartDelete, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+        //4
+        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    private fun onItemClicked(item: CartListItem): Boolean {
+
+        // Retrieve model.
+        val itemCart = item.model
+
+        val foodDetail = Intent(this, FoodDetail::class.java)
+        foodDetail.putExtra("OpeningCrawl", "z koszyka")
+        foodDetail.putExtra("Name", itemCart.title)
+        startActivity(foodDetail)
+
+        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {

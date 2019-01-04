@@ -3,7 +3,12 @@ package com.swapi.swapikotlin
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
+import android.support.design.widget.Snackbar
+import android.widget.Button
 import android.widget.TextView
+import com.swapi.swapikotlin.api.Cart
+import com.swapi.swapikotlin.api.model.CartDto
+import kotlinx.android.synthetic.main.activity_food_detail.*
 
 class FoodDetail : AppCompatActivity() {
 
@@ -27,7 +32,13 @@ class FoodDetail : AppCompatActivity() {
         findViewById<TextView>(R.id.food_description).apply {
             text = message
         }
+        val button : Button = findViewById(R.id.add_to_order_button)
 
+        button.setOnClickListener{
+            val item = CartDto(name)
+            Cart.setInfoItem(item)
+            Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+        }
 
     }
 

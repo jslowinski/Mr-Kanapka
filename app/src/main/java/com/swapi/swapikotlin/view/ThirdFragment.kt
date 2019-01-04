@@ -28,8 +28,8 @@ class ThirdFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         button3.setOnClickListener {
-            Log.i("Third fragment", Cart.info)
-            Snackbar.make(root1, Cart.info, Snackbar.LENGTH_SHORT).show()
+            //Log.i("Third fragment", Cart.info)
+            //Snackbar.make(root1, Cart.info, Snackbar.LENGTH_SHORT).show()
         }
     }
 

@@ -26,7 +26,7 @@ class PlanetFragment  : Fragment() {
 
     //to swipe refresh
     private lateinit var mHandler: Handler
-    private lateinit var mRunnable:Runnable
+    private lateinit var mRunnable: Runnable
 
     private val adapter: FastItemAdapter<PlanetListItem> = FastItemAdapter()
     //region Tag

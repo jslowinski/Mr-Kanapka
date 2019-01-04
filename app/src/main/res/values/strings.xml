@@ -2,8 +2,11 @@
     <string name="app_name">Mr Kanapka</string>
     <string name="fetchError">Wystąpił błąd podczas pobierania elementów.</string>
     <string name="fetchSuccess">Pomyślnie pobrano elementy.</string>
+    <string name="cartSuccess">Pomyślnie dodano element do koszyka.</string>
+    <string name="cartDelete">Pomyślnie usunięto element z koszyka.</string>
     <string name="sandDescritpion">Opis:</string>
     <string name="sandPrice">(Cena za 1 sztukę):</string>
+    <string name="price">Cena:</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

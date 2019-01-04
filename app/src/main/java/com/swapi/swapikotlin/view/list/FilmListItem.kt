@@ -1,11 +1,17 @@
 package com.swapi.swapikotlin.view.list
 
+import android.support.design.widget.Snackbar
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import com.mikepenz.fastadapter.FastAdapter.ViewHolder
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.swapi.swapikotlin.R
+import com.swapi.swapikotlin.R.id.root1
+import com.swapi.swapikotlin.api.Cart
+import com.swapi.swapikotlin.api.model.CartDto
 import com.swapi.swapikotlin.api.model.FilmDto
+import com.swapi.swapikotlin.view.HomeFragment
 import com.swapi.swapikotlin.view.list.FilmListItem.FilmListItemViewHolder
 import java.util.Objects.hash
 
@@ -32,7 +38,7 @@ class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, Fi
     private val titleText: TextView = itemView.findViewById(R.id.title)
     private val directorText: TextView = itemView.findViewById(R.id.director)
     private val producerText: TextView = itemView.findViewById(R.id.producer)
-
+    private val button: Button = itemView.findViewById(R.id.button)
     override fun bindView(item: FilmListItem, payloads: MutableList<Any>) {
 
       // Retrieve model.
@@ -42,6 +48,12 @@ class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, Fi
       titleText.text = model.title
       directorText.text = model.director
       producerText.text = model.producer
+      button.setOnClickListener{
+        //Cart.setInfoFilm(model.title)
+        val item = CartDto(model.title)
+        Cart.setInfoItem(item)
+        Snackbar.make(itemView, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+      }
     }
 
     override fun unbindView(item: FilmListItem) {
@@ -49,6 +61,5 @@ class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, Fi
       directorText.text = null
       producerText.text = null
     }
-
   }
 }

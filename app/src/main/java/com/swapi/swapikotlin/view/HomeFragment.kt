@@ -49,11 +49,6 @@ class HomeFragment  : Fragment() {
     }
 
     private val disposables: CompositeDisposable = CompositeDisposable()
-
-    val itemOnClick: (View, Int, Int) -> Unit = { view, position, type ->
-        Log.d(TAG, "test")
-    }
-
     //endregion
 
 
@@ -107,7 +102,6 @@ class HomeFragment  : Fragment() {
     }
 
 
-
     private fun onItemClicked(item: FilmListItem): Boolean {
 
         // Retrieve model.
@@ -126,8 +120,8 @@ class HomeFragment  : Fragment() {
 //
 //        // Return true to indicate adapter that event was consumed.
         //Cart.info
-        Cart.setInfoFilm(film.title)
-        Cart.InfoFilm()
+        //Cart.setInfoFilm(film.title)
+        //Cart.infoFilm()
         val foodDetail = Intent(context, FoodDetail::class.java)
         foodDetail.putExtra("OpeningCrawl", film.openingCrawl)
         foodDetail.putExtra("Name",film.title)
@@ -156,7 +150,7 @@ class HomeFragment  : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    fun addAndFetchFilms(progressbar: Boolean)
+    private fun addAndFetchFilms(progressbar: Boolean)
     {
         if(progressbar)
         {
