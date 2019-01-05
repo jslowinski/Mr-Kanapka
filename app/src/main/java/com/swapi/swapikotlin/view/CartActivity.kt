@@ -26,6 +26,8 @@ class CartActivity : AppCompatActivity() {
 
     private val items = Cart.infoItem().map { CartListItem(it) }.toMutableList()
 
+    private var ile_deletow = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
@@ -47,7 +49,7 @@ class CartActivity : AppCompatActivity() {
 
         adapter.setNewList(items)
         //TU TRZEBA BYŁO ZMIENIC THIS NA CONTEXT
-        recyclerView.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = adapter
 
@@ -68,9 +70,20 @@ class CartActivity : AppCompatActivity() {
                 //3
                 val position = viewHolder.adapterPosition
                 Log.i("USUWANIE Z KOSZYKA: ", "$position")
+
                 Cart.deleteItem(position)
                 items.removeAt(position)
+
+                //adapter.notifyItemRemoved(position)
+                //adapter.notifyItemRangeChanged(position, items.size)
+//                for(i in (position+1)..(items.size-1))
+//                    adapter.set(i-1, items[i])
+
+
+                //adapter.setNewList(items)
                 //recyclerView.adapter!!.notifyItemRemoved(position)
+                //recyclerView.adapter!!.notifyItemChanged(position, items)
+
                 //recyclerView.adapter!!.notifyDataSetChanged()
                 initializeRecyclerView()
                 Snackbar.make(root1, R.string.cartDelete, Snackbar.LENGTH_SHORT).show()

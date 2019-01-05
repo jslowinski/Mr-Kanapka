@@ -6,6 +6,7 @@ import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.support.design.widget.Snackbar
 import android.widget.Button
 import android.widget.TextView
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.model.CartDto
 import kotlinx.android.synthetic.main.activity_food_detail.*
@@ -33,10 +34,20 @@ class FoodDetail : AppCompatActivity() {
             text = message
         }
         val button : Button = findViewById(R.id.add_to_order_button)
-
+        val numberButton : ElegantNumberButton = findViewById(R.id.number_button)
         button.setOnClickListener{
-            val item = CartDto(name)
-            Cart.setInfoItem(item)
+            var bool : Boolean = true
+            for (item in Cart.cartList)
+            {
+                if(item.title == name) {
+                    item.quantity+=numberButton.number.toInt()
+                    bool = false
+                }
+            }
+            if(bool) {
+                val item = CartDto(name, numberButton.number.toInt())
+                Cart.setInfoItem(item)
+            }
             Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
         }
 

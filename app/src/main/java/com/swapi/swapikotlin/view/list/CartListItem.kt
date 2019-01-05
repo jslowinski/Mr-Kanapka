@@ -44,6 +44,7 @@ class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, Ca
             val model = item.model
             // Update view.
             titleText.text = model.title
+            countButton.number = model.quantity.toString()
             button.setOnClickListener{
 
                 //itemView.recyclerView.adapter.notifyDataSetChanged()
@@ -51,6 +52,9 @@ class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, Ca
 
                 //Snackbar.make(itemView, R.string.cartDelete, Snackbar.LENGTH_SHORT).show()
             }
+//            countButton.setOnClickListener {
+//
+//            }
         }
 
         override fun unbindView(item: CartListItem) {
