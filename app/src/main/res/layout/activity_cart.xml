@@ -6,9 +6,11 @@
         android:layout_width="match_parent"
         android:id="@+id/root1"
         android:layout_height="match_parent"
+        android:background="@color/colorBackgroudView"
         tools:context=".view.HomeFragment">
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
+
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
@@ -23,6 +25,7 @@
     </android.support.v7.widget.RecyclerView>
     <Button
             android:text="Zamów"
+            android:background="@color/colorButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:id="@+id/button2"

@@ -23,13 +23,13 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setContentView(R.layout.activity_main2)
         setSupportActionBar(toolbar)
 
-//      Funkcja od ikonki maila
-        fab.setOnClickListener { //view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-            val intent = Intent(this, CartActivity::class.java)
-            startActivity(intent)
-        }
+////      Funkcja od ikonki maila
+//        fab.setOnClickListener { //view ->
+////            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+////                .setAction("Action", null).show()
+//            val intent = Intent(this, CartActivity::class.java)
+//            startActivity(intent)
+//        }
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close

@@ -8,7 +8,7 @@
             android:id="@+id/action_cart"
             android:orderInCategory="300"
             android:title="User"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/ic_shopping_cart"
             app:showAsAction="ifRoom"/>
 
 </menu>
