@@ -21,6 +21,7 @@
                       android:clipToPadding="false"
                       android:paddingBottom="8dp"
                       android:paddingTop="8dp"
+                      android:background="@color/colorBackgroudView"
                       app:layout_constraintBottom_toBottomOf="parent"
                       app:layout_constraintEnd_toEndOf="parent"
                       app:layout_constraintStart_toStartOf="parent"
