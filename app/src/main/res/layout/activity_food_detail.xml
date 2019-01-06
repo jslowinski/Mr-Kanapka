@@ -138,7 +138,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:id="@+id/add_to_order_button"
-                            android:background="@color/colorButton"
+                            android:backgroundTint="@color/colorButton"
                             android:layout_marginBottom="8dp"
                             android:layout_marginLeft="8dp"
                             android:layout_marginRight="8dp"
