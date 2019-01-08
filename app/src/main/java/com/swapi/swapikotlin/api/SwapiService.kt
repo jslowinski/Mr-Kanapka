@@ -1,9 +1,8 @@
 package com.swapi.swapikotlin.api
 
-import com.swapi.swapikotlin.api.model.FilmDto
-import com.swapi.swapikotlin.api.model.PlanetDto
-import com.swapi.swapikotlin.api.model.Response
+import com.swapi.swapikotlin.api.model.*
 import io.reactivex.Single
+import retrofit2.Call
 import retrofit2.http.GET
 
 import retrofit2.http.Url
@@ -15,5 +14,8 @@ interface SwapiService {
 
   @GET
   fun fetchPlanets(@Url user_id: String): Single<Response<List<PlanetDto>>>
+
+  @GET
+  fun fetchDetail(@Url url: String): Call<DetailDto>
 
 }

@@ -18,6 +18,7 @@ import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.SwapiClient
+import com.swapi.swapikotlin.api.Url
 import com.swapi.swapikotlin.api.model.FilmDto
 import com.swapi.swapikotlin.view.list.FilmListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -126,6 +127,8 @@ class HomeFragment  : Fragment() {
         foodDetail.putExtra("OpeningCrawl", film.openingCrawl)
         foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
+        Url.Detail_id = film.url
+        println(Url.Detail_id)
 
        return true
     }

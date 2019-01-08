@@ -14,5 +14,8 @@ data class FilmDto(
     var producer: String,
 
     @SerializedName("opening_crawl")
-    var openingCrawl: String
+    var openingCrawl: String,
+
+    @SerializedName("url")
+    var url: String
 )
