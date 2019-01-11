@@ -1,6 +1,8 @@
 package com.swapi.swapikotlin.view.list
 
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -48,9 +50,15 @@ class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, Ca
             button.setOnClickListener{
 
                 //itemView.recyclerView.adapter.notifyDataSetChanged()
+                //val viewHolder: RecyclerView.ViewHolder = item.getViewHolder(itemView)
+                val position = adapterPosition
 
+                Log.i("POZYCJA: ", "$position")
+                Cart.deleteItem(position)
 
-                //Snackbar.make(itemView, R.string.cartDelete, Snackbar.LENGTH_SHORT).show()
+                //payloads.removeAt(position)
+
+                Snackbar.make(itemView, R.string.cartDelete, Snackbar.LENGTH_SHORT).show()
             }
 //            countButton.setOnClickListener {
 //

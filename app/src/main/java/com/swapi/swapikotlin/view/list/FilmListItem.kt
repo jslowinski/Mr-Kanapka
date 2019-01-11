@@ -58,7 +58,7 @@ class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, Fi
           }
         }
         if(bool) {
-          val item = CartDto(model.title, 1)
+          val item = CartDto(model.url, model.title, 1)
           Cart.setInfoItem(item)
         }
         Snackbar.make(itemView, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()

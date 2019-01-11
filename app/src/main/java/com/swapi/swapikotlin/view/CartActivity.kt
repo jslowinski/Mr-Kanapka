@@ -49,9 +49,9 @@ class CartActivity : AppCompatActivity() {
 
         adapter.setNewList(items)
         //TU TRZEBA BYŁO ZMIENIC THIS NA CONTEXT
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = adapter
+        cartRecyclerView.layoutManager = LinearLayoutManager(this)
+        cartRecyclerView.itemAnimator = DefaultItemAnimator()
+        cartRecyclerView.adapter = adapter
 
         adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
         setRecyclerViewItemTouchListener()
@@ -92,7 +92,7 @@ class CartActivity : AppCompatActivity() {
 
         //4
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(cartRecyclerView)
     }
 
     private fun onItemClicked(item: CartListItem): Boolean {
@@ -101,8 +101,9 @@ class CartActivity : AppCompatActivity() {
         val itemCart = item.model
 
         val foodDetail = Intent(this, FoodDetail::class.java)
-        foodDetail.putExtra("OpeningCrawl", "z koszyka")
-        foodDetail.putExtra("Name", itemCart.title)
+        //foodDetail.putExtra("OpeningCrawl", "z koszyka")
+        //foodDetail.putExtra("Name", itemCart.title)
+        foodDetail.putExtra("Url", itemCart.url)
         startActivity(foodDetail)
 
         return true

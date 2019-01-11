@@ -124,8 +124,8 @@ class HomeFragment  : Fragment() {
         //Cart.setInfoFilm(film.title)
         //Cart.infoFilm()
         val foodDetail = Intent(context, FoodDetail::class.java)
-        foodDetail.putExtra("OpeningCrawl", film.openingCrawl)
-        foodDetail.putExtra("Name",film.title)
+        foodDetail.putExtra("Url", film.url)
+        //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
         Url.Detail_id = film.url
         println(Url.Detail_id)
