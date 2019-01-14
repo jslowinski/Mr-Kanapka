@@ -7,11 +7,9 @@ import android.widget.TextView
 import com.mikepenz.fastadapter.FastAdapter.ViewHolder
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.swapi.swapikotlin.R
-import com.swapi.swapikotlin.R.id.root1
 import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.model.CartDto
 import com.swapi.swapikotlin.api.model.FilmDto
-import com.swapi.swapikotlin.view.HomeFragment
 import com.swapi.swapikotlin.view.list.FilmListItem.FilmListItemViewHolder
 import java.util.Objects.hash
 
@@ -39,6 +37,7 @@ class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, Fi
     private val directorText: TextView = itemView.findViewById(R.id.director)
     private val producerText: TextView = itemView.findViewById(R.id.producer)
     private val button: Button = itemView.findViewById(R.id.button)
+
     override fun bindView(item: FilmListItem, payloads: MutableList<Any>) {
 
       // Retrieve model.
@@ -48,7 +47,8 @@ class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, Fi
       titleText.text = model.title
       directorText.text = model.director
       producerText.text = model.producer
-      button.setOnClickListener{
+
+        button.setOnClickListener{
         var bool : Boolean = true
         for (item in Cart.cartList)
         {

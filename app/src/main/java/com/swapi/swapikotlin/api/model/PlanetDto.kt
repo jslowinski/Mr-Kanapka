@@ -11,5 +11,8 @@ data class PlanetDto (
     var rotation_period: String,
 
     @SerializedName("orbital_period")
-    var orbital_period: String
+    var orbital_period: String,
+
+    @SerializedName("url")
+    var url: String
 )

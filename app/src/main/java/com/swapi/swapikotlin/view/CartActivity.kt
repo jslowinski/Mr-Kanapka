@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
+import android.view.View
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
@@ -45,6 +46,15 @@ class CartActivity : AppCompatActivity() {
 
         // Convert to list items.
         //items = Cart.infoItem().map { CartListItem(it) }.toMutableList()
+
+        if (items.size != 0){
+            textView3.visibility = View.GONE
+            imageView2.visibility = View.GONE
+        }
+        else {
+            textView3.visibility = View.VISIBLE
+            imageView2.visibility = View.VISIBLE
+        }
 
 
         adapter.setNewList(items)

@@ -76,6 +76,8 @@ class HomeFragment  : Fragment() {
         adapter.setNewList(items)
         Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
         swipe_refresh_layout.isRefreshing = false
+        textView5.visibility = View.GONE
+        imageView4.visibility = View.GONE
     }
 
     private fun handleFetchFilmsError(throwable: Throwable) {
@@ -86,6 +88,8 @@ class HomeFragment  : Fragment() {
 
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
         swipe_refresh_layout.isRefreshing = false
+        textView5.visibility = View.VISIBLE
+        imageView4.visibility = View.VISIBLE
     }
 
     //endregion
@@ -97,9 +101,6 @@ class HomeFragment  : Fragment() {
         recyclerView.adapter = adapter
 
         adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
-        //adapter.withOnClickListener{ _, _, item, _ -> onItemButtonClicked(item)}
-
-
     }
 
 
@@ -107,22 +108,7 @@ class HomeFragment  : Fragment() {
 
         // Retrieve model.
         val film = item.model
-//
-//
-//        //TU JAKAŚ MAGIĄ Z ALT+ENTER ALE DZIAŁA XD
-//        // Show crawl.
-//        this!!.context?.let {
-//            AlertDialog.Builder(it)
-//                .setPositiveButton("OK", null)
-//                .setTitle(film.title)
-//                .setMessage(film.openingCrawl)
-//                .show()
-//        }
-//
-//        // Return true to indicate adapter that event was consumed.
-        //Cart.info
-        //Cart.setInfoFilm(film.title)
-        //Cart.infoFilm()
+
         val foodDetail = Intent(context, FoodDetail::class.java)
         foodDetail.putExtra("Url", film.url)
         //foodDetail.putExtra("Name",film.title)

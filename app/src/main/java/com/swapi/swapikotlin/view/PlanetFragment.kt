@@ -1,5 +1,6 @@
 package com.swapi.swapikotlin.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
@@ -12,8 +13,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.SwapiClient
+import com.swapi.swapikotlin.api.Url
 import com.swapi.swapikotlin.api.model.PlanetDto
 import com.swapi.swapikotlin.view.list.PlanetListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -123,28 +126,23 @@ class PlanetFragment  : Fragment() {
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = adapter
 
-//        adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+        adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
     }
 
-//    private fun onItemClicked(item: PlanetListItem): Boolean {
-//
-//        // Retrieve model.
-//        val film = item.model
-//
-//
-//        //TU JAKAŚ MAGIĄ Z ALT+ENTER ALE DZIAŁA XD
-//        // Show crawl.
-//        this!!.context?.let {
-//            AlertDialog.Builder(it)
-//                .setPositiveButton("OK", null)
-//                .setTitle(film.name)
-//                .setMessage(film.openingCrawl)
-//                .show()
-//        }
-//
-//        // Return true to indicate adapter that event was consumed.
-//        return true
-//    }
+    private fun onItemClicked(item: PlanetListItem): Boolean {
+
+        // Retrieve model.
+        val planet = item.model
+
+        val foodDetail = Intent(context, FoodDetail::class.java)
+        foodDetail.putExtra("Url", planet.url)
+        startActivity(foodDetail)
+        Url.Detail_id = planet.url
+        println(Url.Detail_id)
+
+        // Return true to indicate adapter that event was consumed.
+        return true
+    }
 
     //endregion
 
@@ -171,6 +169,8 @@ class PlanetFragment  : Fragment() {
 
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
         initializeRecyclerView()
         mHandler = Handler()
 
