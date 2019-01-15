@@ -147,41 +147,34 @@ class HomeFragment  : Fragment() {
 
     private fun addAndFetchFilms(progressbar: Boolean)
     {
-        if(progressbar)
-        {
-            filmsManager
-                .getFilms()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    this::handleFetchFilmsSuccess,
-                    this::handleFetchFilmsError
-                )
-                .addTo(disposables)
+        filmsManager
+            .getFilms()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                this::handleFetchFilmsSuccess,
+                this::handleFetchFilmsError
+            )
+            .addTo(disposables)
 
-            filmsManager
-                .downloadFilms()
-                .andThen(filmsManager.getFilms())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doFinally { hideProgress() }
-                .subscribe(
-                    this::handleFetchFilmsSuccess,
-                    this::handleFetchFilmsError
-                )
-                .addTo(disposables)
-        }
-        else
-        {
-
-        }
+        filmsManager
+            .downloadFilms()
+            .andThen(filmsManager.getFilms())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { showProgress() }
+            .doFinally { hideProgress() }
+            .subscribe(
+                this::handleFetchFilmsSuccess,
+                this::handleFetchFilmsError
+            )
+            .addTo(disposables)
 
     }
 
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeRecyclerView()
-
         // Initialize the handler instance
+
         mHandler = Handler()
         // Set an on refresh listener for swipe refresh layout
         swipe_refresh_layout.setOnRefreshListener {

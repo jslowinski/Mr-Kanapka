@@ -9,7 +9,7 @@ import com.swapi.swapikotlin.database.entity.FilmEntity
 
 
 @Database(
-    version = 1,
+    version = 2,
     exportSchema = false,
     entities = [
         FilmEntity::class
