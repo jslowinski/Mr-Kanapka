@@ -13,6 +13,7 @@ import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.R.layout
 import com.swapi.swapikotlin.api.SwapiClient
 import com.swapi.swapikotlin.api.model.FilmDto
+import com.swapi.swapikotlin.database.entity.FilmEntity
 import com.swapi.swapikotlin.view.list.FilmListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -48,30 +49,30 @@ class MainActivity : AppCompatActivity() {
     // Initialize RecyclerView.
     initializeRecyclerView()
   }
-
-  override fun onResume() {
-    super.onResume()
-    disposables.add(
-        swapiService
-            .fetchFilms()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { response -> response.results }
-            .doOnSubscribe { showProgress() }
-            .doFinally { hideProgress() }
-            .subscribe(
-                { result -> handleFetchFilmsSuccess(result) },
-                { throwable -> handleFetchFilmsError(throwable) }
-            )
-    )
-  }
+//
+//  override fun onResume() {
+//    super.onResume()
+//    disposables.add(
+//        swapiService
+//            .fetchFilms()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .map { response -> response.results }
+//            .doOnSubscribe { showProgress() }
+//            .doFinally { hideProgress() }
+//            .subscribe(
+//                { result -> handleFetchFilmsSuccess(result) },
+//                { throwable -> handleFetchFilmsError(throwable) }
+//            )
+//    )
+//  }
 
   override fun onPause() {
     disposables.clear()
     super.onPause()
   }
 
-  private fun handleFetchFilmsSuccess(films: List<FilmDto>) {
+  private fun handleFetchFilmsSuccess(films: List<FilmEntity>) {
 
     // Log the fact.
     Log.i(TAG, "Successfully fetched films.")

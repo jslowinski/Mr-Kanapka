@@ -10,10 +10,11 @@ import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.model.CartDto
 import com.swapi.swapikotlin.api.model.FilmDto
+import com.swapi.swapikotlin.database.entity.FilmEntity
 import com.swapi.swapikotlin.view.list.FilmListItem.FilmListItemViewHolder
 import java.util.Objects.hash
 
-class FilmListItem(model: FilmDto) : ModelAbstractItem<FilmDto, FilmListItem, FilmListItemViewHolder>(model) {
+class FilmListItem(model: FilmEntity) : ModelAbstractItem<FilmEntity, FilmListItem, FilmListItemViewHolder>(model) {
 
   override fun getType(): Int {
     return R.id.film_type_id

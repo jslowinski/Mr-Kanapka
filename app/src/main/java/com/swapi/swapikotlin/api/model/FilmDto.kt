@@ -7,6 +7,9 @@ data class FilmDto(
     @SerializedName("title")
     var title: String,
 
+    @SerializedName("episode_id")
+    var episodeId: Int,
+
     @SerializedName("director")
     var director: String,
 

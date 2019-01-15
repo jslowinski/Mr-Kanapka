@@ -20,9 +20,13 @@ import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.SwapiClient
 import com.swapi.swapikotlin.api.Url
 import com.swapi.swapikotlin.api.model.FilmDto
+import com.swapi.swapikotlin.database.AndroidDatabase
+import com.swapi.swapikotlin.database.entity.FilmEntity
+import com.swapi.swapikotlin.manager.FilmsManager
 import com.swapi.swapikotlin.view.list.FilmListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
@@ -36,7 +40,7 @@ class HomeFragment  : Fragment() {
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
 
-    private val adapter: FastItemAdapter<FilmListItem> = FastItemAdapter()
+    private val fastItemAdapter: FastItemAdapter<FilmListItem> = FastItemAdapter()
     //region Tag
 
     private val TAG = HomeFragment::class.java.simpleName
@@ -45,8 +49,8 @@ class HomeFragment  : Fragment() {
 
     //region API
 
-    private val swapiService by lazy {
-        SwapiClient.create()
+    private val filmsManager by lazy {
+        FilmsManager()
     }
 
     private val disposables: CompositeDisposable = CompositeDisposable()
@@ -63,7 +67,7 @@ class HomeFragment  : Fragment() {
         super.onPause()
     }
 
-    private fun handleFetchFilmsSuccess(films: List<FilmDto>) {
+    private fun handleFetchFilmsSuccess(films: List<FilmEntity>) {
 
         // Log the fact.
         Log.i(TAG, "Successfully fetched films.")
@@ -73,7 +77,7 @@ class HomeFragment  : Fragment() {
         }
 
         // Display result.
-        adapter.setNewList(items)
+        fastItemAdapter.setNewList(items)
         Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
         swipe_refresh_layout.isRefreshing = false
         textView5.visibility = View.GONE
@@ -96,11 +100,13 @@ class HomeFragment  : Fragment() {
 
     private fun initializeRecyclerView() {
         //TU TRZEBA BYŁO ZMIENIC THIS NA CONTEXT
+
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = adapter
+        recyclerView.adapter = fastItemAdapter
 
-        adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+
+        fastItemAdapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
     }
 
 
@@ -143,33 +149,30 @@ class HomeFragment  : Fragment() {
     {
         if(progressbar)
         {
-            disposables.add(
-                swapiService
-                    .fetchFilms()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { response -> response.results }
-                    .doOnSubscribe { showProgress() }
-                    .doFinally { hideProgress() }
-                    .subscribe(
-                        { result -> handleFetchFilmsSuccess(result) },
-                        { throwable -> handleFetchFilmsError(throwable) }
-                    )
-            )
+            filmsManager
+                .getFilms()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    this::handleFetchFilmsSuccess,
+                    this::handleFetchFilmsError
+                )
+                .addTo(disposables)
+
+            filmsManager
+                .downloadFilms()
+                .andThen(filmsManager.getFilms())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { showProgress() }
+                .doFinally { hideProgress() }
+                .subscribe(
+                    this::handleFetchFilmsSuccess,
+                    this::handleFetchFilmsError
+                )
+                .addTo(disposables)
         }
         else
         {
-            disposables.add(
-                swapiService
-                    .fetchFilms()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { response -> response.results }
-                    .subscribe(
-                        { result -> handleFetchFilmsSuccess(result) },
-                        { throwable -> handleFetchFilmsError(throwable) }
-                    )
-            )
+
         }
 
     }
@@ -177,6 +180,7 @@ class HomeFragment  : Fragment() {
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeRecyclerView()
+
         // Initialize the handler instance
         mHandler = Handler()
         // Set an on refresh listener for swipe refresh layout

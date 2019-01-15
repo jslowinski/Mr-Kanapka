@@ -61,4 +61,18 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
 
     //endregion
+
+    //region Room
+
+    kapt "android.arch.persistence.room:compiler:1.1.1"
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
+
+    //endregion
+
+    //region Stetho
+
+    implementation "com.facebook.stetho:stetho:1.5.0"
+
+    //endregion
 }

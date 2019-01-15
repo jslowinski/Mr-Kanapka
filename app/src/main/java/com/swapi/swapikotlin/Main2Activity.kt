@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.swapi.swapikotlin.database.AndroidDatabase
 import com.swapi.swapikotlin.view.CartActivity
 import com.swapi.swapikotlin.view.HomeFragment
 import com.swapi.swapikotlin.view.ThirdFragment
@@ -20,7 +21,6 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //setTheme(R.style.AppTheme)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         setSupportActionBar(toolbar)
