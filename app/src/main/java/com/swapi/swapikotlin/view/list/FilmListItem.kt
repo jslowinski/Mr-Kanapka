@@ -49,21 +49,21 @@ class FilmListItem(model: FilmEntity) : ModelAbstractItem<FilmEntity, FilmListIt
       directorText.text = model.director
       producerText.text = model.producer
 
-        button.setOnClickListener{
-        var bool : Boolean = true
-        for (item in Cart.cartList)
-        {
-          if(item.title == model.title) {
-            item.quantity++
-            bool = false
-          }
-        }
-        if(bool) {
-          val item = CartDto(model.url, model.title, 1)
-          Cart.setInfoItem(item)
-        }
-        Snackbar.make(itemView, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
-      }
+//        button.setOnClickListener{
+//        var bool : Boolean = true
+//        for (item in Cart.cartList)
+//        {
+//          if(item.title == model.title) {
+//            item.quantity++
+//            bool = false
+//          }
+//        }
+//        if(bool) {
+//          val item = CartDto(model.url, model.title, 1)
+//          Cart.setInfoItem(item)
+//        }
+//        Snackbar.make(itemView, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+//      }
     }
 
     override fun unbindView(item: FilmListItem) {

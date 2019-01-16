@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.provider.AlarmClock.EXTRA_MESSAGE
+import android.support.annotation.NonNull
+import android.support.annotation.Nullable
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -30,8 +32,11 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
-
-
+import com.mikepenz.fastadapter.FastAdapter
+import android.support.v7.widget.RecyclerView
+import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.swapi.swapikotlin.api.model.CartDto
+import kotlinx.android.synthetic.main.item_film.view.*
 
 
 class HomeFragment  : Fragment() {
@@ -107,8 +112,38 @@ class HomeFragment  : Fragment() {
 
 
         fastItemAdapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+
+        fastItemAdapter.withEventHook(object : ClickEventHook<FilmListItem>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder) =
+                viewHolder.itemView.run { listOf(button) }
+
+            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<FilmListItem>?, item: FilmListItem?) {
+                if (view != null && item != null) {
+                    onListItemClicked(view, item)
+                }
+            }
+        })
+
+
     }
 
+    private fun onListItemClicked(view: View, item: FilmListItem){
+        var bool : Boolean = true
+        val model = item.model
+        for (item in Cart.cartList)
+        {
+          if(item.title == model.title) {
+            item.quantity++
+            bool = false
+          }
+        }
+        if(bool) {
+          val item = CartDto(model.url, model.title, 1)
+          Cart.setInfoItem(item)
+        }
+        Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+
+    }
 
     private fun onItemClicked(item: FilmListItem): Boolean {
 

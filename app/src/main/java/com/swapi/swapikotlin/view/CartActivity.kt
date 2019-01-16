@@ -10,12 +10,15 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
+import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.view.list.CartListItem
 import kotlinx.android.synthetic.main.activity_cart.*
+import kotlinx.android.synthetic.main.item_in_cart.view.*
 import java.util.*
 import java.util.Collections.swap
 
@@ -26,8 +29,6 @@ class CartActivity : AppCompatActivity() {
     private val adapter: FastItemAdapter<CartListItem> = FastItemAdapter()
 
     private val items = Cart.infoItem().map { CartListItem(it) }.toMutableList()
-
-    private var ile_deletow = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +65,28 @@ class CartActivity : AppCompatActivity() {
         cartRecyclerView.adapter = adapter
 
         adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+        adapter.withEventHook(object : ClickEventHook<CartListItem>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder) =
+                viewHolder.itemView.run { listOf(button2) }
+
+            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<CartListItem>?, item: CartListItem?) {
+                if (view != null && item != null) {
+                    onListItemClicked(view, item)
+                }
+            }
+        })
         setRecyclerViewItemTouchListener()
+    }
+
+    private fun onListItemClicked(view: View, item: CartListItem){
+
+        val position = adapter.getAdapterPosition(item)
+        Cart.deleteItem(position)
+        items.removeAt(position)
+        //adapter.notifyItemRemoved(position)
+        Snackbar.make(root1, R.string.cartDelete, Snackbar.LENGTH_SHORT).show()
+        initializeRecyclerView()
+
     }
 
     private fun setRecyclerViewItemTouchListener() {

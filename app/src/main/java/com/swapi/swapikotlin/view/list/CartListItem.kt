@@ -38,7 +38,7 @@ class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, Ca
     class CartListItemViewHolder(itemView: View) : FastAdapter.ViewHolder<CartListItem>(itemView) {
 
         private val titleText: TextView = itemView.findViewById(R.id.title)
-        private val button: Button = itemView.findViewById(R.id.button2)
+        //private val button: Button = itemView.findViewById(R.id.button2)
         private val countButton: ElegantNumberButton = itemView.findViewById(R.id.number_button)
         override fun bindView(item: CartListItem, payloads: MutableList<Any>) {
 
@@ -47,22 +47,7 @@ class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, Ca
             // Update view.
             titleText.text = model.title
             countButton.number = model.quantity.toString()
-            button.setOnClickListener{
 
-                //itemView.recyclerView.adapter.notifyDataSetChanged()
-                //val viewHolder: RecyclerView.ViewHolder = item.getViewHolder(itemView)
-                val position = adapterPosition
-
-                Log.i("POZYCJA: ", "$position")
-                Cart.deleteItem(position)
-
-                //payloads.removeAt(position)
-
-                Snackbar.make(itemView, R.string.cartDelete, Snackbar.LENGTH_SHORT).show()
-            }
-//            countButton.setOnClickListener {
-//
-//            }
         }
 
         override fun unbindView(item: CartListItem) {
