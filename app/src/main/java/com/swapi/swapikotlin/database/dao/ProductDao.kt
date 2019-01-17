@@ -4,8 +4,9 @@ import android.arch.persistence.room.*
 import com.swapi.swapikotlin.database.entity.ProductEntity
 import io.reactivex.Maybe
 
+
 @Dao
-abstract class FilmDao {
+abstract class ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(entities: List<ProductEntity>)

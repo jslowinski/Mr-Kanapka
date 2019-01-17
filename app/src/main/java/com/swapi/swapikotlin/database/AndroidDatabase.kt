@@ -4,7 +4,7 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import com.swapi.swapikotlin.database.dao.FilmDao
+import com.swapi.swapikotlin.database.dao.ProductDao
 import com.swapi.swapikotlin.database.entity.ProductEntity
 
 
@@ -35,7 +35,7 @@ abstract class AndroidDatabase : RoomDatabase() {
 
     //region Dao
 
-    abstract fun filmDao(): FilmDao
+    abstract fun filmDao(): ProductDao
 
     //endregion
 }

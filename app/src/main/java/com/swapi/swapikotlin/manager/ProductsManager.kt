@@ -19,7 +19,7 @@ class ProductsManager {
         swapiService
             .fetchFilms()
             .flatMapCompletable {
-                saveFilms(it.results)
+                saveFilms(it.product)
             }
             .subscribeOn(Schedulers.io())
 

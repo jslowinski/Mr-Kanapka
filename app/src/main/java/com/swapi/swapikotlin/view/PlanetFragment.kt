@@ -94,7 +94,7 @@ class PlanetFragment  : Fragment() {
                     .fetchPlanets("planets/?page=1")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .map { response -> response.results }
+                    .map { response -> response.product }
                     .doOnSubscribe { showProgress() }
                     .doFinally { hideProgress() }
                     .subscribe(
@@ -110,7 +110,7 @@ class PlanetFragment  : Fragment() {
                     .fetchPlanets("planets/?page=1")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .map { response -> response.results }
+                    .map { response -> response.product }
                     .subscribe(
                         { result -> handleFetchPlanetsSuccess(result) },
                         { throwable -> handleFetchPlanetsError(throwable) }

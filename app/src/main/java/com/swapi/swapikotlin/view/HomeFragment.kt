@@ -173,6 +173,7 @@ class HomeFragment  : Fragment() {
 
     private fun addAndFetchFilms(progressbar: Boolean)
     {
+        //From cache
         filmsManager
             .getFilms()
             .observeOn(AndroidSchedulers.mainThread())
@@ -182,6 +183,7 @@ class HomeFragment  : Fragment() {
             )
             .addTo(disposables)
 
+        //From api
         filmsManager
             .downloadFilms()
             .andThen(filmsManager.getFilms())
