@@ -1,23 +1,23 @@
 package com.swapi.swapikotlin.database.dao
 
 import android.arch.persistence.room.*
-import com.swapi.swapikotlin.database.entity.FilmEntity
+import com.swapi.swapikotlin.database.entity.ProductEntity
 import io.reactivex.Maybe
 
 @Dao
 abstract class FilmDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(entities: List<FilmEntity>)
+    abstract fun insert(entities: List<ProductEntity>)
 
-    @Query("DELETE FROM films")
+    @Query("DELETE FROM products")
     abstract fun removeAll()
 
-    @Query("SELECT * FROM films ORDER BY episode_id ASC")
-    abstract fun getFilms(): Maybe<List<FilmEntity>>
+    @Query("SELECT * FROM products ORDER BY id_product ASC")
+    abstract fun getFilms(): Maybe<List<ProductEntity>>
 
     @Transaction
-    open fun removeAndInsert(entities: List<FilmEntity>) {
+    open fun removeAndInsert(entities: List<ProductEntity>) {
         removeAll()
         insert(entities)
     }

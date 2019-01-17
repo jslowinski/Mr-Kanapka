@@ -5,21 +5,21 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.swapi.swapikotlin.database.dao.FilmDao
-import com.swapi.swapikotlin.database.entity.FilmEntity
+import com.swapi.swapikotlin.database.entity.ProductEntity
 
 
 @Database(
-    version = 2,
+    version = 3,
     exportSchema = false,
     entities = [
-        FilmEntity::class
+        ProductEntity::class
     ]
 )
 abstract class AndroidDatabase : RoomDatabase() {
 
     companion object {
 
-        private const val DB_NAME = "swapi_db"
+        private const val DB_NAME = "mrkanapka_db"
 
         lateinit var database: AndroidDatabase
             private set

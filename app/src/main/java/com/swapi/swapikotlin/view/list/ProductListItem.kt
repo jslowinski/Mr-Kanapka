@@ -1,27 +1,23 @@
 package com.swapi.swapikotlin.view.list
 
-import android.support.design.widget.Snackbar
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.mikepenz.fastadapter.FastAdapter.ViewHolder
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.swapi.swapikotlin.R
-import com.swapi.swapikotlin.api.Cart
-import com.swapi.swapikotlin.api.model.CartDto
-import com.swapi.swapikotlin.api.model.FilmDto
-import com.swapi.swapikotlin.database.entity.FilmEntity
-import com.swapi.swapikotlin.view.list.FilmListItem.FilmListItemViewHolder
+import com.swapi.swapikotlin.database.entity.ProductEntity
+import com.swapi.swapikotlin.view.list.ProductListItem.ProductListItemViewHolder
 import java.util.Objects.hash
 
-class FilmListItem(model: FilmEntity) : ModelAbstractItem<FilmEntity, FilmListItem, FilmListItemViewHolder>(model) {
+class ProductListItem(model: ProductEntity) : ModelAbstractItem<ProductEntity, ProductListItem, ProductListItemViewHolder>(model) {
 
   override fun getType(): Int {
     return R.id.film_type_id
   }
 
-  override fun getViewHolder(v: View): FilmListItemViewHolder {
-    return FilmListItemViewHolder(v)
+  override fun getViewHolder(v: View): ProductListItemViewHolder {
+    return ProductListItemViewHolder(v)
   }
 
   override fun getLayoutRes(): Int {
@@ -32,22 +28,22 @@ class FilmListItem(model: FilmEntity) : ModelAbstractItem<FilmEntity, FilmListIt
     return hash(model).toLong()
   }
 
-  class FilmListItemViewHolder(itemView: View) : ViewHolder<FilmListItem>(itemView) {
+  class ProductListItemViewHolder(itemView: View) : ViewHolder<ProductListItem>(itemView) {
 
     private val titleText: TextView = itemView.findViewById(R.id.title)
     private val directorText: TextView = itemView.findViewById(R.id.director)
     private val producerText: TextView = itemView.findViewById(R.id.producer)
     private val button: Button = itemView.findViewById(R.id.button)
 
-    override fun bindView(item: FilmListItem, payloads: MutableList<Any>) {
+    override fun bindView(item: ProductListItem, payloads: MutableList<Any>) {
 
       // Retrieve model.
       val model = item.model
 
       // Update view.
-      titleText.text = model.title
-      directorText.text = model.director
-      producerText.text = model.producer
+      titleText.text = model.name
+      directorText.text = model.photo_url
+      producerText.text = model.price
 
 //        button.setOnClickListener{
 //        var bool : Boolean = true
@@ -66,7 +62,7 @@ class FilmListItem(model: FilmEntity) : ModelAbstractItem<FilmEntity, FilmListIt
 //      }
     }
 
-    override fun unbindView(item: FilmListItem) {
+    override fun unbindView(item: ProductListItem) {
       titleText.text = null
       directorText.text = null
       producerText.text = null

@@ -1,14 +1,14 @@
 package com.swapi.swapikotlin.manager
 
 import com.swapi.swapikotlin.api.SwapiClient
-import com.swapi.swapikotlin.api.model.FilmDto
+import com.swapi.swapikotlin.api.model.ProductsDto
 import com.swapi.swapikotlin.database.AndroidDatabase
-import com.swapi.swapikotlin.database.entity.FilmEntity
+import com.swapi.swapikotlin.database.entity.ProductEntity
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 
-class FilmsManager {
+class ProductsManager {
     //region API
 
     private val swapiService by lazy {
@@ -31,23 +31,22 @@ class FilmsManager {
         AndroidDatabase.database
     }
 
-    private fun saveFilms(filmDto: List<FilmDto>) =
+    private fun saveFilms(productsDto: List<ProductsDto>) =
         Completable.fromAction {
-            val entities = filmDto.map {
-                FilmEntity(
-                    it.title,
-                    it.episodeId,
-                    it.director,
-                    it.producer,
-                    it.openingCrawl,
-                    it.url
+            val entities = productsDto.map {
+                ProductEntity(
+                    it.name,
+                    it.id_product,
+                    it.id_seller,
+                    it.photo_url,
+                    it.price
                 )
             }
             database.filmDao().removeAndInsert(entities)
         }.subscribeOn(Schedulers.io())
 
 
-    fun getFilms(): Maybe<List<FilmEntity>> =
+    fun getFilms(): Maybe<List<ProductEntity>> =
         database
             .filmDao()
             .getFilms()

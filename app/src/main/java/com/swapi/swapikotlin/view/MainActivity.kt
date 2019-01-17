@@ -2,7 +2,6 @@ package com.swapi.swapikotlin.view
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -12,12 +11,9 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.R.layout
 import com.swapi.swapikotlin.api.SwapiClient
-import com.swapi.swapikotlin.api.model.FilmDto
-import com.swapi.swapikotlin.database.entity.FilmEntity
-import com.swapi.swapikotlin.view.list.FilmListItem
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.swapi.swapikotlin.database.entity.ProductEntity
+import com.swapi.swapikotlin.view.list.ProductListItem
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -72,14 +68,14 @@ class MainActivity : AppCompatActivity() {
     super.onPause()
   }
 
-  private fun handleFetchFilmsSuccess(films: List<FilmEntity>) {
+  private fun handleFetchFilmsSuccess(product: List<ProductEntity>) {
 
     // Log the fact.
     Log.i(TAG, "Successfully fetched films.")
 
     // Convert to list items.
-    val items = films.map {
-      FilmListItem(it)
+    val items = product.map {
+      ProductListItem(it)
     }
 
     // Display result.
@@ -100,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
   //region List
 
-  private val adapter: FastItemAdapter<FilmListItem> = FastItemAdapter()
+  private val adapter: FastItemAdapter<ProductListItem> = FastItemAdapter()
 
   private fun initializeRecyclerView() {
     recyclerView.layoutManager = LinearLayoutManager(this)
@@ -110,17 +106,17 @@ class MainActivity : AppCompatActivity() {
     adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
   }
 
-  private fun onItemClicked(item: FilmListItem): Boolean {
+  private fun onItemClicked(item: ProductListItem): Boolean {
 
     // Retrieve model.
     val film = item.model
 
     // Show crawl.
-    AlertDialog.Builder(this)
-        .setPositiveButton("OK", null)
-        .setTitle(film.title)
-        .setMessage(film.openingCrawl)
-        .show()
+//    AlertDialog.Builder(this)
+//        .setPositiveButton("OK", null)
+//        .setTitle(film.title)
+//        .setMessage(film.openingCrawl)
+//        .show()
 
     // Return true to indicate adapter that event was consumed.
     return true

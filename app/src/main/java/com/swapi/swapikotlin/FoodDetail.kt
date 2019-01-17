@@ -26,7 +26,7 @@ class FoodDetail : AppCompatActivity() {
 
     var message = ""
     var name = ""
-    var url = ""
+    var url = 0
     //val foodDetailBar : AppBarLayout = findViewById(R.id.food_detail_bar)
     //val nestedScrollView : NestedScrollView = findViewById(R.id.nestedScrollView)
 
@@ -47,7 +47,7 @@ class FoodDetail : AppCompatActivity() {
         nestedScrollView.visibility = View.INVISIBLE
         progressBar2.visibility = View.VISIBLE
 
-        url = intent.getStringExtra("Url")
+        url = intent.getIntExtra("intVariableName",0)
         
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -86,7 +86,7 @@ class FoodDetail : AppCompatActivity() {
     fun callDetail(){
 
         val apiService = SwapiClient.createDetail("https://swapi.co/api/films/")
-        val call = apiService.fetchDetail(url)
+        val call = apiService.fetchDetail(url.toString())
         call?.enqueue(object : Callback<DetailDto> {
             override fun onFailure(call: Call<DetailDto>, t: Throwable) {
                 progressBar2.visibility = View.GONE

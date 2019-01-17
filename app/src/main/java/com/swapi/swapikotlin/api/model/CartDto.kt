@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class CartDto(
 
     @SerializedName("url")
-    var url: String,
+    var url: Int,
 
     @SerializedName("title")
     var title: String,

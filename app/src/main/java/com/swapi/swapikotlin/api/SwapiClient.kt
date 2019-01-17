@@ -10,7 +10,7 @@ class SwapiClient {
 
   companion object {
 
-    private const val BASE_URL = "https://swapi.co/api/"
+    private const val BASE_URL = "http://zespol9-server.herokuapp.com/api/products/"
 
     private val retrofit by lazy {
       Retrofit.Builder()

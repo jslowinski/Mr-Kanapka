@@ -3,12 +3,8 @@ package com.swapi.swapikotlin.view
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.provider.AlarmClock.EXTRA_MESSAGE
-import android.support.annotation.NonNull
-import android.support.annotation.Nullable
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -19,19 +15,14 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.swapi.swapikotlin.FoodDetail
 import com.swapi.swapikotlin.R
 import com.swapi.swapikotlin.api.Cart
-import com.swapi.swapikotlin.api.SwapiClient
 import com.swapi.swapikotlin.api.Url
-import com.swapi.swapikotlin.api.model.FilmDto
-import com.swapi.swapikotlin.database.AndroidDatabase
-import com.swapi.swapikotlin.database.entity.FilmEntity
-import com.swapi.swapikotlin.manager.FilmsManager
-import com.swapi.swapikotlin.view.list.FilmListItem
+import com.swapi.swapikotlin.database.entity.ProductEntity
+import com.swapi.swapikotlin.manager.ProductsManager
+import com.swapi.swapikotlin.view.list.ProductListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.*
 import com.mikepenz.fastadapter.FastAdapter
 import android.support.v7.widget.RecyclerView
 import com.mikepenz.fastadapter.listeners.ClickEventHook
@@ -45,7 +36,7 @@ class HomeFragment  : Fragment() {
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
 
-    private val fastItemAdapter: FastItemAdapter<FilmListItem> = FastItemAdapter()
+    private val fastItemAdapter: FastItemAdapter<ProductListItem> = FastItemAdapter()
     //region Tag
 
     private val TAG = HomeFragment::class.java.simpleName
@@ -55,7 +46,7 @@ class HomeFragment  : Fragment() {
     //region API
 
     private val filmsManager by lazy {
-        FilmsManager()
+        ProductsManager()
     }
 
     private val disposables: CompositeDisposable = CompositeDisposable()
@@ -72,13 +63,13 @@ class HomeFragment  : Fragment() {
         super.onPause()
     }
 
-    private fun handleFetchFilmsSuccess(films: List<FilmEntity>) {
+    private fun handleFetchFilmsSuccess(products: List<ProductEntity>) {
 
         // Log the fact.
         Log.i(TAG, "Successfully fetched films.")
         // Convert to list items.
-        val items = films.map {
-            FilmListItem(it)
+        val items = products.map {
+            ProductListItem(it)
         }
 
         // Display result.
@@ -113,11 +104,11 @@ class HomeFragment  : Fragment() {
 
         fastItemAdapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
 
-        fastItemAdapter.withEventHook(object : ClickEventHook<FilmListItem>() {
+        fastItemAdapter.withEventHook(object : ClickEventHook<ProductListItem>() {
             override fun onBindMany(viewHolder: RecyclerView.ViewHolder) =
                 viewHolder.itemView.run { listOf(button) }
 
-            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<FilmListItem>?, item: FilmListItem?) {
+            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<ProductListItem>?, item: ProductListItem?) {
                 if (view != null && item != null) {
                     onListItemClicked(view, item)
                 }
@@ -127,35 +118,35 @@ class HomeFragment  : Fragment() {
 
     }
 
-    private fun onListItemClicked(view: View, item: FilmListItem){
+    private fun onListItemClicked(view: View, item: ProductListItem){
         var bool : Boolean = true
         val model = item.model
         for (item in Cart.cartList)
         {
-          if(item.title == model.title) {
+          if(item.title == model.name) {
             item.quantity++
             bool = false
           }
         }
         if(bool) {
-          val item = CartDto(model.url, model.title, 1)
+          val item = CartDto(model.id_product, model.name, 1)
           Cart.setInfoItem(item)
         }
         Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
 
     }
 
-    private fun onItemClicked(item: FilmListItem): Boolean {
+    private fun onItemClicked(item: ProductListItem): Boolean {
 
         // Retrieve model.
-        val film = item.model
+        val product = item.model
 
         val foodDetail = Intent(context, FoodDetail::class.java)
-        foodDetail.putExtra("Url", film.url)
+        foodDetail.putExtra("intVariableName", product.id_product)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
-        Url.Detail_id = film.url
-        println(Url.Detail_id)
+        Url.Detail_id = product.id_product
+
 
        return true
     }
