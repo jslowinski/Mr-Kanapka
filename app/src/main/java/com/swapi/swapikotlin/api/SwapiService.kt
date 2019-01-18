@@ -16,6 +16,6 @@ interface SwapiService {
   fun fetchPlanets(@Url user_id: String): Single<Response<List<PlanetDto>>>
 
   @GET
-  fun fetchDetail(@Url url: String): Call<ResponseDetail<DetailDto>>
+  fun fetchDetail(@Url url: String): Call<ResponseDetail<List<DetailDto>>>
 
 }

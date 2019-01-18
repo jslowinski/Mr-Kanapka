@@ -10,5 +10,8 @@ class DetailDto {
     @SerializedName("name")
     var name: String? = null
 
+    @SerializedName("photo_url")
+    var photo_url: String? = null
+
 }
 

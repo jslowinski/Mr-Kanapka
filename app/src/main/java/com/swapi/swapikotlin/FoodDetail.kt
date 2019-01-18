@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.SwapiClient
@@ -17,12 +19,16 @@ import kotlinx.android.synthetic.main.activity_food_detail.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.adapter.rxjava2.Result.response
+
+
 
 
 class FoodDetail : AppCompatActivity() {
 
     var message = ""
     var name = ""
+    var photo_url = ""
     var url = 0
     //val foodDetailBar : AppBarLayout = findViewById(R.id.food_detail_bar)
     //val nestedScrollView : NestedScrollView = findViewById(R.id.nestedScrollView)
@@ -83,18 +89,19 @@ class FoodDetail : AppCompatActivity() {
     fun callDetail(){
 
         val apiService = SwapiClient.createDetail("http://zespol9-server.herokuapp.com/api/products/4/")
-        val call = apiService.fetchDetail("3")
-        call.enqueue(object : Callback<ResponseDetail<DetailDto>> {
-            override fun onFailure(call: Call<ResponseDetail<DetailDto>>, t: Throwable) {
+        val call = apiService.fetchDetail(url.toString())
+        call.enqueue(object : Callback<ResponseDetail<List<DetailDto>>> {
+            override fun onFailure(call: Call<ResponseDetail<List<DetailDto>>>, t: Throwable) {
                 progressBar2.visibility = View.GONE
                 Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
             }
 
-            override fun onResponse(call: Call<ResponseDetail<DetailDto>>, response: Response<ResponseDetail<DetailDto>>) {
+            override fun onResponse(call: Call<ResponseDetail<List<DetailDto>>>, response: Response<ResponseDetail<List<DetailDto>>>) {
                 val body = response.body()
-                val title = body?.product?.name
+                val title = body?.product?.get(0)?.name
                 name = title.toString()
-                message = body?.product?.description.toString()
+                message = body?.product?.get(0)?.description.toString()
+                photo_url = body?.product?.get(0)?.photo_url.toString()
 
                 val titleText: TextView = findViewById(R.id.food_name)
                 titleText.text = name
@@ -102,8 +109,12 @@ class FoodDetail : AppCompatActivity() {
                 findViewById<TextView>(R.id.food_description).apply {
                     text = message
                 }
+
+                val imageView: ImageView = findViewById(R.id.img_food)
+                Glide.with(this@FoodDetail).load(photo_url).into(imageView)
                 food_detail_bar.visibility = View.VISIBLE
                 nestedScrollView.visibility = View.VISIBLE
+
             }
 
         })
