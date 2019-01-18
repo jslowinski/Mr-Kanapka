@@ -20,7 +20,11 @@ data class ProductEntity(
     var photo_url: String,
 
     @ColumnInfo(name = "price")
-    var price: String
+    var price: String,
+
+    @ColumnInfo(name = "description")
+    var description: String
+
 
 ) {
 

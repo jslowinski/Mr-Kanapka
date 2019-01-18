@@ -39,7 +39,8 @@ class ProductsManager {
                     it.id_product,
                     it.id_seller,
                     it.photo_url,
-                    it.price
+                    it.price,
+                    it.description
                 )
             }
             database.filmDao().removeAndInsert(entities)

@@ -2,19 +2,16 @@ package com.swapi.swapikotlin
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
-import android.support.v4.widget.NestedScrollView
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.swapi.swapikotlin.api.Cart
 import com.swapi.swapikotlin.api.SwapiClient
-import com.swapi.swapikotlin.api.Url
 import com.swapi.swapikotlin.api.model.CartDto
 import com.swapi.swapikotlin.api.model.DetailDto
+import com.swapi.swapikotlin.api.model.ResponseDetail
 
 import kotlinx.android.synthetic.main.activity_food_detail.*
 import retrofit2.Call
@@ -51,7 +48,7 @@ class FoodDetail : AppCompatActivity() {
         
         val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar!!.title = "Szczegóły"
+            actionBar.title = "Szczegóły"
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
         callDetail()
@@ -85,20 +82,19 @@ class FoodDetail : AppCompatActivity() {
 
     fun callDetail(){
 
-        val apiService = SwapiClient.createDetail("https://swapi.co/api/films/")
-        val call = apiService.fetchDetail(url.toString())
-        call?.enqueue(object : Callback<DetailDto> {
-            override fun onFailure(call: Call<DetailDto>, t: Throwable) {
+        val apiService = SwapiClient.createDetail("http://zespol9-server.herokuapp.com/api/products/4/")
+        val call = apiService.fetchDetail("3")
+        call.enqueue(object : Callback<ResponseDetail<DetailDto>> {
+            override fun onFailure(call: Call<ResponseDetail<DetailDto>>, t: Throwable) {
                 progressBar2.visibility = View.GONE
                 Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
             }
 
-            override fun onResponse(call: Call<DetailDto>, response: Response<DetailDto>) {
+            override fun onResponse(call: Call<ResponseDetail<DetailDto>>, response: Response<ResponseDetail<DetailDto>>) {
                 val body = response.body()
-
-                val title = body?.title
+                val title = body?.product?.name
                 name = title.toString()
-                message = body?.openingCrawl.toString()
+                message = body?.product?.description.toString()
 
                 val titleText: TextView = findViewById(R.id.food_name)
                 titleText.text = name

@@ -2,7 +2,9 @@ package com.swapi.swapikotlin.view.list
 
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter.ViewHolder
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.swapi.swapikotlin.R
@@ -33,6 +35,7 @@ class ProductListItem(model: ProductEntity) : ModelAbstractItem<ProductEntity, P
     private val titleText: TextView = itemView.findViewById(R.id.title)
     private val directorText: TextView = itemView.findViewById(R.id.director)
     private val producerText: TextView = itemView.findViewById(R.id.producer)
+    private val imageView: ImageView = itemView.findViewById(R.id.image)
     private val button: Button = itemView.findViewById(R.id.button)
 
     override fun bindView(item: ProductListItem, payloads: MutableList<Any>) {
@@ -42,9 +45,9 @@ class ProductListItem(model: ProductEntity) : ModelAbstractItem<ProductEntity, P
 
       // Update view.
       titleText.text = model.name
-      directorText.text = model.photo_url
+      directorText.text = model.description
       producerText.text = model.price
-
+      Glide.with(itemView).load(model.photo_url).into(imageView)
 //        button.setOnClickListener{
 //        var bool : Boolean = true
 //        for (item in Cart.cartList)

@@ -17,6 +17,9 @@ data class ProductsDto(
     var photo_url: String,
 
     @SerializedName("price")
-    var price: String
+    var price: String,
+
+    @SerializedName("description")
+    var description: String
 
 )

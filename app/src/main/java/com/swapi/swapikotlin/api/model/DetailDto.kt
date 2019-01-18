@@ -4,10 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 class DetailDto {
 
-    @SerializedName("title")
-    var title: String? = null
+    @SerializedName("description")
+    var description: String? = null
 
-    @SerializedName("opening_crawl")
-    var openingCrawl: String? = null
+    @SerializedName("name")
+    var name: String? = null
+
 }
 

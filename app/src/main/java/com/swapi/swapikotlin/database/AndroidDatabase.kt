@@ -9,7 +9,7 @@ import com.swapi.swapikotlin.database.entity.ProductEntity
 
 
 @Database(
-    version = 3,
+    version = 4,
     exportSchema = false,
     entities = [
         ProductEntity::class
