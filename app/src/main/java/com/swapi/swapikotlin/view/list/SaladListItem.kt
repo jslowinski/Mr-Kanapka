@@ -23,7 +23,7 @@ class SaladListItem(model: SaladEntity) : ModelAbstractItem<SaladEntity, SaladLi
     }
 
     override fun getLayoutRes(): Int {
-        return R.layout.item_planets
+        return R.layout.item_film
     }
 
     override fun getIdentifier(): Long {
