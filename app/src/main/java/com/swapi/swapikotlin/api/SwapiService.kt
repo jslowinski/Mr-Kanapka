@@ -9,13 +9,13 @@ import retrofit2.http.Url
 
 interface SwapiService {
 
-  @GET("4")
+  @GET("Kanapka")
   fun fetchFilms(): Single<Response<List<ProductsDto>>>
 
   @GET
   fun fetchPlanets(@Url user_id: String): Single<Response<List<PlanetDto>>>
 
   @GET
-  fun fetchDetail(@Url url: String): Call<ResponseDetail<List<DetailDto>>>
+  fun fetchDetail(@Url url: String): Call<ResponseDetail>
 
 }

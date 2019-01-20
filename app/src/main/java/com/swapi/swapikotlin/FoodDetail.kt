@@ -16,6 +16,7 @@ import com.swapi.swapikotlin.api.model.DetailDto
 import com.swapi.swapikotlin.api.model.ResponseDetail
 
 import kotlinx.android.synthetic.main.activity_food_detail.*
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +31,7 @@ class FoodDetail : AppCompatActivity() {
     var name = ""
     var photo_url = ""
     var url = 0
+    var price = ""
     //val foodDetailBar : AppBarLayout = findViewById(R.id.food_detail_bar)
     //val nestedScrollView : NestedScrollView = findViewById(R.id.nestedScrollView)
 
@@ -88,23 +90,41 @@ class FoodDetail : AppCompatActivity() {
 
     fun callDetail(){
 
-        val apiService = SwapiClient.createDetail("http://zespol9-server.herokuapp.com/api/products/4/")
+        val apiService = SwapiClient.createDetail("http://zespol9-server.herokuapp.com/api/details/")
         val call = apiService.fetchDetail(url.toString())
-        call.enqueue(object : Callback<ResponseDetail<List<DetailDto>>> {
-            override fun onFailure(call: Call<ResponseDetail<List<DetailDto>>>, t: Throwable) {
+        call.enqueue(object : Callback<ResponseDetail> {
+            override fun onFailure(call: Call<ResponseDetail>, t: Throwable) {
                 progressBar2.visibility = View.GONE
                 Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
             }
 
-            override fun onResponse(call: Call<ResponseDetail<List<DetailDto>>>, response: Response<ResponseDetail<List<DetailDto>>>) {
+            override fun onResponse(call: Call<ResponseDetail>, response: Response<ResponseDetail>) {
                 val body = response.body()
-                val title = body?.product?.get(0)?.name
+                val title = body?.name
+                val test = body?.component // Lista składników
+                val description = body?.description
+                val priceS = body?.price
+                var range = test?.size
+
+                var skladnik = ""
+                //Odwoływanie się do składników
+                for(i  in 0 until range!!){
+                    skladnik += "- " + test!!.get(i).name.toString()
+                    if (i == range-1)
+                    {}
+                    else skladnik += "\n"
+                }
+
+                price = priceS.toString()
                 name = title.toString()
-                message = body?.product?.get(0)?.description.toString()
-                photo_url = body?.product?.get(0)?.photo_url.toString()
+                message = description + "\n\n" + skladnik
+                photo_url = body?.photo_url.toString()
 
                 val titleText: TextView = findViewById(R.id.food_name)
                 titleText.text = name
+
+                val priceText: TextView = findViewById(R.id.food_price)
+                priceText.text = price
 
                 findViewById<TextView>(R.id.food_description).apply {
                     text = message
