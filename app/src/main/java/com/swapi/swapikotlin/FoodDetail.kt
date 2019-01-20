@@ -73,7 +73,7 @@ class FoodDetail : AppCompatActivity() {
                 }
             }
             if(bool) {
-                val item = CartDto(url, name, numberButton.number.toInt())
+                val item = CartDto(url, name, numberButton.number.toInt(), photo_url)
                 Cart.setInfoItem(item)
             }
             Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()

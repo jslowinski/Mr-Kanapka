@@ -129,7 +129,7 @@ class HomeFragment  : Fragment() {
           }
         }
         if(bool) {
-          val item = CartDto(model.id_product, model.name, 1)
+          val item = CartDto(model.id_product, model.name, 1, model.photo_url)
           Cart.setInfoItem(item)
         }
         Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()

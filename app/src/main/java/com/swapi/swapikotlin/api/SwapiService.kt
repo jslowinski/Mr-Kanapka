@@ -12,6 +12,12 @@ interface SwapiService {
   @GET("Kanapka")
   fun fetchFilms(): Single<Response<List<ProductsDto>>>
 
+  @GET("Salatka")
+  fun fetchSalads(): Single<Response<List<ProductsDto>>>
+
+  @GET("Sok")
+  fun fetchJuice(): Single<Response<List<ProductsDto>>>
+
   @GET
   fun fetchPlanets(@Url user_id: String): Single<Response<List<PlanetDto>>>
 

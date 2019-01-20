@@ -58,7 +58,7 @@ class PlanetListItem(model: PlanetDto) : ModelAbstractItem<PlanetDto, PlanetList
                 }
             }
             if(bool) {
-                val item = CartDto(model.url, model.name, 1)
+                val item = CartDto(model.url, model.name, 1, model.url.toString())
                 Cart.setInfoItem(item)
             }
             Snackbar.make(itemView, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()

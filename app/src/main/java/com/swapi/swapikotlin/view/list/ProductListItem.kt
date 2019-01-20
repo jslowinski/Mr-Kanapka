@@ -48,21 +48,7 @@ class ProductListItem(model: ProductEntity) : ModelAbstractItem<ProductEntity, P
       directorText.text = model.description
       producerText.text = model.price + " zł"
       Glide.with(itemView).load(model.photo_url).into(imageView)
-//        button.setOnClickListener{
-//        var bool : Boolean = true
-//        for (item in Cart.cartList)
-//        {
-//          if(item.title == model.title) {
-//            item.quantity++
-//            bool = false
-//          }
-//        }
-//        if(bool) {
-//          val item = CartDto(model.url, model.title, 1)
-//          Cart.setInfoItem(item)
-//        }
-//        Snackbar.make(itemView, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
-//      }
+
     }
 
     override fun unbindView(item: ProductListItem) {

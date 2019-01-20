@@ -11,5 +11,8 @@ data class CartDto(
     var title: String,
 
     @SerializedName("quantity")
-    var quantity: Int
+    var quantity: Int,
+
+    @SerializedName("photo_url")
+    var photo_url: String
 )
