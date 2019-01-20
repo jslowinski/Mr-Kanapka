@@ -46,7 +46,7 @@ class ProductListItem(model: ProductEntity) : ModelAbstractItem<ProductEntity, P
       // Update view.
       titleText.text = model.name
       directorText.text = model.description
-      producerText.text = model.price
+      producerText.text = model.price + " zł"
       Glide.with(itemView).load(model.photo_url).into(imageView)
 //        button.setOnClickListener{
 //        var bool : Boolean = true

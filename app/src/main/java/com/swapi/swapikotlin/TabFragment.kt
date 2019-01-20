@@ -44,9 +44,9 @@ class TabFragment : Fragment(){
 
         override fun getPageTitle(position: Int): CharSequence? {
             when(position){
-                0 -> return "Filmy"
-                1 -> return "Planety"
-                2 -> return "Third"
+                0 -> return "Kanapki"
+                1 -> return "Sałatki"
+                2 -> return "Soki"
             }
             return null
         }
