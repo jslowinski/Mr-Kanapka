@@ -108,32 +108,41 @@ class FoodDetail : AppCompatActivity() {
 
                 var skladnik = ""
                 //Odwoływanie się do składników
-                for(i  in 0 until range!!){
-                    skladnik += "- " + test!!.get(i).name.toString()
-                    if (i == range-1)
-                    {}
-                    else skladnik += "\n"
+                if (range != null && title != null ) {
+                    for(i  in 0 until range!!){
+                        skladnik += "- " + test!!.get(i).name.toString()
+                        if (i == range-1)
+                        {}
+                        else skladnik += "\n"
+                    }
+                    price = priceS.toString()
+                    name = title.toString()
+                    message = description + "\n\n" + skladnik
+                    photo_url = body?.photo_url.toString()
+
+                    val titleText: TextView = findViewById(R.id.food_name)
+                    titleText.text = name
+
+                    val priceText: TextView = findViewById(R.id.food_price)
+                    priceText.text = price
+
+                    findViewById<TextView>(R.id.food_description).apply {
+                        text = message
+                    }
+
+                    val imageView: ImageView = findViewById(R.id.img_food)
+                    Glide.with(this@FoodDetail).load(photo_url).into(imageView)
+                    food_detail_bar.visibility = View.VISIBLE
+                    nestedScrollView.visibility = View.VISIBLE
+                    }
+                else {
+                    progressBar2.visibility = View.GONE
+                    Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
+                    return
                 }
 
-                price = priceS.toString()
-                name = title.toString()
-                message = description + "\n\n" + skladnik
-                photo_url = body?.photo_url.toString()
 
-                val titleText: TextView = findViewById(R.id.food_name)
-                titleText.text = name
 
-                val priceText: TextView = findViewById(R.id.food_price)
-                priceText.text = price
-
-                findViewById<TextView>(R.id.food_description).apply {
-                    text = message
-                }
-
-                val imageView: ImageView = findViewById(R.id.img_food)
-                Glide.with(this@FoodDetail).load(photo_url).into(imageView)
-                food_detail_bar.visibility = View.VISIBLE
-                nestedScrollView.visibility = View.VISIBLE
 
             }
 
