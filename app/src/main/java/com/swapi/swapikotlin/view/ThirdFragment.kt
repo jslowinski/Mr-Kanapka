@@ -26,7 +26,7 @@ import com.swapi.swapikotlin.view.list.JuiceListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import kotlinx.android.synthetic.main.fragment_planet.*
+import kotlinx.android.synthetic.main.fragment_third.*
 import kotlinx.android.synthetic.main.item_film.view.*
 
 
@@ -73,10 +73,16 @@ class ThirdFragment : Fragment(){
 
         // Display result.
         fastItemAdapter.setNewList(items)
-        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
         swipe_refresh_layout.isRefreshing = false
-//        textView5.visibility = View.GONE
-//        imageView4.visibility = View.GONE
+        if(items.isEmpty()) {
+            textView5.visibility = View.VISIBLE
+            imageView4.visibility = View.VISIBLE
+        }
+        else {
+            Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+            textView5.visibility = View.GONE
+            imageView4.visibility = View.GONE
+        }
     }
 
     private fun handleFetchJuicesError(throwable: Throwable) {
@@ -87,8 +93,8 @@ class ThirdFragment : Fragment(){
 
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
         swipe_refresh_layout.isRefreshing = false
-//        textView5.visibility = View.VISIBLE
-//        imageView4.visibility = View.VISIBLE
+        textView5.visibility = View.VISIBLE
+        imageView4.visibility = View.VISIBLE
     }
 
     //endregion

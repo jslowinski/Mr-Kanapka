@@ -42,7 +42,7 @@ class HomeFragment  : Fragment() {
     private val TAG = HomeFragment::class.java.simpleName
 
     //endregion
-
+    private var cacheSucces : Boolean = false
     //region API
 
     private val sandwichesManager by lazy {
@@ -74,13 +74,73 @@ class HomeFragment  : Fragment() {
 
         // Display result.
         fastItemAdapter.setNewList(items)
-        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
-        swipe_refresh_layout.isRefreshing = false
-        textView5.visibility = View.GONE
-        imageView4.visibility = View.GONE
+        if(items.isEmpty()) {
+            textView6.visibility = View.VISIBLE
+            imageView5.visibility = View.VISIBLE
+        }
+        else {
+            Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+            swipe_refresh_layout.isRefreshing = false
+            textView5.visibility = View.GONE
+            imageView4.visibility = View.GONE
+
+        }
+
+    }
+
+    private fun handleFetchFilmsCacheSuccess(products: List<ProductEntity>) {
+
+        // Log the fact.
+        Log.i(TAG, "Successfully fetched films.")
+        // Convert to list items.
+        val items = products.map {
+            ProductListItem(it)
+        }
+        // Display result.
+        fastItemAdapter.setNewList(items)
+
+
+        if(items.isEmpty()) {
+            textView6.visibility = View.VISIBLE
+            imageView5.visibility = View.VISIBLE
+        }
+        else {
+            //Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+            swipe_refresh_layout.isRefreshing = false
+            textView5.visibility = View.GONE
+            imageView4.visibility = View.GONE
+            cacheSucces = true
+        }
+
     }
 
     private fun handleFetchFilmsError(throwable: Throwable) {
+
+        // Log an error.
+        Log.e(TAG, "An error occurred while fetching films.")
+        Log.e(TAG, throwable.localizedMessage)
+        swipe_refresh_layout.isRefreshing = false
+        //zaslepka internet z pobraniem z bazy
+        if(cacheSucces) {
+            Snackbar.make(root1, "Brak połączenia z internetem, tryb offline", Snackbar.LENGTH_SHORT).show()
+        }
+        else {
+
+            textView5.visibility = View.VISIBLE
+            imageView4.visibility = View.VISIBLE
+            if(textView6.visibility == View.VISIBLE
+                && imageView5.visibility == View.VISIBLE)
+            {
+                Log.i("handleFetchFilmsError: if true: ", "no weszlo")
+                textView6.visibility = View.GONE
+                imageView5.visibility = View.GONE
+            }
+        }
+
+
+    }
+
+    private fun handleFetchFilmsCacheError(throwable: Throwable) {
 
         // Log an error.
         Log.e(TAG, "An error occurred while fetching films.")
@@ -90,6 +150,7 @@ class HomeFragment  : Fragment() {
         swipe_refresh_layout.isRefreshing = false
         textView5.visibility = View.VISIBLE
         imageView4.visibility = View.VISIBLE
+        cacheSucces = false
     }
 
     //endregion
@@ -178,8 +239,8 @@ class HomeFragment  : Fragment() {
             .getFilms()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                this::handleFetchFilmsSuccess,
-                this::handleFetchFilmsError
+                this::handleFetchFilmsCacheSuccess,
+                this::handleFetchFilmsCacheError
             )
             .addTo(disposables)
 

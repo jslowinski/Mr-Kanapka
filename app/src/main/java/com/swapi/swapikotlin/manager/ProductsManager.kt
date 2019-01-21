@@ -35,9 +35,9 @@ class ProductsManager {
 
     fun downloadJuices(): Completable =
         swapiService
-            .fetchSalads()
+            .fetchJuice()
             .flatMapCompletable {
-                saveSalads(it.product)
+                saveJuices(it.product)
             }
             .subscribeOn(Schedulers.io())
 
