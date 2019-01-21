@@ -42,7 +42,7 @@ class ThirdFragment : Fragment(){
     private val TAG = PlanetFragment::class.java.simpleName
 
     //endregion
-
+    private var cacheSucces : Boolean = false
     //region API
 
     private val juicesManager by lazy {
@@ -62,6 +62,42 @@ class ThirdFragment : Fragment(){
         super.onPause()
     }
 
+//    private fun handleFetchJuicesSuccess(products: List<JuiceEntity>) {
+//
+//        // Log the fact.
+//        Log.i(TAG, "Successfully fetched films.")
+//        // Convert to list items.
+//        val items = products.map {
+//            JuiceListItem(it)
+//        }
+//
+//        // Display result.
+//        fastItemAdapter.setNewList(items)
+//        swipe_refresh_layout.isRefreshing = false
+//        if(items.isEmpty()) {
+//            textView5.visibility = View.VISIBLE
+//            imageView4.visibility = View.VISIBLE
+//        }
+//        else {
+//            Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+//            textView5.visibility = View.GONE
+//            imageView4.visibility = View.GONE
+//        }
+//    }
+//
+//    private fun handleFetchJuicesError(throwable: Throwable) {
+//
+//        // Log an error.
+//        Log.e(TAG, "An error occurred while fetching films.")
+//        Log.e(TAG, throwable.localizedMessage)
+//
+//        Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
+//        swipe_refresh_layout.isRefreshing = false
+//        textView5.visibility = View.VISIBLE
+//        imageView4.visibility = View.VISIBLE
+//    }
+
+
     private fun handleFetchJuicesSuccess(products: List<JuiceEntity>) {
 
         // Log the fact.
@@ -73,19 +109,73 @@ class ThirdFragment : Fragment(){
 
         // Display result.
         fastItemAdapter.setNewList(items)
-        swipe_refresh_layout.isRefreshing = false
         if(items.isEmpty()) {
-            textView5.visibility = View.VISIBLE
-            imageView4.visibility = View.VISIBLE
+            textView6.visibility = View.VISIBLE
+            imageView5.visibility = View.VISIBLE
         }
         else {
             Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+            swipe_refresh_layout.isRefreshing = false
             textView5.visibility = View.GONE
             imageView4.visibility = View.GONE
+
         }
+
+    }
+
+    private fun handleFetchJuicesCacheSuccess(products: List<JuiceEntity>) {
+
+        // Log the fact.
+        Log.i(TAG, "Successfully fetched films.")
+        // Convert to list items.
+        val items = products.map {
+            JuiceListItem(it)
+        }
+        // Display result.
+        fastItemAdapter.setNewList(items)
+
+
+        if(items.isEmpty()) {
+            textView6.visibility = View.VISIBLE
+            imageView5.visibility = View.VISIBLE
+        }
+        else {
+            //Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
+            swipe_refresh_layout.isRefreshing = false
+            textView5.visibility = View.GONE
+            imageView4.visibility = View.GONE
+            cacheSucces = true
+        }
+
     }
 
     private fun handleFetchJuicesError(throwable: Throwable) {
+
+        // Log an error.
+        Log.e(TAG, "An error occurred while fetching films.")
+        Log.e(TAG, throwable.localizedMessage)
+        swipe_refresh_layout.isRefreshing = false
+        //zaslepka internet z pobraniem z bazy
+        if(cacheSucces) {
+            Snackbar.make(root1, "Brak połączenia z internetem, tryb offline", Snackbar.LENGTH_SHORT).show()
+        }
+        else {
+
+            textView5.visibility = View.VISIBLE
+            imageView4.visibility = View.VISIBLE
+            if(textView6.visibility == View.VISIBLE
+                && imageView5.visibility == View.VISIBLE)
+            {
+
+                textView6.visibility = View.GONE
+                imageView5.visibility = View.GONE
+            }
+        }
+
+
+    }
+
+    private fun handleFetchJuicesCacheError(throwable: Throwable) {
 
         // Log an error.
         Log.e(TAG, "An error occurred while fetching films.")
@@ -95,8 +185,8 @@ class ThirdFragment : Fragment(){
         swipe_refresh_layout.isRefreshing = false
         textView5.visibility = View.VISIBLE
         imageView4.visibility = View.VISIBLE
+        cacheSucces = false
     }
-
     //endregion
 
     private fun initializeRecyclerView() {
@@ -161,11 +251,11 @@ class ThirdFragment : Fragment(){
     //region Progress Bar
 
     private fun showProgress() {
-        progressBar1.visibility = View.VISIBLE
+        swipe_refresh_layout.isRefreshing = true
     }
 
     private fun hideProgress() {
-        progressBar1.visibility = View.GONE
+        swipe_refresh_layout.isRefreshing = false
     }
 
 

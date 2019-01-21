@@ -131,7 +131,7 @@ class HomeFragment  : Fragment() {
             if(textView6.visibility == View.VISIBLE
                 && imageView5.visibility == View.VISIBLE)
             {
-                Log.i("handleFetchFilmsError: if true: ", "no weszlo")
+
                 textView6.visibility = View.GONE
                 imageView5.visibility = View.GONE
             }
@@ -217,11 +217,11 @@ class HomeFragment  : Fragment() {
     //region Progress Bar
 
     private fun showProgress() {
-        progressBar1.visibility = View.VISIBLE
+        swipe_refresh_layout.isRefreshing = true
     }
 
     private fun hideProgress() {
-        progressBar1.visibility = View.GONE
+        swipe_refresh_layout.isRefreshing = false
     }
 
 

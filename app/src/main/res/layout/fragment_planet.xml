@@ -7,14 +7,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
   <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:id="@+id/root1"
-    android:layout_height="match_parent"
-    tools:context=".view.PlanetFragment">
-
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:app="http://schemas.android.com/apk/res-auto"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:layout_width="match_parent"
+          android:id="@+id/root1"
+          android:layout_height="match_parent"
+          tools:context=".view.PlanetFragment"
+          android:background="@color/colorBackgroudView">
+    <TextView
+            android:text="Sprawdź swoje połączenie z internetem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" android:visibility="gone"
+            android:layout_marginTop="8dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/no_internet"
+            android:id="@+id/imageView4" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recyclerView" android:visibility="gone"/>
+    <TextView
+            android:text="Brak produktów do wyświetlenia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" android:visibility="gone"
+            android:layout_marginTop="8dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/no_products"
+            android:id="@+id/imageView5" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recyclerView" android:visibility="gone"/>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -22,7 +52,7 @@
             android:clipToPadding="false"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            android:background="@color/colorBackgroudView"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,16 +61,6 @@
             app:layout_constraintVertical_bias="0.0" tools:itemCount="9"
     >
     </android.support.v7.widget.RecyclerView>
-
-    <ProgressBar
-      android:id="@+id/progressBar1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:visibility="gone"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/recyclerView"
-      app:layout_constraintTop_toTopOf="parent"/>
 
   </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
