@@ -45,7 +45,7 @@ class HomeFragment  : Fragment() {
 
     //region API
 
-    private val filmsManager by lazy {
+    private val sandwichesManager by lazy {
         ProductsManager()
     }
 
@@ -174,7 +174,7 @@ class HomeFragment  : Fragment() {
     private fun addAndFetchFilms(progressbar: Boolean)
     {
         //From cache
-        filmsManager
+        sandwichesManager
             .getFilms()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -184,9 +184,9 @@ class HomeFragment  : Fragment() {
             .addTo(disposables)
 
         //From api
-        filmsManager
+        sandwichesManager
             .downloadFilms()
-            .andThen(filmsManager.getFilms())
+            .andThen(sandwichesManager.getFilms())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress() }
             .doFinally { hideProgress() }

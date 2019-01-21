@@ -3,6 +3,7 @@ package com.swapi.swapikotlin.manager
 import com.swapi.swapikotlin.api.SwapiClient
 import com.swapi.swapikotlin.api.model.ProductsDto
 import com.swapi.swapikotlin.database.AndroidDatabase
+import com.swapi.swapikotlin.database.entity.JuiceEntity
 import com.swapi.swapikotlin.database.entity.ProductEntity
 import com.swapi.swapikotlin.database.entity.SaladEntity
 import io.reactivex.Completable
@@ -25,6 +26,14 @@ class ProductsManager {
             .subscribeOn(Schedulers.io())
 
     fun downloadSalads(): Completable =
+        swapiService
+            .fetchSalads()
+            .flatMapCompletable {
+                saveSalads(it.product)
+            }
+            .subscribeOn(Schedulers.io())
+
+    fun downloadJuices(): Completable =
         swapiService
             .fetchSalads()
             .flatMapCompletable {
@@ -70,6 +79,21 @@ class ProductsManager {
             database.saladDao().removeAndInsert(entities)
         }.subscribeOn(Schedulers.io())
 
+    private fun saveJuices(productsDto: List<ProductsDto>) =
+        Completable.fromAction {
+            val entities = productsDto.map {
+                JuiceEntity(
+                    it.name,
+                    it.id_product,
+                    it.id_seller,
+                    it.photo_url,
+                    it.price,
+                    it.description
+                )
+            }
+            database.juiceDao().removeAndInsert(entities)
+        }.subscribeOn(Schedulers.io())
+
 
     fun getFilms(): Maybe<List<ProductEntity>> =
         database
@@ -81,5 +105,11 @@ class ProductsManager {
         database
             .saladDao()
             .getSalads()
+            .subscribeOn(Schedulers.io())
+
+    fun getJuices(): Maybe<List<JuiceEntity>> =
+        database
+            .juiceDao()
+            .getJuices()
             .subscribeOn(Schedulers.io())
 }

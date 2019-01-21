@@ -46,7 +46,7 @@ class PlanetFragment  : Fragment() {
 
     //region API
 
-    private val filmsManager by lazy {
+    private val saladManager by lazy {
         ProductsManager()
     }
 
@@ -171,10 +171,10 @@ class PlanetFragment  : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    private fun addAndFetchFilms(progressbar: Boolean)
+    private fun addAndFetchSalads(progressbar: Boolean)
     {
         //From cache
-        filmsManager
+        saladManager
             .getSalads()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -184,9 +184,9 @@ class PlanetFragment  : Fragment() {
             .addTo(disposables)
 
         //From api
-        filmsManager
+        saladManager
             .downloadSalads()
-            .andThen(filmsManager.getSalads())
+            .andThen(saladManager.getSalads())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress() }
             .doFinally { hideProgress() }
@@ -208,7 +208,7 @@ class PlanetFragment  : Fragment() {
         swipe_refresh_layout.setOnRefreshListener {
             // Initialize a new Runnable
             mRunnable = Runnable {
-                addAndFetchFilms(false)
+                addAndFetchSalads(false)
                 // Hide swipe to refresh icon animation
                 //swipe_refresh_layout.isRefreshing = false
                 //chowane jest w handleFetchSucces/false
@@ -217,7 +217,7 @@ class PlanetFragment  : Fragment() {
             mHandler.post(mRunnable)
         }
         if(savedInstanceState == null)
-            addAndFetchFilms(true)
+            addAndFetchSalads(true)
     }
 
 }
