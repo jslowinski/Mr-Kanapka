@@ -1,10 +1,6 @@
-# SwapiKotlin
+# Mr Kanapka
 
-SwapiKotlin is a showcase project that consumes [SWAPI](https://swapi.co/) resources.
-
-  - Fetches films.
-  - Displays as list.
-  - Shows opening crawl when clicked.
+Tutaj kiedyś będzie opis (może)
 
 # Tools
 
