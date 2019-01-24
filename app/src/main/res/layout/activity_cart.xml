@@ -7,7 +7,7 @@
         android:id="@+id/root1"
         android:layout_height="match_parent"
         android:background="@color/colorBackgroudView"
-        tools:context=".view.HomeFragment">
+        tools:context=".view.SandwichFragment">
     <TextView
             android:text="Twój koszyk jest pusty"
             android:layout_width="wrap_content"

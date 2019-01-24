@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <item name="film_type_id" type="id"/>
-  <item name="planet_type_id" type="id"/>
+  <item name="sandwich_type_id" type="id"/>
+  <item name="salad_type_id" type="id"/>
   <item name="cart_type_id" type="id"/>
+  <item name="juice_type_id" type="id"/>
 </resources>
