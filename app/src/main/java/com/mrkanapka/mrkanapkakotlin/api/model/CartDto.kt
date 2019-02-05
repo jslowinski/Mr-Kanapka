@@ -10,8 +10,14 @@ data class CartDto(
     @SerializedName("title")
     var title: String,
 
+    @SerializedName("price")
+    var price: String,
+
     @SerializedName("quantity")
     var quantity: Int,
+
+    @SerializedName("id_product")
+    var id_product: Int,
 
     @SerializedName("photo_url")
     var photo_url: String

@@ -62,42 +62,6 @@ class JuiceFragment : Fragment(){
         super.onPause()
     }
 
-//    private fun handleFetchJuicesSuccess(products: List<JuiceEntity>) {
-//
-//        // Log the fact.
-//        Log.i(TAG, "Successfully fetched films.")
-//        // Convert to list items.
-//        val items = products.map {
-//            JuiceListItem(it)
-//        }
-//
-//        // Display result.
-//        fastItemAdapter.setNewList(items)
-//        swipe_refresh_layout.isRefreshing = false
-//        if(items.isEmpty()) {
-//            textView5.visibility = View.VISIBLE
-//            imageView4.visibility = View.VISIBLE
-//        }
-//        else {
-//            Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
-//            textView5.visibility = View.GONE
-//            imageView4.visibility = View.GONE
-//        }
-//    }
-//
-//    private fun handleFetchJuicesError(throwable: Throwable) {
-//
-//        // Log an error.
-//        Log.e(TAG, "An error occurred while fetching films.")
-//        Log.e(TAG, throwable.localizedMessage)
-//
-//        Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
-//        swipe_refresh_layout.isRefreshing = false
-//        textView5.visibility = View.VISIBLE
-//        imageView4.visibility = View.VISIBLE
-//    }
-
-
     private fun handleFetchJuicesSuccess(products: List<JuiceEntity>) {
 
         // Log the fact.
@@ -109,17 +73,7 @@ class JuiceFragment : Fragment(){
 
         // Display result.
         fastItemAdapter.setNewList(items)
-        if(items.isEmpty()) {
-            textView6.visibility = View.VISIBLE
-            imageView5.visibility = View.VISIBLE
-        }
-        else {
-            Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
-            swipe_refresh_layout.isRefreshing = false
-            textView5.visibility = View.GONE
-            imageView4.visibility = View.GONE
-
-        }
+        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
 
     }
 
@@ -142,8 +96,6 @@ class JuiceFragment : Fragment(){
         else {
             //Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
             swipe_refresh_layout.isRefreshing = false
-            textView5.visibility = View.GONE
-            imageView4.visibility = View.GONE
             cacheSucces = true
         }
 
@@ -160,16 +112,10 @@ class JuiceFragment : Fragment(){
             Snackbar.make(root1, "Brak połączenia z internetem, tryb offline", Snackbar.LENGTH_SHORT).show()
         }
         else {
-
+            textView6.visibility = View.GONE
+            imageView5.visibility = View.GONE
             textView5.visibility = View.VISIBLE
             imageView4.visibility = View.VISIBLE
-            if(textView6.visibility == View.VISIBLE
-                && imageView5.visibility == View.VISIBLE)
-            {
-
-                textView6.visibility = View.GONE
-                imageView5.visibility = View.GONE
-            }
         }
 
 
@@ -178,7 +124,7 @@ class JuiceFragment : Fragment(){
     private fun handleFetchJuicesCacheError(throwable: Throwable) {
 
         // Log an error.
-        Log.e(TAG, "An error occurred while fetching films.")
+        Log.e(TAG, "An error occurred while fetching juices.")
         Log.e(TAG, throwable.localizedMessage)
 
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
@@ -224,7 +170,7 @@ class JuiceFragment : Fragment(){
             }
         }
         if(bool) {
-            val item = CartDto(model.id_product, model.name, 1, model.photo_url)
+            val item = CartDto(model.id_product, model.name, model.price, 1, model.id_product, model.photo_url)
             Cart.setInfoItem(item)
         }
         Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
@@ -240,7 +186,7 @@ class JuiceFragment : Fragment(){
         foodDetail.putExtra("intVariableName", product.id_product)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
-        Url.Detail_id = product.id_product
+        //Url.Detail_id = product.id_product
 
 
         return true
@@ -268,13 +214,17 @@ class JuiceFragment : Fragment(){
 
     private fun addAndFetchJuices(progressbar: Boolean)
     {
+        textView5.visibility = View.GONE
+        imageView4.visibility = View.GONE
+        textView6.visibility = View.GONE
+        imageView5.visibility = View.GONE
         //From cache
         juicesManager
             .getJuices()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                this::handleFetchJuicesSuccess,
-                this::handleFetchJuicesError
+                this::handleFetchJuicesCacheSuccess,
+                this::handleFetchJuicesCacheError
             )
             .addTo(disposables)
 

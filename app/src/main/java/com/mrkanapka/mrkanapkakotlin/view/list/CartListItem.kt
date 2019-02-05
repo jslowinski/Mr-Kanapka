@@ -1,7 +1,10 @@
 package com.mrkanapka.mrkanapkakotlin.view.list
 
+import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.ModelAbstractItem
@@ -32,15 +35,20 @@ class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, Ca
     class CartListItemViewHolder(itemView: View) : FastAdapter.ViewHolder<CartListItem>(itemView) {
 
         private val titleText: TextView = itemView.findViewById(R.id.title)
+        private val textViewPrice: TextView = itemView.findViewById(R.id.textViewPrice)
         //private val button: Button = itemView.findViewById(R.id.button2)
+        private val imageView: ImageView = itemView.findViewById(R.id.image)
         private val countButton: ElegantNumberButton = itemView.findViewById(R.id.number_button)
         override fun bindView(item: CartListItem, payloads: MutableList<Any>) {
 
             // Retrieve model.
             val model = item.model
             // Update view.
+            var price = model.price.toDouble() * model.quantity
             titleText.text = model.title
             countButton.number = model.quantity.toString()
+            textViewPrice.text = price.toString()
+            Glide.with(itemView).load(model.photo_url).into(imageView)
 
         }
 

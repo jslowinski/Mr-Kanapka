@@ -25,30 +25,28 @@
                 android:layout_height="81dp"
                 android:src="@drawable/kanapka"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title"/>
         <TextView
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/image"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/button2"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@+id/button2"
+                android:layout_marginEnd="8dp"/>
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                android:layout_width="67dp"
-                android:layout_height="30dp"
+                android:layout_width="80dp"
+                android:layout_height="37dp"
                 android:id="@+id/number_button"
                 app:textSize="8sp"
                 app:backGroundColor="@color/colorAccent"
                 app:initialNumber="1"
                 app:finalNumber="20"
                 app:layout_constraintStart_toEndOf="@+id/image"
-                app:layout_constraintHorizontal_bias="0.027" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-        />
+                app:layout_constraintBottom_toBottomOf="@+id/image" android:layout_marginBottom="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/textView2"/>
         <Button
                 android:text="X"
                 android:layout_width="42dp"
@@ -62,15 +60,16 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView2"
                 app:layout_constraintEnd_toStartOf="@+id/textViewPrice"
-                android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="@+id/number_button"/>
+                app:layout_constraintTop_toTopOf="@+id/number_button"
+                app:layout_constraintBottom_toBottomOf="@+id/number_button"/>
         <TextView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewPrice"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="@+id/number_button"/>
+                app:layout_constraintTop_toTopOf="@+id/number_button"
+                app:layout_constraintBottom_toBottomOf="@+id/number_button"
+        />
 
     </android.support.constraint.ConstraintLayout>
 

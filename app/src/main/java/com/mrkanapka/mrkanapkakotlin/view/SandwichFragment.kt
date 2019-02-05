@@ -65,6 +65,8 @@ class SandwichFragment  : Fragment() {
 
     private fun handleFetchSandwichsSuccess(products: List<ProductEntity>) {
 
+        textView5.visibility = View.GONE
+        imageView4.visibility = View.GONE
         // Log the fact.
         Log.i(TAG, "Successfully fetched Sandwichs.")
         // Convert to list items.
@@ -74,17 +76,7 @@ class SandwichFragment  : Fragment() {
 
         // Display result.
         fastItemAdapter.setNewList(items)
-        if(items.isEmpty()) {
-            textView6.visibility = View.VISIBLE
-            imageView5.visibility = View.VISIBLE
-        }
-        else {
-            Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
-            swipe_refresh_layout.isRefreshing = false
-            textView5.visibility = View.GONE
-            imageView4.visibility = View.GONE
-
-        }
+        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
 
     }
 
@@ -98,8 +90,6 @@ class SandwichFragment  : Fragment() {
         }
         // Display result.
         fastItemAdapter.setNewList(items)
-
-
         if(items.isEmpty()) {
             textView6.visibility = View.VISIBLE
             imageView5.visibility = View.VISIBLE
@@ -107,8 +97,6 @@ class SandwichFragment  : Fragment() {
         else {
             //Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
             swipe_refresh_layout.isRefreshing = false
-            textView5.visibility = View.GONE
-            imageView4.visibility = View.GONE
             cacheSucces = true
         }
 
@@ -125,16 +113,8 @@ class SandwichFragment  : Fragment() {
             Snackbar.make(root1, "Brak połączenia z internetem, tryb offline", Snackbar.LENGTH_SHORT).show()
         }
         else {
-
             textView5.visibility = View.VISIBLE
             imageView4.visibility = View.VISIBLE
-            if(textView6.visibility == View.VISIBLE
-                && imageView5.visibility == View.VISIBLE)
-            {
-
-                textView6.visibility = View.GONE
-                imageView5.visibility = View.GONE
-            }
         }
 
 
@@ -190,7 +170,7 @@ class SandwichFragment  : Fragment() {
           }
         }
         if(bool) {
-          val item = CartDto(model.id_product, model.name, 1, model.photo_url)
+          val item = CartDto(model.id_product, model.name, model.price, 1, model.id_product,  model.photo_url)
           Cart.setInfoItem(item)
         }
         Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
@@ -206,7 +186,7 @@ class SandwichFragment  : Fragment() {
         foodDetail.putExtra("intVariableName", product.id_product)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
-        Url.Detail_id = product.id_product
+        //Url.Detail_id = product.id_product
 
 
        return true
@@ -234,6 +214,10 @@ class SandwichFragment  : Fragment() {
 
     private fun addAndFetchSandwiches(progressbar: Boolean)
     {
+        textView5.visibility = View.GONE
+        imageView4.visibility = View.GONE
+        textView6.visibility = View.GONE
+        imageView5.visibility = View.GONE
         //From cache
         sandwichesManager
             .getSandwiches()

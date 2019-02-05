@@ -63,39 +63,6 @@ class SaladFragment  : Fragment() {
         super.onPause()
     }
 
-//    private fun handleFetchSaladsSuccess(products: List<SaladEntity>) {
-//
-//        // Log the fact.
-//        Log.i(TAG, "Successfully fetched films.")
-//        // Convert to list items.
-//        val items = products.map {
-//            SaladListItem(it)
-//        }
-//
-//        // Display result.
-//        fastItemAdapter.setNewList(items)
-//        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
-//        swipe_refresh_layout.isRefreshing = false
-////        textView5.visibility = View.GONE
-////        imageView4.visibility = View.GONE
-//    }
-//
-//    private fun handleFetchSaladsError(throwable: Throwable) {
-//
-//        // Log an error.
-//        Log.e(TAG, "An error occurred while fetching films.")
-//        Log.e(TAG, throwable.localizedMessage)
-//
-//        Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
-//        swipe_refresh_layout.isRefreshing = false
-////        textView5.visibility = View.VISIBLE
-////        imageView4.visibility = View.VISIBLE
-//    }
-
-
-
-
-
     private fun handleFetchSaladsSuccess(products: List<SaladEntity>) {
 
         // Log the fact.
@@ -107,21 +74,13 @@ class SaladFragment  : Fragment() {
 
         // Display result.
         fastItemAdapter.setNewList(items)
-        if(items.isEmpty()) {
-            textView6.visibility = View.VISIBLE
-            imageView5.visibility = View.VISIBLE
-        }
-        else {
-            Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
-            swipe_refresh_layout.isRefreshing = false
-            textView5.visibility = View.GONE
-            imageView4.visibility = View.GONE
+        Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
 
-        }
 
     }
 
     private fun handleFetchSaladsCacheSuccess(products: List<SaladEntity>) {
+
 
         // Log the fact.
         Log.i(TAG, "Successfully fetched films.")
@@ -132,7 +91,6 @@ class SaladFragment  : Fragment() {
         // Display result.
         fastItemAdapter.setNewList(items)
 
-
         if(items.isEmpty()) {
             textView6.visibility = View.VISIBLE
             imageView5.visibility = View.VISIBLE
@@ -140,8 +98,6 @@ class SaladFragment  : Fragment() {
         else {
             //Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
             swipe_refresh_layout.isRefreshing = false
-            textView5.visibility = View.GONE
-            imageView4.visibility = View.GONE
             cacheSucces = true
         }
 
@@ -154,30 +110,27 @@ class SaladFragment  : Fragment() {
         Log.e(TAG, throwable.localizedMessage)
         swipe_refresh_layout.isRefreshing = false
         //zaslepka internet z pobraniem z bazy
+
+
+
         if(cacheSucces) {
             Snackbar.make(root1, "Brak połączenia z internetem, tryb offline", Snackbar.LENGTH_SHORT).show()
         }
         else {
-
             textView5.visibility = View.VISIBLE
             imageView4.visibility = View.VISIBLE
-            if(textView6.visibility == View.VISIBLE
-                && imageView5.visibility == View.VISIBLE)
-            {
-
-                textView6.visibility = View.GONE
-                imageView5.visibility = View.GONE
-            }
         }
-
 
     }
 
     private fun handleFetchSaladsCacheError(throwable: Throwable) {
 
+
         // Log an error.
-        Log.e(TAG, "An error occurred while fetching films.")
+        Log.e(TAG, "An error occurred while fetching salads.")
         Log.e(TAG, throwable.localizedMessage)
+
+
 
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
         swipe_refresh_layout.isRefreshing = false
@@ -222,7 +175,7 @@ class SaladFragment  : Fragment() {
             }
         }
         if(bool) {
-            val item = CartDto(model.id_product, model.name, 1, model.photo_url)
+            val item = CartDto(model.id_product, model.name, model.price, 1, model.id_product, model.photo_url)
             Cart.setInfoItem(item)
         }
         Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
@@ -238,7 +191,7 @@ class SaladFragment  : Fragment() {
         foodDetail.putExtra("intVariableName", product.id_product)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
-        Url.Detail_id = product.id_product
+        //Url.Detail_id = product.id_product
 
 
         return true
@@ -266,6 +219,10 @@ class SaladFragment  : Fragment() {
 
     private fun addAndFetchSalads(progressbar: Boolean)
     {
+        textView5.visibility = View.GONE
+        imageView4.visibility = View.GONE
+        textView6.visibility = View.GONE
+        imageView5.visibility = View.GONE
         //From cache
         saladManager
             .getSalads()

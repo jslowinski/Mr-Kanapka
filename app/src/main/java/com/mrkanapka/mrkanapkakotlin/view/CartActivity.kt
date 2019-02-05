@@ -16,6 +16,7 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mrkanapka.mrkanapkakotlin.FoodDetail
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.Cart
+import com.mrkanapka.mrkanapkakotlin.api.Url
 import com.mrkanapka.mrkanapkakotlin.view.list.CartListItem
 import kotlinx.android.synthetic.main.activity_cart.*
 import kotlinx.android.synthetic.main.item_in_cart.view.*
@@ -132,8 +133,10 @@ class CartActivity : AppCompatActivity() {
         val foodDetail = Intent(this, FoodDetail::class.java)
         //foodDetail.putExtra("OpeningCrawl", "z koszyka")
         //foodDetail.putExtra("Name", itemCart.title)
-        foodDetail.putExtra("Url", itemCart.url)
+        foodDetail.putExtra("intVariableName", itemCart.id_product)
+        //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
+        //Url.Detail_id = itemCart.id_product
 
         return true
     }
