@@ -9,16 +9,19 @@ import retrofit2.http.Url
 
 interface ApiService {
 
-  @GET("Kanapka")
+  @GET("products/Kanapka")
   fun fetchSandwiches(): Single<Response<List<ProductsDto>>>
 
-  @GET("Salatka")
+  @GET("products/Salatka")
   fun fetchSalads(): Single<Response<List<ProductsDto>>>
 
-  @GET("Sok")
+  @GET("products/Sok")
   fun fetchJuice(): Single<Response<List<ProductsDto>>>
 
   @GET
   fun fetchDetail(@Url url: String): Call<ResponseDetail>
+
+  @GET("products")
+  fun fetchCategory(): Single<ResponseCategory<List<CategoryDto>>>
 
 }

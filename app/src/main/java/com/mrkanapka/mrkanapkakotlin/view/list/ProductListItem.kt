@@ -9,6 +9,7 @@ import com.mikepenz.fastadapter.FastAdapter.ViewHolder
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.database.entity.ProductEntity
+import com.mrkanapka.mrkanapkakotlin.database.entity.SaladEntity
 import com.mrkanapka.mrkanapkakotlin.view.list.ProductListItem.ProductListItemViewHolder
 import java.util.Objects.hash
 

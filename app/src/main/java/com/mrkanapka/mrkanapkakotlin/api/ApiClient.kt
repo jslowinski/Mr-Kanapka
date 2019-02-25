@@ -8,7 +8,7 @@ class ApiClient {
 
   companion object {
 
-    private const val BASE_URL = "http://zespol9-server.herokuapp.com/api/products/"
+    private const val BASE_URL = "http://zespol9-server.herokuapp.com/api/"
 
     private val retrofit by lazy {
       Retrofit.Builder()

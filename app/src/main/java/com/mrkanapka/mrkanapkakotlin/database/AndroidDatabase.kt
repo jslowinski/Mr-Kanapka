@@ -13,7 +13,7 @@ import com.mrkanapka.mrkanapkakotlin.database.entity.SaladEntity
 
 
 @Database(
-    version = 6,
+    version = 8,
     exportSchema = false,
     entities = [
         ProductEntity::class,

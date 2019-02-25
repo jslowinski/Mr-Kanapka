@@ -228,8 +228,8 @@ class SaladFragment  : Fragment() {
             .getSalads()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                this::handleFetchSaladsCacheSuccess,
-                this::handleFetchSaladsCacheError
+                //this::handleFetchSaladsCacheSuccess,
+                //this::handleFetchSaladsCacheError
             )
             .addTo(disposables)
 
@@ -241,8 +241,8 @@ class SaladFragment  : Fragment() {
             .doOnSubscribe { showProgress() }
             .doFinally { hideProgress() }
             .subscribe(
-                this::handleFetchSaladsSuccess,
-                this::handleFetchSaladsError
+                //this::handleFetchSaladsSuccess,
+                //this::handleFetchSaladsError
             )
             .addTo(disposables)
 
