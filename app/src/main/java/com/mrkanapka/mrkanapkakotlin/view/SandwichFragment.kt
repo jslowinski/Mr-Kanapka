@@ -416,9 +416,9 @@ class SandwichFragment  : Fragment() {
         swipe_refresh_layout.setOnRefreshListener {
             // Initialize a new Runnable
             mRunnable = Runnable {
-                if(category == 0)
+                if(category == 4)
                     addAndFetchSandwiches(false)
-                if(category == 1)
+                if(category == 3)
                     addAndFetchSalads(false)
                 // Hide swipe to refresh icon animation
                 //swipe_refresh_layout.isRefreshing = false
@@ -428,9 +428,9 @@ class SandwichFragment  : Fragment() {
             mHandler.post(mRunnable)
         }
         if(savedInstanceState == null) {
-            if(category == 0)
+            if(category == 4)
                 addAndFetchSandwiches(true)
-            if(category == 1)
+            if(category == 3)
                 addAndFetchSalads(true)
         }
 

@@ -10,5 +10,4 @@ data class CategoryDto(
     @SerializedName("name")
     var name: String
 
-
 )

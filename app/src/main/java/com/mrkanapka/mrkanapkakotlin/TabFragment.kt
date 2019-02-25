@@ -40,6 +40,10 @@ class TabFragment : Fragment(){
 //            FilmListItem(it)
 //        }
 
+        int_items = category.size
+        viewPager.adapter = MyAdapter(childFragmentManager, category)
+        tabLayout.post { (tabLayout.setupWithViewPager(viewPager)) }
+
     }
 
     private fun handleFetchCategoryError(throwable: Throwable) {
@@ -58,34 +62,31 @@ class TabFragment : Fragment(){
                 .fetchCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { it.results }
+                .map { it.category }
                 .subscribe(
                     { handleFetchCategorySuccess(it) },
                     { handleFetchCategoryError(it) }
                 )
         )
-
         val x =  inflater.inflate(R.layout.tab_layout,null)
         tabLayout = x.findViewById<View>(R.id.tabs) as TabLayout
         viewPager = x.findViewById<View>(R.id.viewpager) as ViewPager
 
-        viewPager.adapter = MyAdapter(childFragmentManager)
-        tabLayout.post { (tabLayout.setupWithViewPager(viewPager)) }
+
 
 
         // TO DZIADOWSTWO TRZEBA BYŁO DODAC ABY NIE ODSWIEZALO CIAGLE PIREWSZEGO FRAGMENTU W TABIE
-        viewPager.offscreenPageLimit = 3
+        viewPager.offscreenPageLimit = 9
 
         return x
     }
-    internal inner class MyAdapter (fm : FragmentManager) : FragmentPagerAdapter(fm){
+    internal inner class MyAdapter (fm : FragmentManager, category: List<CategoryDto>) : FragmentPagerAdapter(fm){
+
+        val list = category
         override fun getItem(position: Int): Fragment? {
-            when(position){
-                0 -> return SandwichFragment.newInstance(0)
-                1 -> return SandwichFragment.newInstance(1)
-                2 -> return SandwichFragment.newInstance(0)
-                //1 -> return SaladFragment()
-                //2 -> return JuiceFragment()
+
+            for (item in list) {
+                return SandwichFragment.newInstance(item.id_category)
             }
             return null
         }
@@ -95,19 +96,17 @@ class TabFragment : Fragment(){
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            when(position){
-                0 -> return "Kanapki"
-                1 -> return "Sałatki"
-                2 -> return "Kanapki"
-                //2 -> return "Soki"
+            for (item in list) {
+                return item.name
             }
             return null
         }
+
     }
 
     companion object {
         lateinit var tabLayout : TabLayout
         lateinit var viewPager: ViewPager
-        val int_items= 3
+        var int_items = 0
     }
 }
