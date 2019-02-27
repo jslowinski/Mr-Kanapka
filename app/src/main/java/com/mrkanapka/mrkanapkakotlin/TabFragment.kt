@@ -1,6 +1,7 @@
 package com.mrkanapka.mrkanapkakotlin
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -23,56 +24,20 @@ import io.reactivex.schedulers.Schedulers
 class TabFragment : Fragment(){
 
 
-    private val apiService by lazy {
-        ApiClient.create()
-    }
-    private val disposables: CompositeDisposable = CompositeDisposable()
-
-    private fun handleFetchCategorySuccess(category: List<CategoryDto>) {
-
-        // Log the fact.
-        Log.i("tabfragment", "Successfully fetched categories.")
-
-        // Convert to list items.
-//        val items = films.sortedBy {
-//            it.episodeId
-//        }.map {
-//            FilmListItem(it)
-//        }
-
-        int_items = category.size
-        viewPager.adapter = MyAdapter(childFragmentManager, category)
-        tabLayout.post { (tabLayout.setupWithViewPager(viewPager)) }
-
-    }
-
-    private fun handleFetchCategoryError(throwable: Throwable) {
-
-        // Log an error.
-        Log.e("tabfragment", "An error occurred while fetching categories.")
-        Log.e("tabfragment", throwable.localizedMessage)
-
-        //Snackbar.make(root, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        disposables.add(
-            apiService
-                .fetchCategory()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { it.category }
-                .subscribe(
-                    { handleFetchCategorySuccess(it) },
-                    { handleFetchCategoryError(it) }
-                )
-        )
+        val args = arguments
+        var category:List<CategoryDto> = ArrayList<CategoryDto>()
+        category = args!!.getParcelableArrayList("category")
+
         val x =  inflater.inflate(R.layout.tab_layout,null)
         tabLayout = x.findViewById<View>(R.id.tabs) as TabLayout
         viewPager = x.findViewById<View>(R.id.viewpager) as ViewPager
 
-
+        int_items = category.size
+        viewPager.adapter = MyAdapter(childFragmentManager, category)
+        tabLayout.post { (tabLayout.setupWithViewPager(viewPager)) }
 
 
         // TO DZIADOWSTWO TRZEBA BYŁO DODAC ABY NIE ODSWIEZALO CIAGLE PIREWSZEGO FRAGMENTU W TABIE
@@ -86,6 +51,7 @@ class TabFragment : Fragment(){
         override fun getItem(position: Int): Fragment? {
 
             for (item in list) {
+                Log.i("item.id_category: ", item.id_category.toString())
                 return SandwichFragment.newInstance(item.id_category)
             }
             return null
@@ -97,6 +63,7 @@ class TabFragment : Fragment(){
 
         override fun getPageTitle(position: Int): CharSequence? {
             for (item in list) {
+                Log.i("item.name: ", item.name)
                 return item.name
             }
             return null
@@ -108,5 +75,14 @@ class TabFragment : Fragment(){
         lateinit var tabLayout : TabLayout
         lateinit var viewPager: ViewPager
         var int_items = 0
+
+
+        fun newInstance(category: ArrayList<CategoryDto>): TabFragment {
+            val fragment = TabFragment()
+            val args = Bundle()
+            args.putParcelableArrayList("category", category as java.util.ArrayList<out Parcelable>)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

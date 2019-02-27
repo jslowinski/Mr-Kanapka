@@ -226,7 +226,7 @@ class SandwichFragment  : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.itemAnimator = DefaultItemAnimator()
 
-        if(category == 0) {
+        if(category == 4) {
             recyclerView.adapter = fastItemAdapter
             fastItemAdapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
             fastItemAdapter.withEventHook(object : ClickEventHook<ProductListItem>() {
@@ -239,7 +239,7 @@ class SandwichFragment  : Fragment() {
                 }
             })
         }
-        if(category == 1) {
+        if(category == 3) {
             recyclerView.adapter = fastItemAdapter1
             fastItemAdapter1.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
             fastItemAdapter1.withEventHook(object : ClickEventHook<SaladListItem>() {

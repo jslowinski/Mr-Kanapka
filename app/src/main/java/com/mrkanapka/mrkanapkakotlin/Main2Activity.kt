@@ -2,18 +2,51 @@ package com.mrkanapka.mrkanapkakotlin
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.mrkanapka.mrkanapkakotlin.api.ApiClient
+import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
 import com.mrkanapka.mrkanapkakotlin.view.CartActivity
 import com.mrkanapka.mrkanapkakotlin.view.JuiceFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
 
 class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private val apiService by lazy {
+        ApiClient.create()
+    }
+    private val disposables: CompositeDisposable = CompositeDisposable()
+
+    private fun handleFetchCategorySuccess(category: List<CategoryDto>) {
+
+        // Log the fact.
+        Log.i("tabfragment", "Successfully fetched categories.")
+
+
+
+
+        displayScreen(R.id.main_menu, category)
+
+    }
+
+    private fun handleFetchCategoryError(throwable: Throwable) {
+
+        // Log an error.
+        Log.e("tabfragment", "An error occurred while fetching categories.")
+        Log.e("tabfragment", throwable.localizedMessage)
+
+        //Snackbar.make(root, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //setTheme(R.style.AppTheme)
@@ -37,8 +70,20 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         nav_view.setNavigationItemSelectedListener(this)
 
+        disposables.add(
+            apiService
+                .fetchCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { it.category }
+                .subscribe(
+                    { handleFetchCategorySuccess(it) },
+                    { handleFetchCategoryError(it) }
+                )
+        )
+
         //domyslny ekran czyli odpali się default
-        displayScreen(R.id.main_menu)
+
     }
 
     override fun onBackPressed() {
@@ -71,18 +116,20 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    fun displayScreen(id: Int) {
-       val fragment  = when (id) {
+    fun displayScreen(id: Int, category: List<CategoryDto>) {
+        var categoryt:List<CategoryDto> = ArrayList<CategoryDto>(category)
+        Log.e("item.id_category: ", categoryt[0].id_category.toString())
+        Log.e("item.id_category: ", categoryt[1].id_category.toString())
+        Log.e("item.id_category: ", categoryt[2].id_category.toString())
+        val fragment  = when (id) {
             R.id.main_menu -> {
-                TabFragment()
+                // TU CHYBA PROBLEM
+                TabFragment.newInstance(categoryt as ArrayList<CategoryDto>)
             }
            else -> {
                 JuiceFragment()
             }
         }
-
-
-
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.relativeLayout, fragment)
@@ -99,7 +146,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
             else -> {
-                displayScreen(item.itemId)
+
 
             }
         }
