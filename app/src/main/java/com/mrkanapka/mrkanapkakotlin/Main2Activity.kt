@@ -33,9 +33,12 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         Log.i("tabfragment", "Successfully fetched categories.")
 
 
+        val arrayList = ArrayList<CategoryDto>()
+        for (item in category) {
+            arrayList.add(item)
+        }
 
-
-        displayScreen(R.id.main_menu, category)
+        displayScreen(R.id.main_menu, arrayList)
 
     }
 
@@ -116,15 +119,14 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    fun displayScreen(id: Int, category: List<CategoryDto>) {
-        var categoryt:List<CategoryDto> = ArrayList<CategoryDto>(category)
-        Log.e("item.id_category: ", categoryt[0].id_category.toString())
-        Log.e("item.id_category: ", categoryt[1].id_category.toString())
-        Log.e("item.id_category: ", categoryt[2].id_category.toString())
+    fun displayScreen(id: Int, category: ArrayList<CategoryDto>) {
+        Log.e("item.id_category: ", category[0].id_category.toString())
+        Log.e("item.id_category: ", category[1].id_category.toString())
+        Log.e("item.id_category: ", category[2].id_category.toString())
         val fragment  = when (id) {
             R.id.main_menu -> {
                 // TU CHYBA PROBLEM
-                TabFragment.newInstance(categoryt as ArrayList<CategoryDto>)
+                TabFragment.newInstance(category)
             }
            else -> {
                 JuiceFragment()

@@ -13,32 +13,34 @@ data class CategoryDto(
     var name: String
 
 ) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readInt(),
-        parcel.readString()
-    ) {
-    }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(id_category)
-        parcel.writeString(name)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
+    // 1
     companion object {
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<CategoryDto>
-        {
-            override fun createFromParcel(parcel: Parcel): CategoryDto {
-                return CategoryDto(parcel)
+        // 2
+        inline fun <reified T : Parcelable> createParcel(
+            crossinline createFromParcel: (Parcel) -> T?
+        ): Parcelable.Creator<T> =
+            object : Parcelable.Creator<T> {
+                override fun createFromParcel(source: Parcel): T? = createFromParcel(source)
+                override fun newArray(size: Int): Array<out T?> = arrayOfNulls(size)
             }
 
-            override fun newArray(size: Int): Array<CategoryDto?> {
-                return arrayOfNulls(size)
-            }
-        }
+        @JvmField
+        @Suppress("unused")
+        val CREATOR = createParcel { CategoryDto(it) } // 3
     }
+
+    // 4
+    protected constructor(parcelIn: Parcel) : this(
+        parcelIn.readInt(),
+        parcelIn.readString()
+
+    )
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeInt(id_category)
+        dest.writeString(name)
+    }
+
+    override fun describeContents() = 0
 }
