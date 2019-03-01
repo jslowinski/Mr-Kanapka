@@ -10,6 +10,8 @@ class ApiClient {
 
     private const val BASE_URL = "http://zespol9-server.herokuapp.com/api/products/"
 
+    private const val BASE_URL_REGISTER = "http://zespol9-server.herokuapp.com/api/"
+
     private val retrofit by lazy {
       Retrofit.Builder()
           .addCallAdapterFactory(
@@ -31,6 +33,16 @@ class ApiClient {
               .build()
 
           return retrofit.create(ApiService::class.java)
+      }
+
+
+      val instance: ApiService by lazy{
+          val retrofit = Retrofit.Builder()
+              .baseUrl(BASE_URL_REGISTER)
+              .addConverterFactory(GsonConverterFactory.create())
+              .build()
+
+          retrofit.create(ApiService::class.java)
       }
   }
 }

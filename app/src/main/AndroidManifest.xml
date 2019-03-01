@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mrkanapka.mrkanapkakotlin">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:name=".application.App"
@@ -11,22 +11,32 @@
             android:label="@string/app_name"
             android:roundIcon="@drawable/icon"
             android:supportsRtl="true"
-            android:usesCleartextTraffic="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true">
         <activity
                 android:name=".Main2Activity"
                 android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar"
-                >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="android.intent.action.VIEW"/>
-            </intent-filter>
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".view.CartActivity">
         </activity>
         <activity android:name=".FoodDetail">
+        </activity>
+        <activity
+                android:name=".LoginUI"
+                android:theme="@style/AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".RegisterUI"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:windowSoftInputMode="adjustResize">
         </activity>
     </application>
 
