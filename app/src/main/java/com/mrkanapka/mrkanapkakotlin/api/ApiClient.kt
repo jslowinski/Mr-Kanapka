@@ -8,9 +8,7 @@ class ApiClient {
 
   companion object {
 
-    private const val BASE_URL = "http://zespol9-server.herokuapp.com/api/products/"
-
-    private const val BASE_URL_REGISTER = "http://zespol9-server.herokuapp.com/api/"
+    private const val BASE_URL = "http://zespol9-server.herokuapp.com/api/"
 
     private val retrofit by lazy {
       Retrofit.Builder()
@@ -26,6 +24,17 @@ class ApiClient {
       return retrofit.create(ApiService::class.java)
     }
 
+      fun createDestination(url: String): ApiService {
+          val retrofit = Retrofit.Builder()
+              .addCallAdapterFactory(
+                  RxJava2CallAdapterFactory.create())
+              .baseUrl(url)
+              .addConverterFactory(GsonConverterFactory.create())
+              .build()
+          return retrofit.create(ApiService::class.java)
+      }
+
+
       fun createDetail(URL: String): ApiService{
           val retrofit = Retrofit.Builder()
               .baseUrl(URL)
@@ -38,7 +47,7 @@ class ApiClient {
 
       val instance: ApiService by lazy{
           val retrofit = Retrofit.Builder()
-              .baseUrl(BASE_URL_REGISTER)
+              .baseUrl(BASE_URL)
               .addConverterFactory(GsonConverterFactory.create())
               .build()
 
