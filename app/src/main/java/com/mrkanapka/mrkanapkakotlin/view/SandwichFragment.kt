@@ -93,7 +93,7 @@ class SandwichFragment  : Fragment() {
     private fun handleFetchSandwichsCacheSuccess(products: List<ProductEntity>) {
 
         // Log the fact.
-        Log.i(TAG, "Successfully fetched Sandwichs.")
+        Log.i(TAG, "CACHE: Successfully fetched Sandwichs.")
         // Convert to list items.
         val items = products.map {
             ProductListItem(it)
