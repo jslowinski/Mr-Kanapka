@@ -17,25 +17,25 @@ class ProductsManager {
         ApiClient.create()
     }
 
-    fun downloadSandwiches(): Completable =
+    fun downloadSandwiches(url: String): Completable =
         apiService
-            .fetchSandwiches()
+            .fetchSandwiches(url)
             .flatMapCompletable {
                 saveSandwiches(it.product)
             }
             .subscribeOn(Schedulers.io())
 
-    fun downloadSalads(): Completable =
+    fun downloadSalads(url: String): Completable =
         apiService
-            .fetchSalads()
+            .fetchSalads(url)
             .flatMapCompletable {
                 saveSalads(it.product)
             }
             .subscribeOn(Schedulers.io())
 
-    fun downloadJuices(): Completable =
+    fun downloadJuices(url: String): Completable =
         apiService
-            .fetchJuice()
+            .fetchJuice(url)
             .flatMapCompletable {
                 saveJuices(it.product)
             }

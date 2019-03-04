@@ -157,7 +157,6 @@ class RegisterUI : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val item = adapter.getItem(position)
                 id_destination = destinations[position].id_destination
 
             }

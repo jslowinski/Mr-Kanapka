@@ -32,6 +32,16 @@ import kotlinx.android.synthetic.main.item_menu.view.*
 
 class SandwichFragment  : Fragment() {
 
+    companion object {
+        fun newInstance(category: Int): SandwichFragment {
+            val fragment = SandwichFragment()
+            val args = Bundle()
+            args.putInt("category", category)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+    private var category = 0
     //to swipe refresh
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
@@ -230,7 +240,7 @@ class SandwichFragment  : Fragment() {
 
         //From api
         sandwichesManager
-            .downloadSandwiches()
+            .downloadSandwiches("products/" + category)
             .andThen(sandwichesManager.getSandwiches())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress() }
@@ -245,6 +255,7 @@ class SandwichFragment  : Fragment() {
 
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        arguments?.getInt("category").let { category = it!! }
         initializeRecyclerView()
         // Initialize the handler instance
 

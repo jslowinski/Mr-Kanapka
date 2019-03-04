@@ -31,6 +31,17 @@ import kotlinx.android.synthetic.main.item_menu.view.*
 
 
 class JuiceFragment : Fragment(){
+
+    companion object {
+        fun newInstance(category: Int): SandwichFragment {
+            val fragment = SandwichFragment()
+            val args = Bundle()
+            args.putInt("category", category)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+    private var category = 0
     //to swipe refresh
     //to swipe refresh
     private lateinit var mHandler: Handler
@@ -230,7 +241,7 @@ class JuiceFragment : Fragment(){
 
         //From api
         juicesManager
-            .downloadJuices()
+            .downloadJuices("products/" + category)
             .andThen(juicesManager.getJuices())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress() }
@@ -245,6 +256,7 @@ class JuiceFragment : Fragment(){
 
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        arguments?.getInt("category").let { category = it!! }
         initializeRecyclerView()
         // Initialize the handler instance
 
