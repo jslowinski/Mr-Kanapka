@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+            xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mrkanapka.mrkanapkakotlin">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -7,12 +8,14 @@
     <application
             android:name=".application.App"
             android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/ic_launcher_sandwich_brown"
             android:label="@string/app_name"
-            android:roundIcon="@drawable/icon"
+            android:roundIcon="@mipmap/ic_launcher_sandwich_brown_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            android:usesCleartextTraffic="true">
+            android:usesCleartextTraffic="true"
+            tools:replace="android:icon,android:theme"
+    >
         <activity
                 android:name=".Main2Activity"
                 android:label="@string/app_name"
@@ -24,7 +27,7 @@
         </activity>
         <activity
                 android:name=".LoginUI"
-                android:theme="@style/AppTheme.NoActionBar"
+                android:theme="@style/AppTheme.Launcher"
                 android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

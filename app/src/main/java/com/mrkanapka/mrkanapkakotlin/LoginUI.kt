@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_login_ui.*
 class LoginUI : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_ui)
 
