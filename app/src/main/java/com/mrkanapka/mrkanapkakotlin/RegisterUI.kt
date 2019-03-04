@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CityDto
-import com.mrkanapka.mrkanapkakotlin.api.model.DefaultResponse
+import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.api.model.DestinationDto
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -19,7 +19,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.regex.Pattern
-import com.mrkanapka.mrkanapkakotlin.api.model.RegisterRequest
+import com.mrkanapka.mrkanapkakotlin.api.model.RequestRegister
 
 
 
@@ -65,14 +65,14 @@ class RegisterUI : AppCompatActivity() {
         {
             // println("$emailInput $passwordInput $id_destination")
             //.instance.register(emailInput,passwordInput,id_destination.toString())
-            apiService.register(RegisterRequest(emailInput, passwordInput, id_destination.toString()))
-                .enqueue(object : Callback<DefaultResponse>{
-                    override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+            apiService.register(RequestRegister(emailInput, passwordInput, id_destination.toString()))
+                .enqueue(object : Callback<ResponseDefault>{
+                    override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                         Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                         println("blad")
                     }
 
-                    override fun onResponse(call: Call<DefaultResponse>, response: Response<DefaultResponse>) {
+                    override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                         if (response.body()?.message.equals("Client with that email already exists"))
                         {
                             Toast.makeText(applicationContext,"Podany email jest już zajęty", Toast.LENGTH_LONG).show()

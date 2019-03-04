@@ -1,18 +1,26 @@
 package com.mrkanapka.mrkanapkakotlin
 
-import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.transition.TransitionManager
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
 import android.widget.*
+import com.mrkanapka.mrkanapkakotlin.api.ApiClient
+import com.mrkanapka.mrkanapkakotlin.api.model.RequestLogin
+import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import kotlinx.android.synthetic.main.activity_login_ui.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LoginUI : AppCompatActivity() {
+
+    private var emailInput: String = ""
+    private var passwordInput: String = ""
+
+    private val apiService by lazy {
+        ApiClient.create()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
@@ -24,9 +32,30 @@ class LoginUI : AppCompatActivity() {
         val reset_click_me = findViewById(R.id.forgetPass_text) as TextView
 
         button.setOnClickListener{
+
+            emailInput = email_text.text.toString().trim()
+            passwordInput = password_text.text.toString().trim()
             val main = Intent(this, Main2Activity::class.java)
-            //foodDetail.putExtra("Name",film.title)
-            startActivity(main)
+
+            apiService.login(RequestLogin(emailInput,passwordInput))
+                .enqueue(object : Callback<ResponseDefault>{
+                    override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                        if (response.body()?.message.equals("Niepoprawne dane logowania"))
+                        {
+                            Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
+                        }
+                        else {
+                            Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                            startActivity(main)
+                        }
+                    }
+
+                })
+
         }
 
         register_click_me.setOnClickListener {
@@ -36,13 +65,11 @@ class LoginUI : AppCompatActivity() {
         }
 
         reset_click_me.setOnClickListener{
-
-            withEditText()
-
+            resetPasswordPopup()
         }
     }
 
-    fun withEditText() {
+    fun resetPasswordPopup() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.reset_password_popup, null)

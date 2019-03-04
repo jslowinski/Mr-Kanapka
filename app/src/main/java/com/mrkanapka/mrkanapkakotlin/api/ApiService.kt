@@ -30,6 +30,9 @@ interface ApiService {
   fun fetchDestinations(@Url url: String): Single<ResponseDestination<List<DestinationDto>>>
 
   @POST("register")
-  fun register(@Body body : RegisterRequest): Call<DefaultResponse>
+  fun register(@Body body : RequestRegister): Call<ResponseDefault>
+
+  @PUT("login")
+  fun login(@Body body : RequestLogin): Call<ResponseDefault>
 
 }
