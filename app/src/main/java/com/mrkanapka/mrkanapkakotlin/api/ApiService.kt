@@ -2,7 +2,6 @@ package com.mrkanapka.mrkanapkakotlin.api
 
 import com.mrkanapka.mrkanapkakotlin.api.model.*
 import io.reactivex.Single
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 import retrofit2.http.Url
@@ -28,9 +27,6 @@ interface ApiService {
   fun fetchDestinations(@Url url: String): Single<ResponseDestination<List<DestinationDto>>>
 
   @POST("register")
-  @FormUrlEncoded
-  fun register(@Field("email") email: String,
-               @Field("password") password: String,
-               @Field("id_destination") id_destination: Int): Call<ResponseBody>
+  fun register(@Body body : RegisterRequest): Call<DefaultResponse>
 
 }

@@ -6,29 +6,34 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
+import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.ApiService
 import com.mrkanapka.mrkanapkakotlin.api.model.CityDto
+import com.mrkanapka.mrkanapkakotlin.api.model.DefaultResponse
 import com.mrkanapka.mrkanapkakotlin.api.model.DestinationDto
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_register_ui.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.regex.Pattern
+import com.mrkanapka.mrkanapkakotlin.api.model.RegisterRequest
+
+
 
 class RegisterUI : AppCompatActivity() {
 
     private var emailInput: String = ""
     private var passwordInput: String = ""
     private var id_destination: Int = 0
+
     private val apiService by lazy {
         ApiClient.create()
     }
     private val disposables: CompositeDisposable = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,26 +50,54 @@ class RegisterUI : AppCompatActivity() {
                     { handleFetchCitiesError(it) }
                 )
         )
-        
 
+        //przycisk rejestruj
+        val button: Button = this.findViewById(R.id.register_button)
 
+        button.setOnClickListener {
+            register()
+        }
     }
 
+    //Funcka rejestracji
+    private fun register(){
+        if (validateEmail() && validatePassword())
+        {
+            // println("$emailInput $passwordInput $id_destination")
+            //.instance.register(emailInput,passwordInput,id_destination.toString())
+            apiService.register(RegisterRequest(emailInput, passwordInput, id_destination.toString()))
+                .enqueue(object : Callback<DefaultResponse>{
+                    override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                        println("blad")
+                    }
+
+                    override fun onResponse(call: Call<DefaultResponse>, response: Response<DefaultResponse>) {
+                        if (response.body()?.message.equals("Client with that email already exists"))
+                        {
+                            Toast.makeText(applicationContext,"Podany email jest już zajęty", Toast.LENGTH_LONG).show()
+                        }
+                        else {
+                            Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                            println("Haslo: " + passwordInput)
+                            println("sukces")
+                        }
+                    }
+                })
+        }
+    }
+
+    //spinnery
     private fun handleFetchCitiesError(throwable: Throwable?) {
-
-
     }
 
     private fun handleFetchCitiesSuccess(cities: List<CityDto>) {
-
         val myCities = ArrayList<String>()
         //myCities.add("Wybierz miasto:")
         for(item in cities) {
             Log.i("miasto: ", item.city)
             myCities.add(item.city!!)
         }
-
-
         setCitySpinner(myCities)
         //setOfficeSpinner()
 
@@ -72,7 +105,6 @@ class RegisterUI : AppCompatActivity() {
 
     private fun setCitySpinner(cities: ArrayList<String>) {
         val citySpinner: Spinner = findViewById(R.id.city_register)
-        //val myStrings = arrayOf("Select Item", "One", "Two", "Three")
         var adapter = ArrayAdapter(this, R.layout.spinner_item, cities)
         citySpinner.adapter = adapter
         citySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -100,7 +132,6 @@ class RegisterUI : AppCompatActivity() {
     }
 
     private fun handleFetchDestinationsError(throwable: Throwable) {
-
     }
 
     private fun handleFetchDestinationsSuccess(destinations: List<DestinationDto>) {
@@ -111,7 +142,6 @@ class RegisterUI : AppCompatActivity() {
             Log.i("miasto: ", item.name + " " + item.street + " " + item.house_number)
             myDestination.add(item.name + " " + item.street + " " + item.house_number)
         }
-
 
         setOfficeSpinner(myDestination, destinations)
 
@@ -129,25 +159,12 @@ class RegisterUI : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val item = adapter.getItem(position)
                 id_destination = destinations[position].id_destination
-                println(item)
 
-
-
-            }
-        }
-        val button: Button = this.findViewById(R.id.register_button)
-
-        button.setOnClickListener {
-
-            //if (validateEmail() && validatePassword())
-            if (validateEmail() && validatePassword())
-            {
-                println("$emailInput $passwordInput $id_destination")
-                apiService.register(emailInput, passwordInput, id_destination)
             }
         }
     }
 
+    //Walidacje
     private fun validateEmail(): Boolean {
         emailInput = email_register.text.toString().trim()
 
