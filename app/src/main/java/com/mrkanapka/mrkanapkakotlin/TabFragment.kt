@@ -10,9 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
-import com.mrkanapka.mrkanapkakotlin.view.SandwichFragment
-import com.mrkanapka.mrkanapkakotlin.view.SaladFragment
 import com.mrkanapka.mrkanapkakotlin.view.JuiceFragment
+import com.mrkanapka.mrkanapkakotlin.view.SaladFragment
+import com.mrkanapka.mrkanapkakotlin.view.SandwichFragment
 
 class TabFragment : Fragment(){
 
@@ -38,12 +38,13 @@ class TabFragment : Fragment(){
     internal inner class MyAdapter (fm : FragmentManager) : FragmentPagerAdapter(fm){
 
         override fun getItem(position: Int): Fragment? {
-            if(position == 0)
-                return SandwichFragment.newInstance(category[position].id_category)
-            if(position == 1)
-                return SaladFragment.newInstance(category[position].id_category)
-            if(position == 2)
-                return JuiceFragment.newInstance(category[position].id_category)
+            println(position)
+            when(position){
+                0 -> return SandwichFragment.newInstance(category[position].id_category)
+                1 -> return SaladFragment.newInstance(category[position].id_category)
+                2 -> return JuiceFragment.newInstance(category[position].id_category)
+            }
+
             return null
         }
 

@@ -33,8 +33,8 @@ import kotlinx.android.synthetic.main.item_menu.view.*
 class JuiceFragment : Fragment(){
 
     companion object {
-        fun newInstance(category: Int): SandwichFragment {
-            val fragment = SandwichFragment()
+        fun newInstance(category: Int): JuiceFragment {
+            val fragment = JuiceFragment()
             val args = Bundle()
             args.putInt("category", category)
             fragment.arguments = args
@@ -50,7 +50,7 @@ class JuiceFragment : Fragment(){
     private val fastItemAdapter: FastItemAdapter<JuiceListItem> = FastItemAdapter()
     //region Tag
 
-    private val TAG = SaladFragment::class.java.simpleName
+    private val TAG = JuiceFragment::class.java.simpleName
 
     //endregion
     private var cacheSucces : Boolean = false

@@ -33,8 +33,8 @@ import kotlinx.android.synthetic.main.item_menu.view.*
 class SaladFragment  : Fragment() {
 
     companion object {
-        fun newInstance(category: Int): SandwichFragment {
-            val fragment = SandwichFragment()
+        fun newInstance(category: Int): SaladFragment {
+            val fragment = SaladFragment()
             val args = Bundle()
             args.putInt("category", category)
             fragment.arguments = args
