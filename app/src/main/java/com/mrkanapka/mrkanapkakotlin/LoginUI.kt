@@ -1,5 +1,6 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -37,15 +38,23 @@ class LoginUI : AppCompatActivity() {
         AndroidDatabase.database
     }
 
+    private val tokenManager by lazy {
+        TokenManager()
+    }
+
     private val disposables: CompositeDisposable = CompositeDisposable()
 
-    private fun handleTokenCacheSuccess() {
-
+    private fun handleTokenCacheSuccess(token: TokenEntity) {
+        val main = Intent(this, Main2Activity::class.java)
+        startActivity(main)
+        finish()
     }
 
-    private fun handleTokenCacheError() {
+    private fun handleTokenCacheError(throwable: Throwable) {
 
+        // Log an error.
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
@@ -57,8 +66,14 @@ class LoginUI : AppCompatActivity() {
         val reset_click_me = findViewById<TextView>(R.id.forgetPass_text)
 
 
-
-
+        tokenManager
+            .getToken()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                this::handleTokenCacheSuccess,
+                this::handleTokenCacheError
+            )
+            .addTo(disposables)
 
         button.setOnClickListener{
 
@@ -74,10 +89,11 @@ class LoginUI : AppCompatActivity() {
                             print("blad")
                         }
 
+                        @SuppressLint("CheckResult")
                         override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
-                            if(response.body()?.kod == 200)
+                            if(response.code() == 200)
                             {
-                                Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                                Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
                                 Completable.fromAction {
                                     database
                                         .tokenDao()
@@ -89,19 +105,14 @@ class LoginUI : AppCompatActivity() {
                                     }
                                 startActivity(main)
                             }
+                            else if (response.code() == 202)
+                            {
+                                Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
+                            }
                             else
                             {
-                                Toast.makeText(applicationContext,response.body()?.message, Toast.LENGTH_LONG).show()
+                                Toast.makeText(applicationContext,"Bład przy logowaniu", Toast.LENGTH_LONG).show()
                             }
-
-//                            if (response.body()?.message.equals("Niepoprawne dane logowania"))
-//                            {
-//                                Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
-//                            }
-//                            else {
-//                                Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
-//                                startActivity(main)
-//                            }
                         }
 
                     })

@@ -11,9 +11,11 @@ import android.view.Menu
 import android.view.MenuItem
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
+import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase.Companion.database
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
 import com.mrkanapka.mrkanapkakotlin.view.CartActivity
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -172,6 +174,19 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 val intent = Intent(this, CartActivity::class.java)
                 startActivity(intent)
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+            }
+            R.id.logout ->  {
+                Completable.fromAction {
+                    database
+                        .tokenDao()
+                        .removeToken()
+                }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        // data updated
+                    }
+                val intent = Intent(this, LoginUI::class.java)
+                startActivity(intent)
             }
             else -> {
 
