@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "products")
+
 data class ProductEntity(
 
     @ColumnInfo(name = "name")
@@ -23,8 +24,10 @@ data class ProductEntity(
     var price: String,
 
     @ColumnInfo(name = "description")
-    var description: String
+    var description: String,
 
+    @ColumnInfo(name = "id_category")
+    var id_category: Int
 
 ) {
 

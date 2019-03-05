@@ -4,21 +4,15 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import com.mrkanapka.mrkanapkakotlin.database.dao.JuiceDao
 import com.mrkanapka.mrkanapkakotlin.database.dao.ProductDao
-import com.mrkanapka.mrkanapkakotlin.database.dao.SaladDao
-import com.mrkanapka.mrkanapkakotlin.database.entity.JuiceEntity
 import com.mrkanapka.mrkanapkakotlin.database.entity.ProductEntity
-import com.mrkanapka.mrkanapkakotlin.database.entity.SaladEntity
 
 
 @Database(
-    version = 8,
+    version = 11,
     exportSchema = false,
     entities = [
-        ProductEntity::class,
-        SaladEntity::class,
-        JuiceEntity::class
+        ProductEntity::class
     ]
 )
 abstract class AndroidDatabase : RoomDatabase() {
@@ -41,11 +35,7 @@ abstract class AndroidDatabase : RoomDatabase() {
 
     //region Dao
 
-    abstract fun sandwichDao(): ProductDao
-
-    abstract fun saladDao(): SaladDao
-
-    abstract fun juiceDao(): JuiceDao
+    abstract fun productDao(): ProductDao
 
     //endregion
 }
