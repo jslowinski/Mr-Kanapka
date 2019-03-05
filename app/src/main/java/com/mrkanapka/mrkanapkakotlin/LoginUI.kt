@@ -25,6 +25,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class LoginUI : AppCompatActivity() {
 
     private var emailInput: String = ""
@@ -60,7 +61,6 @@ class LoginUI : AppCompatActivity() {
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_ui)
-
         val button : Button = this.findViewById(R.id.login_button)
         val register_click_me = findViewById<TextView>(R.id.register_text)
         val reset_click_me = findViewById<TextView>(R.id.forgetPass_text)
@@ -93,7 +93,7 @@ class LoginUI : AppCompatActivity() {
                         override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                             if(response.code() == 200)
                             {
-                                Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
+                                //Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
                                 Completable.fromAction {
                                     database
                                         .tokenDao()
@@ -103,7 +103,8 @@ class LoginUI : AppCompatActivity() {
                                     .subscribe {
                                         // data updated
                                     }
-                                startActivity(main)
+                                startActivityForResult(main,1)
+                                finish()
                             }
                             else if (response.code() == 202)
                             {
@@ -119,7 +120,7 @@ class LoginUI : AppCompatActivity() {
             }
             else
             {
-                Toast.makeText(applicationContext,"Brak internetu", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
             }
 
 
@@ -131,9 +132,10 @@ class LoginUI : AppCompatActivity() {
                 val main = Intent(this, RegisterUI::class.java)
                 //foodDetail.putExtra("Name",film.title)
                 startActivity(main)
+                finish()
             }
             else {
-                Toast.makeText(applicationContext,"Sprawdź swoje połączenie z internetem", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
             }
 
         }

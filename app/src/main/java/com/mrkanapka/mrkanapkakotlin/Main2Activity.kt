@@ -187,6 +187,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     }
                 val intent = Intent(this, LoginUI::class.java)
                 startActivity(intent)
+                finish()
             }
             else -> {
 

@@ -1,6 +1,7 @@
 package com.mrkanapka.mrkanapkakotlin
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -25,6 +26,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.regex.Pattern
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestRegister
+import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase.Companion.database
+import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
+import io.reactivex.Completable
 import java.time.LocalDateTime
 
 
@@ -33,7 +37,6 @@ class RegisterUI : AppCompatActivity() {
     private var emailInput: String = ""
     private var passwordInput: String = ""
     private var id_destination: Int = 0
-
     private val apiService by lazy {
         ApiClient.create()
     }
@@ -62,8 +65,6 @@ class RegisterUI : AppCompatActivity() {
 
 
 
-
-
         //przycisk rejestruj
         val button: Button = this.findViewById(R.id.register_button)
 
@@ -72,18 +73,11 @@ class RegisterUI : AppCompatActivity() {
         }
     }
 
-    fun hasNetwork(context: Context): Boolean? {
-        var isConnected: Boolean? = false // Initial Value
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
-        if (activeNetwork != null && activeNetwork.isConnected)
-            isConnected = true
-        return isConnected
-    }
-
     //Funcka rejestracji
     private fun register(){
         val main = Intent(this, Main2Activity::class.java)
+
+
         if (validateEmail() && validatePassword())
         {
             // println("$emailInput $passwordInput $id_destination")
@@ -91,20 +85,32 @@ class RegisterUI : AppCompatActivity() {
             apiService.register(RequestRegister(emailInput, passwordInput, id_destination.toString()))
                 .enqueue(object : Callback<ResponseDefault>{
                     override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                        Toast.makeText(applicationContext, "Brak internetu", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
 
                     }
 
+                    @SuppressLint("CheckResult")
                     override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
-                        if (response.body()?.message.equals("Client with that email already exists"))
+                        if (response.code() == 202)
                         {
                             Toast.makeText(applicationContext,"Podany email jest już zajęty", Toast.LENGTH_LONG).show()
                         }
-                        else {
-                            Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                        else if (response.code() == 201)
+                        {
+                            Completable.fromAction {
+                                database
+                                    .tokenDao()
+                                    .removeAndInsert(TokenEntity(response.body()!!.message))
+                            }.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    // data updated
+                                }
                             startActivity(main)
-                            println("Haslo: " + passwordInput)
-                            println("sukces")
+                            finish()
+                        } else
+                        {
+                            Toast.makeText(applicationContext, "Wystąpił bład. Spróbuj ponownie później", Toast.LENGTH_LONG).show()
                         }
                     }
                 })
@@ -140,6 +146,12 @@ class RegisterUI : AppCompatActivity() {
         setCitySpinner(myCities)
         //setOfficeSpinner()
 
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, LoginUI::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun setCitySpinner(cities: ArrayList<String>) {
@@ -224,7 +236,7 @@ class RegisterUI : AppCompatActivity() {
         "(?=.*[a-z])" +         //at least 1 lower case letter
         "(?=.*[A-Z])" +         //at least 1 upper case letter
         //"(?=.*[a-zA-Z])" +      //any letter
-        "(?=.*[@#$%^&+=])" +    //at least 1 special character
+        //"(?=.*[@#$%^&+=])" +    //at least 1 special character
         "(?=\\S+$)" +           //no white spaces
         ".{6,}" +               //at least 6 characters
         "$")
@@ -236,7 +248,7 @@ class RegisterUI : AppCompatActivity() {
             password_register.setError("Pole nie może być puste")
             return false
         } else if (!PASSWORD_PATTERN.matcher(passwordInput).matches()) {
-            password_register.setError("Hasło musi zawierać od 6 do 32 znaków, jedną cyfrę, jedną wielką literę, jedną małą literę oraz jeden znak specjalny.")
+            password_register.setError("Hasło musi zawierać od 6 do 32 znaków, jedną cyfrę, jedną wielką literę oraz jedną małą literę.")
             return false
         } else {
             password_register.setError(null)
