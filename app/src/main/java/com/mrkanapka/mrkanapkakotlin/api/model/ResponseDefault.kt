@@ -1,3 +1,6 @@
 package com.mrkanapka.mrkanapkakotlin.api.model
 
-data class ResponseDefault (val message: String)
+data class ResponseDefault (
+    val kod: Int,
+    val message: String
+)

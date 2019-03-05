@@ -1,6 +1,9 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -37,24 +40,42 @@ class LoginUI : AppCompatActivity() {
             passwordInput = password_text.text.toString().trim()
             val main = Intent(this, Main2Activity::class.java)
 
-            apiService.login(RequestLogin(emailInput,passwordInput))
-                .enqueue(object : Callback<ResponseDefault>{
-                    override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
-                        if (response.body()?.message.equals("Niepoprawne dane logowania"))
-                        {
-                            Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
+            if(this!!.hasNetwork(applicationContext)!!)
+            {
+                apiService.login(RequestLogin(emailInput,passwordInput))
+                    .enqueue(object : Callback<ResponseDefault>{
+                        override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                            print("blad")
                         }
-                        else {
-                            Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
-                            startActivity(main)
-                        }
-                    }
 
-                })
+                        override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                            if(response.body()?.kod == 200)
+                            {
+                                Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                                startActivity(main)
+                            }
+                            else
+                            {
+                                Toast.makeText(applicationContext,response.body()?.message, Toast.LENGTH_LONG).show()
+                            }
+
+//                            if (response.body()?.message.equals("Niepoprawne dane logowania"))
+//                            {
+//                                Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
+//                            }
+//                            else {
+//                                Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+//                                startActivity(main)
+//                            }
+                        }
+
+                    })
+            }
+            else
+            {
+                Toast.makeText(applicationContext,"Brak internetu", Toast.LENGTH_LONG).show()
+            }
+
 
         }
 
@@ -77,5 +98,14 @@ class LoginUI : AppCompatActivity() {
         builder.setView(dialogLayout)
 
         builder.show()
+    }
+
+    fun hasNetwork(context: Context): Boolean? {
+        var isConnected: Boolean? = false // Initial Value
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnected)
+            isConnected = true
+        return isConnected
     }
 }

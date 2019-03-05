@@ -1,8 +1,13 @@
 package com.mrkanapka.mrkanapkakotlin
 
 
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.util.Patterns
 import android.view.View
@@ -20,7 +25,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.regex.Pattern
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestRegister
-
+import java.time.LocalDateTime
 
 
 class RegisterUI : AppCompatActivity() {
@@ -39,6 +44,10 @@ class RegisterUI : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_ui)
 
+        val myCities = ArrayList<String>()
+        myCities.add("Miasto")
+        setCitySpinnerOffline(myCities)
+
         disposables.add(
             apiService
                 .fetchCities()
@@ -51,6 +60,10 @@ class RegisterUI : AppCompatActivity() {
                 )
         )
 
+
+
+
+
         //przycisk rejestruj
         val button: Button = this.findViewById(R.id.register_button)
 
@@ -59,8 +72,18 @@ class RegisterUI : AppCompatActivity() {
         }
     }
 
+    fun hasNetwork(context: Context): Boolean? {
+        var isConnected: Boolean? = false // Initial Value
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnected)
+            isConnected = true
+        return isConnected
+    }
+
     //Funcka rejestracji
     private fun register(){
+        val main = Intent(this, Main2Activity::class.java)
         if (validateEmail() && validatePassword())
         {
             // println("$emailInput $passwordInput $id_destination")
@@ -68,8 +91,8 @@ class RegisterUI : AppCompatActivity() {
             apiService.register(RequestRegister(emailInput, passwordInput, id_destination.toString()))
                 .enqueue(object : Callback<ResponseDefault>{
                     override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
-                        println("blad")
+                        Toast.makeText(applicationContext, "Brak internetu", Toast.LENGTH_LONG).show()
+
                     }
 
                     override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
@@ -79,6 +102,7 @@ class RegisterUI : AppCompatActivity() {
                         }
                         else {
                             Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                            startActivity(main)
                             println("Haslo: " + passwordInput)
                             println("sukces")
                         }
@@ -89,6 +113,21 @@ class RegisterUI : AppCompatActivity() {
 
     //spinnery
     private fun handleFetchCitiesError(throwable: Throwable?) {
+        Handler().postDelayed({
+            Log.e("Czas",LocalDateTime.now().toString())
+            disposables.add(
+                apiService
+                    .fetchCities()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { it.cities }
+                    .subscribe(
+                        { handleFetchCitiesSuccess(it) },
+                        { handleFetchCitiesError(it) }
+                    )
+            )
+        }, 3000)
+
     }
 
     private fun handleFetchCitiesSuccess(cities: List<CityDto>) {
@@ -105,7 +144,7 @@ class RegisterUI : AppCompatActivity() {
 
     private fun setCitySpinner(cities: ArrayList<String>) {
         val citySpinner: Spinner = findViewById(R.id.city_register)
-        var adapter = ArrayAdapter(this, R.layout.spinner_item, cities)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, cities)
         citySpinner.adapter = adapter
         citySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -149,7 +188,7 @@ class RegisterUI : AppCompatActivity() {
 
     private fun setOfficeSpinner(myDestination: ArrayList<String>, destinations: List<DestinationDto>) {
         val citySpinner: Spinner = findViewById(R.id.office_register)
-        var adapter = ArrayAdapter(this, R.layout.spinner_item, myDestination)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, myDestination)
         citySpinner.adapter = adapter
         citySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -187,7 +226,7 @@ class RegisterUI : AppCompatActivity() {
         //"(?=.*[a-zA-Z])" +      //any letter
         "(?=.*[@#$%^&+=])" +    //at least 1 special character
         "(?=\\S+$)" +           //no white spaces
-        ".{6,}" +               //at least 4 characters
+        ".{6,}" +               //at least 6 characters
         "$")
 
     private fun validatePassword(): Boolean {
@@ -197,11 +236,26 @@ class RegisterUI : AppCompatActivity() {
             password_register.setError("Pole nie może być puste")
             return false
         } else if (!PASSWORD_PATTERN.matcher(passwordInput).matches()) {
-            password_register.setError("Hasło za słabe")
+            password_register.setError("Hasło musi zawierać od 6 do 32 znaków, jedną cyfrę, jedną wielką literę, jedną małą literę oraz jeden znak specjalny.")
             return false
         } else {
             password_register.setError(null)
             return true
+        }
+    }
+
+    private fun setCitySpinnerOffline(cities: ArrayList<String>) {
+        val citySpinner: Spinner = findViewById(R.id.city_register)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, cities)
+        citySpinner.adapter = adapter
+        citySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+            }
         }
     }
 
