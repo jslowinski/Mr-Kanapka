@@ -15,14 +15,13 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mrkanapka.mrkanapkakotlin.FoodDetail
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.Cart
-import com.mrkanapka.mrkanapkakotlin.api.Url
 import com.mrkanapka.mrkanapkakotlin.database.entity.ProductEntity
 import com.mrkanapka.mrkanapkakotlin.manager.ProductsManager
 import com.mrkanapka.mrkanapkakotlin.view.list.ProductListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import kotlinx.android.synthetic.main.fragment_sandwich.*
+import kotlinx.android.synthetic.main.fragment_product.*
 import com.mikepenz.fastadapter.FastAdapter
 import android.support.v7.widget.RecyclerView
 import com.mikepenz.fastadapter.listeners.ClickEventHook
@@ -30,11 +29,11 @@ import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
 import kotlinx.android.synthetic.main.item_menu.view.*
 
 
-class SandwichFragment  : Fragment() {
+class ProductFragment  : Fragment() {
 
     companion object {
-        fun newInstance(category: Int): SandwichFragment {
-            val fragment = SandwichFragment()
+        fun newInstance(category: Int): ProductFragment {
+            val fragment = ProductFragment()
             val args = Bundle()
             args.putInt("category", category)
             fragment.arguments = args
@@ -49,13 +48,13 @@ class SandwichFragment  : Fragment() {
     private val fastItemAdapter: FastItemAdapter<ProductListItem> = FastItemAdapter()
     //region Tag
 
-    private val TAG = SandwichFragment::class.java.simpleName
+    private val TAG = ProductFragment::class.java.simpleName
 
     //endregion
     private var cacheSucces : Boolean = false
     //region API
 
-    private val sandwichesManager by lazy {
+    private val productsManager by lazy {
         ProductsManager()
     }
 
@@ -219,7 +218,7 @@ class SandwichFragment  : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        return inflater.inflate(R.layout.fragment_sandwich, container, false)
+        return inflater.inflate(R.layout.fragment_product, container, false)
     }
 
     private fun addAndFetchSandwiches(progressbar: Boolean)
@@ -229,8 +228,8 @@ class SandwichFragment  : Fragment() {
         textView6.visibility = View.GONE
         imageView5.visibility = View.GONE
         //From cache
-        sandwichesManager
-            .getSandwiches()
+        productsManager
+            .getProducts(category)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 this::handleFetchSandwichsCacheSuccess,
@@ -239,9 +238,9 @@ class SandwichFragment  : Fragment() {
             .addTo(disposables)
 
         //From api
-        sandwichesManager
-            .downloadSandwiches("products/" + category)
-            .andThen(sandwichesManager.getSandwiches())
+        productsManager
+            .downloadProducts("products/" + category, category)
+            .andThen(productsManager.getProducts(category))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress() }
             .doFinally { hideProgress() }

@@ -12,7 +12,6 @@ import android.view.MenuItem
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
 import com.mrkanapka.mrkanapkakotlin.view.CartActivity
-import com.mrkanapka.mrkanapkakotlin.view.JuiceFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -119,16 +118,13 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     fun displayScreen(id: Int, category: ArrayList<CategoryDto>) {
-        Log.e("item.id_category: ", category[0].id_category.toString())
-        Log.e("item.id_category: ", category[1].id_category.toString())
-        Log.e("item.id_category: ", category[2].id_category.toString())
         val fragment  = when (id) {
             R.id.main_menu -> {
                 // TU CHYBA PROBLEM
                 TabFragment.newInstance(category)
             }
             else -> {
-                JuiceFragment()
+                TabFragment.newInstance(category)
             }
         }
         supportFragmentManager

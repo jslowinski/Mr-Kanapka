@@ -13,7 +13,7 @@
               android:layout_width="match_parent"
               android:id="@+id/root1"
               android:layout_height="match_parent"
-              tools:context=".view.SandwichFragment"
+              tools:context=".view.ProductFragment"
               android:background="@color/colorBackgroudView">
               <TextView
                       android:text="Sprawdź swoje połączenie z internetem"

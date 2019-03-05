@@ -11,15 +11,15 @@ abstract class ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(entities: List<ProductEntity>)
 
-    @Query("DELETE FROM products")
-    abstract fun removeAll()
+    @Query("DELETE FROM products WHERE id_category = :category ")
+    abstract fun removeProducts(category: Int)
 
-    @Query("SELECT * FROM products ORDER BY id_product ASC")
-    abstract fun getSandwichs(): Maybe<List<ProductEntity>>
+    @Query("SELECT * FROM products WHERE id_category = :category ORDER BY id_product ASC")
+    abstract fun getProducts(category: Int): Maybe<List<ProductEntity>>
 
     @Transaction
-    open fun removeAndInsert(entities: List<ProductEntity>) {
-        removeAll()
+    open fun removeAndInsert(entities: List<ProductEntity>, category: Int) {
+        removeProducts(category)
         insert(entities)
     }
 }
