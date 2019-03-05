@@ -258,5 +258,4 @@ class RegisterUI : AppCompatActivity() {
             }
         }
     }
-
 }

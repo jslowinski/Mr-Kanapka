@@ -31,8 +31,8 @@ class LoginUI : AppCompatActivity() {
         setContentView(R.layout.activity_login_ui)
 
         val button : Button = this.findViewById(R.id.login_button)
-        val register_click_me = findViewById(R.id.register_text) as TextView
-        val reset_click_me = findViewById(R.id.forgetPass_text) as TextView
+        val register_click_me = findViewById<TextView>(R.id.register_text)
+        val reset_click_me = findViewById<TextView>(R.id.forgetPass_text)
 
         button.setOnClickListener{
 
@@ -80,9 +80,16 @@ class LoginUI : AppCompatActivity() {
         }
 
         register_click_me.setOnClickListener {
-            val main = Intent(this, RegisterUI::class.java)
-            //foodDetail.putExtra("Name",film.title)
-            startActivity(main)
+
+            if(this.hasNetwork(applicationContext)!!) {
+                val main = Intent(this, RegisterUI::class.java)
+                //foodDetail.putExtra("Name",film.title)
+                startActivity(main)
+            }
+            else {
+                Toast.makeText(applicationContext,"Sprawdź swoje połączenie z internetem", Toast.LENGTH_LONG).show()
+            }
+
         }
 
         reset_click_me.setOnClickListener{
