@@ -11,9 +11,12 @@ import android.view.Menu
 import android.view.MenuItem
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
+import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
+import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
 import com.mrkanapka.mrkanapkakotlin.view.CartActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
@@ -23,6 +26,11 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private val apiService by lazy {
         ApiClient.create()
     }
+
+    private val tokenManager by lazy {
+        TokenManager()
+    }
+
     private val disposables: CompositeDisposable = CompositeDisposable()
 
     private fun handleFetchCategorySuccess(category: List<CategoryDto>) {
@@ -49,6 +57,17 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         //Snackbar.make(root, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
     }
 
+    private fun handleTokenCacheSuccess(token: TokenEntity) {
+
+        println(token.token)
+
+    }
+
+    private fun handleTokenCacheError(throwable: Throwable) {
+
+        // Log an error.
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
@@ -62,6 +81,18 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 //            val intent = Intent(this, CartActivity::class.java)
 //            startActivity(intent)
 //        }
+
+
+
+        tokenManager
+            .getToken()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                this::handleTokenCacheSuccess,
+                this::handleTokenCacheError
+            )
+            .addTo(disposables)
+
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close

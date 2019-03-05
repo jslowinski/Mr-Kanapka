@@ -5,14 +5,17 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.mrkanapka.mrkanapkakotlin.database.dao.ProductDao
+import com.mrkanapka.mrkanapkakotlin.database.dao.TokenDao
 import com.mrkanapka.mrkanapkakotlin.database.entity.ProductEntity
+import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 
 
 @Database(
-    version = 11,
+    version = 12,
     exportSchema = false,
     entities = [
-        ProductEntity::class
+        ProductEntity::class,
+        TokenEntity::class
     ]
 )
 abstract class AndroidDatabase : RoomDatabase() {
@@ -36,6 +39,8 @@ abstract class AndroidDatabase : RoomDatabase() {
     //region Dao
 
     abstract fun productDao(): ProductDao
+
+    abstract fun tokenDao(): TokenDao
 
     //endregion
 }

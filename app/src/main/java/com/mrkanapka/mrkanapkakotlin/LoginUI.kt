@@ -11,6 +11,14 @@ import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestLogin
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase
+import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
+import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login_ui.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,6 +33,20 @@ class LoginUI : AppCompatActivity() {
         ApiClient.create()
     }
 
+    private val database by lazy {
+        AndroidDatabase.database
+    }
+
+    private val disposables: CompositeDisposable = CompositeDisposable()
+
+    private fun handleTokenCacheSuccess() {
+
+    }
+
+    private fun handleTokenCacheError() {
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
@@ -33,6 +55,10 @@ class LoginUI : AppCompatActivity() {
         val button : Button = this.findViewById(R.id.login_button)
         val register_click_me = findViewById<TextView>(R.id.register_text)
         val reset_click_me = findViewById<TextView>(R.id.forgetPass_text)
+
+
+
+
 
         button.setOnClickListener{
 
@@ -52,6 +78,15 @@ class LoginUI : AppCompatActivity() {
                             if(response.body()?.kod == 200)
                             {
                                 Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
+                                Completable.fromAction {
+                                    database
+                                        .tokenDao()
+                                        .removeAndInsert(TokenEntity(response.body()!!.message))
+                                }.subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe {
+                                        // data updated
+                                    }
                                 startActivity(main)
                             }
                             else

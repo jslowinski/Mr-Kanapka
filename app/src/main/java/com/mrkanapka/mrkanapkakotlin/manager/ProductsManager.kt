@@ -53,4 +53,6 @@ class ProductsManager {
             .productDao()
             .getProducts(position)
             .subscribeOn(Schedulers.io())
+
+
 }
