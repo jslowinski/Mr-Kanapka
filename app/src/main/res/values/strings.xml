@@ -25,6 +25,8 @@
     <string name="zaloguj">Zaloguj</string>
     <string name="forget_password">Nie pamiętasz hasła?</string>
     <string name="register_text">Nie masz jeszcze konta?</string>
-    <string name="register"><u>Zarejestruj sie</u></string>
+    <string name="register">
+        <u>Zarejestruj sie</u>
+    </string>
     <string name="zarejestruj">Zarejestruj</string>
 </resources>
