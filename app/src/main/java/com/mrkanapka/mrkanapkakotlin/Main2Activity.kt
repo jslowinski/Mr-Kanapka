@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -13,6 +14,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
 import com.mrkanapka.mrkanapkakotlin.api.model.SellerDto
@@ -52,7 +54,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         displayScreen(R.id.main_menu, arrayList)
-
+        dialog.cancel()
     }
 
     private fun handleFetchCategoryError(throwable: Throwable) {
@@ -60,7 +62,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Log an error.
         Log.e("tabfragment", "An error occurred while fetching categories.")
         Log.e("tabfragment", throwable.localizedMessage)
-
+        dialog.cancel()
         //Snackbar.make(root, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
     }
 
@@ -84,11 +86,12 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         setSellerSpinner(mySeller, seller)
+        dialog.cancel()
 
     }
 
     private fun handleFetchSellerError(throwable: Throwable?) {
-
+        dialog.cancel()
     }
 
     private fun setSellerSpinner(mySeller: ArrayList<String>, seller: List<SellerDto>) {
@@ -102,6 +105,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 //id_destination = destinations[position].id_destination
+                dialog.show()
                 disposables.add(
                     apiService
                         .fetchCategory("products/seller/" + seller[position].id_seller)
@@ -118,13 +122,22 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
+    private lateinit var dialog: AlertDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         setSupportActionBar(toolbar)
 
-
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
+        val message = dialogView.findViewById<TextView>(R.id.textDialog)
+        message.text = "Pobieranie danych..."
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+        dialog = builder.create()
+        dialog.show()
 
 ////      Funkcja od ikonki maila
 //        fab.setOnClickListener { //view ->

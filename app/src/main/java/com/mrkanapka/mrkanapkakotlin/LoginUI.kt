@@ -53,9 +53,11 @@ class LoginUI : AppCompatActivity() {
 
     private fun handleTokenCacheError(throwable: Throwable) {
 
+        dialog.cancel()
         // Log an error.
     }
 
+    private lateinit var dialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
@@ -65,7 +67,14 @@ class LoginUI : AppCompatActivity() {
         val register_click_me = findViewById<TextView>(R.id.register_text)
         val reset_click_me = findViewById<TextView>(R.id.forgetPass_text)
 
-
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
+        val message = dialogView.findViewById<TextView>(R.id.textDialog)
+        message.text = "Sprawdzanie danych logowania..."
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+        dialog = builder.create()
+        dialog.show()
         tokenManager
             .getToken()
             .observeOn(AndroidSchedulers.mainThread())
@@ -77,6 +86,7 @@ class LoginUI : AppCompatActivity() {
 
         button.setOnClickListener{
 
+            dialog.show()
             emailInput = email_text.text.toString().trim()
             passwordInput = password_text.text.toString().trim()
             val main = Intent(this, Main2Activity::class.java)
@@ -108,10 +118,12 @@ class LoginUI : AppCompatActivity() {
                             }
                             else if (response.code() == 202)
                             {
+                                dialog.cancel()
                                 Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
                             }
                             else
                             {
+                                dialog.cancel()
                                 Toast.makeText(applicationContext,"Bład przy logowaniu", Toast.LENGTH_LONG).show()
                             }
                         }
@@ -120,6 +132,7 @@ class LoginUI : AppCompatActivity() {
             }
             else
             {
+                dialog.cancel()
                 Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
             }
 
