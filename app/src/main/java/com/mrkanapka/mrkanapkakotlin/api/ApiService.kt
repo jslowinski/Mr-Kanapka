@@ -11,8 +11,11 @@ interface ApiService {
   @GET
   fun fetchProducts(@Url url: String): Single<Response<List<ProductsDto>>>
 
-  @GET("products")
-  fun fetchCategory(): Single<ResponseCategory<List<CategoryDto>>>
+  @GET
+  fun fetchSellers(@Url url: String): Single<ResponseSeller<List<SellerDto>>>
+
+  @GET
+  fun fetchCategory(@Url url: String): Single<ResponseCategory<List<CategoryDto>>>
 
   @GET
   fun fetchDetail(@Url url: String): Call<ResponseDetail>

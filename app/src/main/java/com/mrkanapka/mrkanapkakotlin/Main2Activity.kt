@@ -9,8 +9,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
+import com.mrkanapka.mrkanapkakotlin.api.model.SellerDto
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase.Companion.database
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
@@ -70,11 +75,56 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Log an error.
     }
 
+    private fun handleFetchSellerSuccess(seller: List<SellerDto>) {
+
+        val mySeller = ArrayList<String>()
+        for (item in seller) {
+            println(item)
+            mySeller.add(item.sellername!!)
+        }
+
+        setSellerSpinner(mySeller, seller)
+
+    }
+
+    private fun handleFetchSellerError(throwable: Throwable?) {
+
+    }
+
+    private fun setSellerSpinner(mySeller: ArrayList<String>, seller: List<SellerDto>) {
+        val sellerSpinner: Spinner = findViewById(R.id.spinner_seller)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, mySeller)
+        sellerSpinner.adapter = adapter
+        sellerSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                //id_destination = destinations[position].id_destination
+                disposables.add(
+                    apiService
+                        .fetchCategory("products/seller/" + seller[position].id_seller)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map { it.category }
+                        .subscribe(
+                            { handleFetchCategorySuccess(it) },
+                            { handleFetchCategoryError(it) }
+                        )
+                )
+
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         setSupportActionBar(toolbar)
+
+
 
 ////      Funkcja od ikonki maila
 //        fab.setOnClickListener { //view ->
@@ -84,6 +134,18 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 //            startActivity(intent)
 //        }
 
+
+        disposables.add(
+            apiService
+                .fetchSellers("seller/" + 1) //tutaj w domysle id_destination wybrane w profilu!!!
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { it.seller }
+                .subscribe(
+                    { handleFetchSellerSuccess(it) },
+                    { handleFetchSellerError(it) }
+                )
+        )
 
 
         tokenManager
@@ -104,21 +166,12 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        disposables.add(
-            apiService
-                .fetchCategory()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { it.category }
-                .subscribe(
-                    { handleFetchCategorySuccess(it) },
-                    { handleFetchCategoryError(it) }
-                )
-        )
-
         //domyslny ekran czyli odpali się default
 
     }
+
+
+
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {

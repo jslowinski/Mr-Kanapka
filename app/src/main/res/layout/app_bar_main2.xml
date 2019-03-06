@@ -26,6 +26,11 @@
                 android:elevation="4dp"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
         />
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/spinner_seller" android:textAlignment="center"
+                android:spinnerMode="dropdown" android:clickable="true"
+                android:popupBackground="@color/colorPrimaryDark"/>
 
     </android.support.design.widget.AppBarLayout>
 

@@ -5,13 +5,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar2" app:title="Wybierz Pana Kanapkę"
-            android:textAlignment="center" android:clickable="true"/>
     <android.support.design.widget.TabLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
