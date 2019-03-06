@@ -242,6 +242,10 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 startActivity(intent)
                 finish()
             }
+            R.id.profile -> {
+                val intent = Intent(this, ProfilUI::class.java)
+                startActivity(intent)
+            }
             else -> {
 
 

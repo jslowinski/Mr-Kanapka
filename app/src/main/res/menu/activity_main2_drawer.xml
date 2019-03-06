@@ -13,7 +13,7 @@
                 android:icon="@drawable/ic_shopping_cart"
                 android:title="@string/nav_cart"/>
         <item
-                android:id="@+id/nav_slideshow"
+                android:id="@+id/profile"
                 android:icon="@drawable/ic_menu_slideshow"
                 android:title="Test"/>
         <item
@@ -25,6 +25,7 @@
                 android:id="@+id/logout"
                 android:title="Wyloguj"
             />
+
     </group>
 
 
