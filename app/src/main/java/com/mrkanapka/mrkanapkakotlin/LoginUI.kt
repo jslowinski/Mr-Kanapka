@@ -97,6 +97,7 @@ class LoginUI : AppCompatActivity() {
                     .enqueue(object : Callback<ResponseDefault>{
                         override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                             print("blad")
+                            dialog.cancel()
                         }
 
                         @SuppressLint("CheckResult")

@@ -7,5 +7,5 @@ data class SellerDto (
     var id_seller: Int,
 
     @SerializedName("sellername")
-    var sellername: String? = null
+    var sellername: String
 )
