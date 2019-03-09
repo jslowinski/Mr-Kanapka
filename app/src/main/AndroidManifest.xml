@@ -16,16 +16,20 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:icon,android:theme">
-        <activity android:name=".ProfilUI">
+        <activity
+                android:name=".ProfilUI"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".Main2Activity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".view.CartActivity">
+        <activity
+                android:name=".view.CartActivity">
         </activity>
-        <activity android:name=".FoodDetail">
+        <activity
+                android:name=".FoodDetail">
         </activity>
         <activity
                 android:name=".LoginUI"
@@ -33,9 +37,7 @@
                 android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
-
                 <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
         </activity>

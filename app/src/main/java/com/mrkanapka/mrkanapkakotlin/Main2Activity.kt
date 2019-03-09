@@ -11,10 +11,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
 import com.mrkanapka.mrkanapkakotlin.api.model.SellerDto
@@ -68,7 +65,6 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
 
-        println(token.token)
 
     }
 
