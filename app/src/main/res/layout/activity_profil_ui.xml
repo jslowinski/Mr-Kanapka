@@ -16,57 +16,54 @@
 
     >
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <!--<android.support.design.widget.CollapsingToolbarLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="250dp"-->
+                <!--app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
+                <!--app:contentScrim="?attr/colorPrimary"-->
+                <!--app:expandedTitleTextAppearance="@android:color/transparent"-->
+                <!--android:fitsSystemWindows="true"-->
+                <!--&gt;-->
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleTextAppearance="@android:color/transparent"
-                android:fitsSystemWindows="true"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin"
         >
 
             <ImageView
-                    app:layout_collapseMode="parallax"
+                    android:id="@+id/edit_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_mode_edit_black_24dp"
+            />
 
-                    android:contentDescription="Mój profil"
-                    android:scaleType="centerCrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:layout_marginBottom="25dp"/>
+            <ImageView
+                    android:id="@+id/edit_profile_accept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_check_black_24dp"
+                    android:visibility="gone"
+            />
 
-            <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:layout_collapseMode="pin"
-                    >
+            <ImageView
+                    android:id="@+id/edit_profile_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="25dp"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:visibility="gone"
+            />
 
-                <ImageView
-                        android:id="@+id/edit_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginEnd="25dp"
-                        android:src="@drawable/ic_mode_edit_black_24dp"
-                />
+        </android.support.v7.widget.Toolbar>
 
-                <ImageView
-                        android:id="@+id/edit_profile_cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginEnd="25dp"
-                        android:src="@drawable/ic_close_black_24dp"
-                        android:visibility="gone"
-                />
-
-            </android.support.v7.widget.Toolbar>
-
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-
+        <!--</android.support.design.widget.CollapsingToolbarLayout>-->
 
     </android.support.design.widget.AppBarLayout>
 
@@ -120,15 +117,15 @@
                         android:layout_height="2dp"
                         android:background="#000000"
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
-                        app:layout_constraintBottom_toBottomOf="@+id/or"
+                        app:layout_constraintBottom_toBottomOf="@+id/email"
                         app:layout_constraintHorizontal_chainStyle="spread_inside"
-                        app:layout_constraintEnd_toStartOf="@+id/or"
+                        app:layout_constraintEnd_toStartOf="@+id/email"
 
 
                 />
 
                 <TextView
-                        android:id="@+id/or"
+                        android:id="@+id/email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Email"
@@ -146,10 +143,10 @@
                         android:layout_width="220dp"
                         android:layout_height="2dp"
                         android:background="#000000"
-                        app:layout_constraintBottom_toBottomOf="@+id/or"
+                        app:layout_constraintBottom_toBottomOf="@+id/email"
                         app:layout_constraintEnd_toEndOf="@id/guideline_right"
-                        app:layout_constraintStart_toEndOf="@+id/or"
-                        app:layout_constraintTop_toTopOf="@+id/or"/>
+                        app:layout_constraintStart_toEndOf="@+id/email"
+                        app:layout_constraintTop_toTopOf="@+id/email"/>
 
                 <EditText
                         android:id="@+id/profile_email"
@@ -160,6 +157,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/line2"
                         android:textColor="#000000"
                         android:enabled="false"
+
                 />
 
                 <View
@@ -209,7 +207,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/line4"
                         android:textColor="#000000"
                         android:visibility="gone"
-
+                        android:maxLines="1"
                 />
 
                 <View
@@ -258,6 +256,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/line6"
                         android:textColor="#000000"
                         android:visibility="gone"
+                        android:maxLines="1"
                 />
 
                 <View
@@ -307,6 +306,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/line8"
                         android:textColor="#000000"
                         android:visibility="gone"
+                        android:maxLines="1"
                 />
 
                 <View

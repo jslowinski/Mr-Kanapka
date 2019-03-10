@@ -38,4 +38,7 @@ interface ApiService {
   @PUT("profile/edit")
   fun editProfile(@Body body: RequestProfileEdit): Call<ResponseDefault>
 
+  @PUT("token_check")
+  fun checkToken(@Body body: RequestToken): Call<ResponseDefault>
+
 }
