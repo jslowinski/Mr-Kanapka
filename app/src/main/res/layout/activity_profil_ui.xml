@@ -27,7 +27,7 @@
 
             <ImageView
                     app:layout_collapseMode="parallax"
-                    android:src="@drawable/ic_account_circle_black_24dp"
+
                     android:contentDescription="Mój profil"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"
@@ -52,11 +52,13 @@
                 />
 
                 <ImageView
+                        android:id="@+id/edit_profile_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
                         android:layout_marginEnd="25dp"
-                        android:src="@drawable/ic_check_black_24dp"
+                        android:src="@drawable/ic_close_black_24dp"
+                        android:visibility="gone"
                 />
 
             </android.support.v7.widget.Toolbar>
@@ -136,6 +138,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/line2"
                         app:layout_constraintStart_toEndOf="@+id/line1"
 
+
                 />
 
                 <View
@@ -155,6 +158,8 @@
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
                         app:layout_constraintEnd_toStartOf="@id/guideline_right"
                         app:layout_constraintTop_toBottomOf="@+id/line2"
+                        android:textColor="#000000"
+                        android:enabled="false"
                 />
 
                 <View
@@ -167,6 +172,7 @@
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
                         app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintEnd_toStartOf="@+id/imie"
+                        android:visibility="gone"
                 />
                 <TextView
                         android:id="@+id/imie"
@@ -177,7 +183,10 @@
                         app:layout_constraintBottom_toBottomOf="@+id/line3"
                         app:layout_constraintTop_toTopOf="@+id/line3"
                         app:layout_constraintEnd_toStartOf="@+id/line4"
-                        app:layout_constraintStart_toEndOf="@+id/line3"/>
+                        app:layout_constraintStart_toEndOf="@+id/line3"
+                        android:visibility="gone"
+                        />
+
 
                 <View
                         android:id="@+id/line4"
@@ -187,7 +196,9 @@
                         app:layout_constraintBottom_toBottomOf="@+id/imie"
                         app:layout_constraintEnd_toEndOf="@id/guideline_right"
                         app:layout_constraintStart_toEndOf="@+id/imie"
-                        app:layout_constraintTop_toTopOf="@+id/imie"/>
+                        app:layout_constraintTop_toTopOf="@+id/imie"
+                        android:visibility="gone"
+                        />
 
                 <EditText
                         android:id="@+id/profile_firstname"
@@ -196,6 +207,9 @@
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
                         app:layout_constraintEnd_toStartOf="@id/guideline_right"
                         app:layout_constraintTop_toBottomOf="@+id/line4"
+                        android:textColor="#000000"
+                        android:visibility="gone"
+
                 />
 
                 <View
@@ -208,6 +222,7 @@
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
                         app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintEnd_toStartOf="@+id/nazwisko"
+                        android:visibility="gone"
                 />
                 <TextView
                         android:id="@+id/nazwisko"
@@ -218,7 +233,9 @@
                         app:layout_constraintBottom_toBottomOf="@+id/line5"
                         app:layout_constraintTop_toTopOf="@+id/line5"
                         app:layout_constraintEnd_toStartOf="@+id/line6"
-                        app:layout_constraintStart_toEndOf="@+id/line5"/>
+                        app:layout_constraintStart_toEndOf="@+id/line5"
+                        android:visibility="gone"
+                />
 
                 <View
                         android:id="@+id/line6"
@@ -228,7 +245,9 @@
                         app:layout_constraintBottom_toBottomOf="@+id/nazwisko"
                         app:layout_constraintEnd_toEndOf="@id/guideline_right"
                         app:layout_constraintStart_toEndOf="@+id/nazwisko"
-                        app:layout_constraintTop_toTopOf="@+id/nazwisko"/>
+                        app:layout_constraintTop_toTopOf="@+id/nazwisko"
+                        android:visibility="gone"
+                />
 
                 <EditText
                         android:id="@+id/profile_lastname"
@@ -237,6 +256,8 @@
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
                         app:layout_constraintEnd_toStartOf="@id/guideline_right"
                         app:layout_constraintTop_toBottomOf="@+id/line6"
+                        android:textColor="#000000"
+                        android:visibility="gone"
                 />
 
                 <View
@@ -249,6 +270,7 @@
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
                         app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintEnd_toStartOf="@+id/phone"
+                        android:visibility="gone"
                 />
                 <TextView
                         android:id="@+id/phone"
@@ -259,7 +281,9 @@
                         app:layout_constraintBottom_toBottomOf="@+id/line7"
                         app:layout_constraintTop_toTopOf="@+id/line7"
                         app:layout_constraintEnd_toStartOf="@+id/line8"
-                        app:layout_constraintStart_toEndOf="@+id/line7"/>
+                        app:layout_constraintStart_toEndOf="@+id/line7"
+                        android:visibility="gone"
+                />
 
                 <View
                         android:id="@+id/line8"
@@ -269,7 +293,9 @@
                         app:layout_constraintBottom_toBottomOf="@+id/phone"
                         app:layout_constraintEnd_toEndOf="@id/guideline_right"
                         app:layout_constraintStart_toEndOf="@+id/phone"
-                        app:layout_constraintTop_toTopOf="@+id/phone"/>
+                        app:layout_constraintTop_toTopOf="@+id/phone"
+                        android:visibility="gone"
+                />
 
                 <EditText
                         android:id="@+id/profile_phone"
@@ -279,6 +305,8 @@
                         app:layout_constraintStart_toStartOf="@id/guideline_left"
                         app:layout_constraintEnd_toStartOf="@id/guideline_right"
                         app:layout_constraintTop_toBottomOf="@+id/line8"
+                        android:textColor="#000000"
+                        android:visibility="gone"
                 />
 
                 <View

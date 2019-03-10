@@ -42,7 +42,11 @@ class ProfilUI : AppCompatActivity() {
 
     private var access_token : String = ""
 
-    private var flag : Int = 0
+    private var flag : Boolean = false
+
+    private var id_destination: Int = 0
+
+    private var id_destination_profile: Int = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +54,8 @@ class ProfilUI : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profil_ui)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        toolbar.setTitle("Profil")
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.title = "Profil"
         setSupportActionBar(toolbar)
         if (supportActionBar != null)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -73,7 +77,6 @@ class ProfilUI : AppCompatActivity() {
         val citySpinner: Spinner = findViewById(R.id.profile_city_spinner)
         val email: EditText =  findViewById(R.id.profile_email)
         val edit_profile = findViewById<ImageView>(R.id.edit_profile)
-        val edit_profile2: ImageView = findViewById(R.id.edit_profile)
         tokenManager
             .getToken()
             .observeOn(AndroidSchedulers.mainThread())
@@ -87,27 +90,62 @@ class ProfilUI : AppCompatActivity() {
 
         button.setOnClickListener{
             Toast.makeText(applicationContext, access_token, Toast.LENGTH_LONG).show()
-
         }
 
         edit_profile.setOnClickListener{
-            edit_profile2.visibility
+            flagChange()
+        }
+    }
 
+    private fun flagChange(){
+        if (!flag)
+        {
+            flag = true
+            edit_profile.setImageResource(R.drawable.ic_check_black_24dp)
+            edit_profile_cancel.visibility = View.VISIBLE
+            //edycja imienia
+            profile_firstname.visibility = View.VISIBLE
+            profile_firstname.isEnabled = true
+            line3.visibility = View.VISIBLE
+            imie.visibility = View.VISIBLE
+            line4.visibility = View.VISIBLE
+            //edycja nazwiska
+            profile_lastname.visibility = View.VISIBLE
+            profile_lastname.isEnabled = true
+            line5.visibility = View.VISIBLE
+            nazwisko.visibility = View.VISIBLE
+            line6.visibility = View.VISIBLE
+            //edycja telefonu
+            profile_phone.visibility = View.VISIBLE
+            profile_phone.isEnabled = true
+            line7.visibility = View.VISIBLE
+            phone.visibility = View.VISIBLE
+            line8.visibility = View.VISIBLE
+        }
+        else
+        {
+            flag = false
+            edit_profile.setImageResource(R.drawable.ic_mode_edit_black_24dp)
+            edit_profile_cancel.visibility = View.GONE
+            editProfile(access_token)
+
+            tokenManager
+                .getToken()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    this::handleTokenCacheSuccess,
+                    this::handleTokenCacheError
+                )
+                .addTo(disposables)
 
         }
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
+        access_token=token.token
         getProfileData(token.token)
-
-
     }
 
-    private fun podpisz()
-    {
-        val email: EditText =  findViewById(R.id.profile_email)
-        email.setText(access_token)
-    }
     private fun handleTokenCacheError(throwable: Throwable) {
 
         // Log an error.
@@ -185,7 +223,7 @@ class ProfilUI : AppCompatActivity() {
         setOfficeSpinner(myDestination, destinations)
 
     }
-    private var id_destination: Int = 0
+
     private fun setOfficeSpinner(myDestination: ArrayList<String>, destinations: List<DestinationDto>) {
         val citySpinner: Spinner = findViewById(R.id.profile_office_spinner)
         val adapter = ArrayAdapter(this, R.layout.spinner_item, myDestination)
@@ -212,12 +250,96 @@ class ProfilUI : AppCompatActivity() {
                 }
 
                 override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {
+                    Log.e("Wiadomość: ", "Pobrane")
                     profile_email.setText(response.body()!!.email)
-                    profile_firstname.setText(response.body()!!.first_name)
-                    profile_lastname.setText(response.body()!!.last_name)
-                    profile_phone.setText(response.body()!!.telephone)
-//                    Toast.makeText(applicationContext, response.body()!!.email, Toast.LENGTH_LONG).show()
+                    if(response.body()?.first_name != null)
+                    {
+                        profile_firstname.visibility = View.VISIBLE
+                        profile_firstname.isEnabled = false
+                        line3.visibility = View.VISIBLE
+                        imie.visibility = View.VISIBLE
+                        line4.visibility = View.VISIBLE
+                        profile_firstname.setText(response.body()?.first_name)
+                    }
+                    else
+                    {
+                        profile_firstname.visibility = View.GONE
+                        line3.visibility = View.GONE
+                        imie.visibility = View.GONE
+                        line4.visibility = View.GONE
+                    }
+                    if(response.body()?.last_name != null)
+                    {
+                        profile_lastname.visibility = View.VISIBLE
+                        profile_lastname.isEnabled = false
+                        line5.visibility = View.VISIBLE
+                        nazwisko.visibility = View.VISIBLE
+                        line6.visibility = View.VISIBLE
+                        profile_lastname.setText(response.body()!!.last_name)
+                    }
+                    else
+                    {
+                        profile_lastname.visibility = View.GONE
+                        line5.visibility = View.GONE
+                        nazwisko.visibility = View.GONE
+                        line6.visibility = View.GONE
+                    }
 
+                    if(response.body()?.telephone != null)
+                    {
+                        profile_phone.visibility = View.VISIBLE
+                        profile_phone.isEnabled = false
+                        line7.visibility = View.VISIBLE
+                        phone.visibility = View.VISIBLE
+                        line8.visibility = View.VISIBLE
+                        profile_phone.setText(response.body()!!.telephone)
+                    }
+                    else
+                    {
+                        profile_phone.visibility = View.GONE
+                        line7.visibility = View.GONE
+                        phone.visibility = View.GONE
+                        line8.visibility = View.GONE
+                    }
+                    id_destination_profile = response.body()!!.id_destination
+//                    Toast.makeText(applicationContext, response.body()!!.email, Toast.LENGTH_LONG).show()
+                }
+
+            })
+    }
+
+    private fun editProfile(access_token: String) {
+        var nameInput: String = profile_firstname.text.toString().trim()
+        var lastnameInput: String = profile_lastname.text.toString().trim()
+        var emailInput : String = profile_email.text.toString().trim()
+        var phoneInput : String = profile_phone.text.toString().trim()
+
+        if (nameInput.equals(""))
+        {
+            nameInput = "NULL"
+            Log.e("Name: ", nameInput)
+        }
+        if(lastnameInput.equals(""))
+        {
+            lastnameInput = "NULL"
+        }
+        if(phoneInput.equals(""))
+        {
+            phoneInput = "NULL"
+        }
+        apiService.editProfile(RequestProfileEdit(access_token,emailInput,nameInput,id_destination_profile,lastnameInput,phoneInput))
+            .enqueue(object : Callback<ResponseDefault>{
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    if(response.code()== 200)
+                    {
+                        Log.e("Wiadomość: ", "Sukces pomyślnie wysłano")
+
+
+                    }
                 }
 
             })

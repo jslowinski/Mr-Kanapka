@@ -35,4 +35,7 @@ interface ApiService {
   @PUT("profile")
   fun fetchProfile(@Body body: RequestToken): Call<ResponseProfile>
 
+  @PUT("profile/edit")
+  fun editProfile(@Body body: RequestProfileEdit): Call<ResponseDefault>
+
 }
