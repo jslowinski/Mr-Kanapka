@@ -14,17 +14,18 @@
                 android:title="@string/nav_cart"/>
         <item
                 android:id="@+id/profile"
-                android:icon="@drawable/ic_menu_slideshow"
-                android:title="Test"/>
+                android:icon="@drawable/ic_person_black_24dp"
+                android:title="Profil"/>
         <item
                 android:id="@+id/nav_manage"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="Test"/>
+                android:icon="@drawable/ic_drafts_black_24dp"
+                android:title="Zamówienia"/>
 
         <item
                 android:id="@+id/logout"
+                android:icon="@drawable/ic_undo_black_24dp"
                 android:title="Wyloguj"
-            />
+        />
 
     </group>
 

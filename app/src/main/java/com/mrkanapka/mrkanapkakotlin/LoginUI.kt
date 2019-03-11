@@ -7,10 +7,13 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestLogin
+import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
@@ -45,16 +48,43 @@ class LoginUI : AppCompatActivity() {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
 
-    private fun handleTokenCacheSuccess(token: TokenEntity) {
+    private fun startMenu() {
         val main = Intent(this, Main2Activity::class.java)
         startActivity(main)
         finish()
+    }
+
+    private fun handleTokenCacheSuccess(token: TokenEntity) {
+
+        println(token.token)
+        apiService.checkToken(RequestToken(token.token))
+            .enqueue(object : Callback<ResponseDefault>{
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    Log.e("Status: ", "Fail connection")
+                    Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    startMenu()
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    if (response.code() == 200) //Good token
+                    {
+                        startMenu()
+                    }
+                    if (response.code() == 204) //Bad token
+                    {
+                        Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                    }
+                }
+        })
+
+
     }
 
     private fun handleTokenCacheError(throwable: Throwable) {
 
         dialog.cancel()
         // Log an error.
+
     }
 
     private lateinit var dialog: AlertDialog

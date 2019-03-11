@@ -1,6 +1,9 @@
 package com.mrkanapka.mrkanapkakotlin.api
 
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
+import com.mrkanapka.mrkanapkakotlin.LoginUI
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
@@ -34,6 +37,7 @@ class TokenCheck {
             //Zadziala jak tutaj wykonamy checktoken z argumentem token.token nie zawsze chce podpisać pod zmienną access_token zadziala jak wyjdzie sie z aktywnosci i wejdzie jeszcze raz
             access_token = token.token
             Log.e("Token z handle access: ", access_token)
+            checkToken()
         }
 
         private fun handleTokenCacheError(throwable: Throwable) {
@@ -59,12 +63,13 @@ class TokenCheck {
                         {
                             Log.e("Status: ", "Bad")
                             status = false
+
                         }
                     }
                 })
         }
 
-        fun sessionStatus(): Boolean {
+        fun sessionStatus() {
             tokenManager
                 .getToken()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,9 +78,8 @@ class TokenCheck {
                     this::handleTokenCacheError
                 )
                 .addTo(disposables)
-            checkToken()
+
             //Log.e("Status: ", "OK")
-            return status
         }
     }
 }

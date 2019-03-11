@@ -70,11 +70,8 @@ class ProfilUI : AppCompatActivity() {
         if (supportActionBar != null)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val myCities = ArrayList<String>()
-        myCities.add("Miasto")
 
-
-            session.sessionStatus()
+//            session.sessionStatus()
 //        if (!session.sessionStatus())
 //        {
 //            Completable.fromAction {
@@ -86,28 +83,7 @@ class ProfilUI : AppCompatActivity() {
 //                .subscribe {
 //                    // data updated
 //                }
-//            val intent = Intent(this, LoginUI::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
 
-
-
-
-        disposables.add(
-            apiService
-                .fetchCities()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { it.cities }
-                .subscribe(
-                    { handleFetchCitiesSuccess(it) },
-                    { handleFetchCitiesError(it) }
-                )
-        )
-        val edit_profile = findViewById<ImageView>(R.id.edit_profile)
-        val edit_profile_accept = findViewById<ImageView>(R.id.edit_profile_accept)
-        val edit_profile_cancel = findViewById<ImageView>(R.id.edit_profile_cancel)
         tokenManager
             .getToken()
             .observeOn(AndroidSchedulers.mainThread())
@@ -117,22 +93,76 @@ class ProfilUI : AppCompatActivity() {
             )
             .addTo(disposables)
 
-        val button : Button = findViewById(R.id.profil)
 
-        button.setOnClickListener{
-            Toast.makeText(applicationContext, access_token, Toast.LENGTH_LONG).show()
-        }
 
-        edit_profile.setOnClickListener{
-            editMode()
-        }
 
-        edit_profile_accept.setOnClickListener{
-            updateProfile()
-        }
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleTokenCacheSuccess(token: TokenEntity) {
+        access_token = token.token
 
+        apiService.checkToken(RequestToken(access_token))
+            .enqueue(object : Callback<ResponseDefault>{
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    Log.e("Status: ", "Fail connection")
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    if (response.code() == 200) //Good token
+                    {
+                        Log.e("Status: ", "Good token")
+                        disposables.add(
+                            apiService
+                                .fetchCities()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .map { it.cities }
+                                .subscribe(
+                                    { handleFetchCitiesSuccess(it) },
+                                    { handleFetchCitiesError(it) }
+                                )
+                        )
+
+                        getProfileData(token.token)
+                        val edit_profile = findViewById<ImageView>(R.id.edit_profile)
+                        val edit_profile_accept = findViewById<ImageView>(R.id.edit_profile_accept)
+                        val edit_profile_cancel = findViewById<ImageView>(R.id.edit_profile_cancel)
+
+                        val button : Button = findViewById(R.id.profil)
+
+                        button.setOnClickListener{
+                            Toast.makeText(applicationContext, access_token, Toast.LENGTH_LONG).show()
+                        }
+
+                        edit_profile.setOnClickListener{
+                            editMode()
+                        }
+
+                        edit_profile_accept.setOnClickListener{
+                            updateProfile()
+                        }
+
+
+                    }
+                    if (response.code() == 204) //Bad token
+                    {
+                        Log.e("Status: ", "Bad")
+
+
+                    }
+                }
+            })
+
+
+
+    }
+
+    private fun handleTokenCacheError(throwable: Throwable) {
+
+        // Log an error.
+    }
 
     private fun editMode()
     {
@@ -144,40 +174,25 @@ class ProfilUI : AppCompatActivity() {
         profile_firstname.isEnabled = true
         line3.visibility = View.VISIBLE
         imie.visibility = View.VISIBLE
-        line4.visibility = View.VISIBLE
         //edycja nazwiska
         profile_lastname.visibility = View.VISIBLE
         profile_lastname.isEnabled = true
         line5.visibility = View.VISIBLE
         nazwisko.visibility = View.VISIBLE
-        line6.visibility = View.VISIBLE
         //edycja telefonu
         profile_phone.visibility = View.VISIBLE
         profile_phone.isEnabled = true
         line7.visibility = View.VISIBLE
         phone.visibility = View.VISIBLE
-        line8.visibility = View.VISIBLE
         //mail
         profile_email.setTextColor(Color.rgb(103,98,94))
     }
 
     private fun updateProfile(){
-        edit_profile_cancel.visibility = View.GONE
-        edit_profile_accept.visibility = View.GONE
-        edit_profile.visibility = View.VISIBLE
-        profile_email.setTextColor(Color.BLACK)
         editProfile(access_token)
     }
 
-    private fun handleTokenCacheSuccess(token: TokenEntity) {
-        access_token = token.token
-        getProfileData(token.token)
-    }
 
-    private fun handleTokenCacheError(throwable: Throwable) {
-
-        // Log an error.
-    }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun handleFetchCitiesError(throwable: Throwable?) {
         Handler().postDelayed({
@@ -211,6 +226,7 @@ class ProfilUI : AppCompatActivity() {
     private fun setCitySpinner(cities: ArrayList<String>) {
         val citySpinner: Spinner = findViewById(R.id.profile_city_spinner)
         val adapter = ArrayAdapter(this, R.layout.spinner_item, cities)
+
         citySpinner.adapter = adapter
         citySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -284,7 +300,6 @@ class ProfilUI : AppCompatActivity() {
                         profile_firstname.visibility = View.GONE
                         line3.visibility = View.GONE
                         imie.visibility = View.GONE
-                        line4.visibility = View.GONE
                     }
                     else
                     {
@@ -292,7 +307,6 @@ class ProfilUI : AppCompatActivity() {
                         profile_firstname.isEnabled = false
                         line3.visibility = View.VISIBLE
                         imie.visibility = View.VISIBLE
-                        line4.visibility = View.VISIBLE
                         profile_firstname.setText(response.body()?.first_name)
                     }
                     if(response.body()?.last_name == null || response.body()!!.last_name.equals("NULL"))
@@ -300,7 +314,6 @@ class ProfilUI : AppCompatActivity() {
                         profile_lastname.visibility = View.GONE
                         line5.visibility = View.GONE
                         nazwisko.visibility = View.GONE
-                        line6.visibility = View.GONE
                     }
                     else
                     {
@@ -308,7 +321,6 @@ class ProfilUI : AppCompatActivity() {
                         profile_lastname.isEnabled = false
                         line5.visibility = View.VISIBLE
                         nazwisko.visibility = View.VISIBLE
-                        line6.visibility = View.VISIBLE
                         profile_lastname.setText(response.body()!!.last_name)
                     }
 
@@ -317,7 +329,6 @@ class ProfilUI : AppCompatActivity() {
                         profile_phone.visibility = View.GONE
                         line7.visibility = View.GONE
                         phone.visibility = View.GONE
-                        line8.visibility = View.GONE
                     }
                     else
                     {
@@ -326,7 +337,6 @@ class ProfilUI : AppCompatActivity() {
                         profile_phone.isEnabled = false
                         line7.visibility = View.VISIBLE
                         phone.visibility = View.VISIBLE
-                        line8.visibility = View.VISIBLE
                         profile_phone.setText(response.body()!!.telephone)
                     }
                     id_destination_profile = response.body()!!.id_destination
@@ -365,6 +375,10 @@ class ProfilUI : AppCompatActivity() {
                     if(response.code()== 200)
                     {
                         Log.e("Wiadomość: ", "Sukces pomyślnie wysłano")
+                        edit_profile_cancel.visibility = View.GONE
+                        edit_profile_accept.visibility = View.GONE
+                        edit_profile.visibility = View.VISIBLE
+                        profile_email.setTextColor(Color.BLACK)
                         getProfileData(access_token)
                     }
                 }
