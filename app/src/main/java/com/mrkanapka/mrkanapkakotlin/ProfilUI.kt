@@ -1,6 +1,8 @@
 package com.mrkanapka.mrkanapkakotlin
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -8,9 +10,11 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.RequiresApi
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.TokenCheck
@@ -45,10 +49,6 @@ class ProfilUI : AppCompatActivity() {
         TokenManager()
     }
 
-    private val session by lazy {
-        TokenCheck
-    }
-
     private var access_token : String = ""
 
     private var flag : Boolean = false
@@ -70,20 +70,6 @@ class ProfilUI : AppCompatActivity() {
         if (supportActionBar != null)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
-//            session.sessionStatus()
-//        if (!session.sessionStatus())
-//        {
-//            Completable.fromAction {
-//                AndroidDatabase.database
-//                    .tokenDao()
-//                    .removeToken()
-//            }.subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe {
-//                    // data updated
-//                }
-
         tokenManager
             .getToken()
             .observeOn(AndroidSchedulers.mainThread())
@@ -93,13 +79,8 @@ class ProfilUI : AppCompatActivity() {
             )
             .addTo(disposables)
 
-
-
-
-
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun handleTokenCacheSuccess(token: TokenEntity) {
         access_token = token.token
 
@@ -132,6 +113,7 @@ class ProfilUI : AppCompatActivity() {
 
                         val button : Button = findViewById(R.id.profil)
 
+
                         button.setOnClickListener{
                             Toast.makeText(applicationContext, access_token, Toast.LENGTH_LONG).show()
                         }
@@ -144,13 +126,28 @@ class ProfilUI : AppCompatActivity() {
                             updateProfile()
                         }
 
+                        edit_profile_cancel.setOnClickListener{
+                            confirmCancel()
+                        }
+
+                        logoutButton.setOnClickListener{
+                            Completable.fromAction {
+                                AndroidDatabase.database
+                                    .tokenDao()
+                                    .removeToken()
+                            }.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    // data updated
+                                }
+                            logout()
+                        }
+
 
                     }
-                    if (response.code() == 204) //Bad token
+                    if (response.code() == 400) //Bad token
                     {
-                        Log.e("Status: ", "Bad")
-
-
+                        logout()
                     }
                 }
             })
@@ -186,6 +183,7 @@ class ProfilUI : AppCompatActivity() {
         phone.visibility = View.VISIBLE
         //mail
         profile_email.setTextColor(Color.rgb(103,98,94))
+        flag = true
     }
 
     private fun updateProfile(){
@@ -193,7 +191,7 @@ class ProfilUI : AppCompatActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     private fun handleFetchCitiesError(throwable: Throwable?) {
         Handler().postDelayed({
             Log.e("Czas", LocalDateTime.now().toString())
@@ -379,11 +377,77 @@ class ProfilUI : AppCompatActivity() {
                         edit_profile_accept.visibility = View.GONE
                         edit_profile.visibility = View.VISIBLE
                         profile_email.setTextColor(Color.BLACK)
+                        profile_firstname.hideKeyboard()
+                        profile_lastname.hideKeyboard()
+                        profile_phone.hideKeyboard()
                         getProfileData(access_token)
                     }
                 }
 
             })
+    }
 
+    private fun cancelEdit(){
+        edit_profile_cancel.visibility = View.GONE
+        edit_profile_accept.visibility = View.GONE
+        edit_profile.visibility = View.VISIBLE
+        profile_email.setTextColor(Color.BLACK)
+        profile_firstname.setText("")
+        profile_firstname.hideKeyboard()
+        profile_lastname.setText("")
+        profile_lastname.hideKeyboard()
+        profile_phone.setText("")
+        profile_phone.hideKeyboard()
+        getProfileData(access_token)
+    }
+
+    //Dziala z każdym edittextem
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    //Działa z api26 z StackOverflow
+    //Działa globalnie dla danego okna
+    fun hideKeyboard() {
+        val view: View = if (currentFocus == null) View(this) else currentFocus
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+    private fun logout() {
+        val main = Intent(this, LoginUI::class.java)
+        startActivity(main)
+        finish()
+    }
+
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private lateinit var dialog: AlertDialog
+    fun confirmCancel() {
+
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.confirm_cancel_popup, null)
+        val buttonNo  = dialogLayout.findViewById<Button>(R.id.confirm_no)
+        val buttonYes  = dialogLayout.findViewById<Button>(R.id.confirm_yes)
+
+        buttonYes.setOnClickListener{
+            dialog.cancel()
+            cancelEdit()
+        }
+
+        buttonNo.setOnClickListener{
+            dialog.cancel()
+        }
+
+        builder.setView(dialogLayout)
+
+        dialog = builder.create()
+        dialog.show()
     }
 }

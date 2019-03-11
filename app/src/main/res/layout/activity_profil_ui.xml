@@ -87,293 +87,306 @@
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorBackgroudItem">
+                    android:layout_height="match_parent" android:background="@color/colorBackgroudView">
+
+                <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorBackgroudItem" android:id="@+id/constraintLayout">
 
 
-                <View
-                        android:id="@+id/line1"
-                        android:layout_marginTop="24dp"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                    <View
+                            android:id="@+id/line1"
+                            android:layout_marginTop="24dp"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:background="#000000"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toTopOf="parent"/>
 
-                <TextView
-                        android:id="@+id/email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Email"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/line1"
-                        app:layout_constraintTop_toTopOf="@+id/line1"
-                        app:layout_constraintStart_toStartOf="@+id/line1" android:layout_marginStart="16dp"
-                        android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-
-
-                />
-
-                <EditText
-                        android:id="@+id/profile_email"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:enabled="false"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/email"
+                    <TextView
+                            android:id="@+id/email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Email"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/line1"
+                            app:layout_constraintTop_toTopOf="@+id/line1"
+                            app:layout_constraintStart_toStartOf="@+id/line1" android:layout_marginStart="16dp"
+                            android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
 
 
-                />
+                    />
 
-                <View
-                        android:id="@+id/line3"
-                        android:layout_marginTop="16dp"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_email"
-                        android:visibility="gone"
-                />
-                <TextView
-                        android:id="@+id/imie"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Imię"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/line3"
-                        app:layout_constraintTop_toTopOf="@+id/line3"
-                        app:layout_constraintStart_toStartOf="@+id/line3" android:layout_marginStart="16dp"
-                        android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:visibility="gone"
+                    <EditText
+                            android:id="@+id/profile_email"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000"
+                            android:enabled="false"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/email"
+
+
+                    />
+
+                    <View
+                            android:id="@+id/line3"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:background="#000000"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_email"
+                            android:visibility="gone"
+                    />
+                    <TextView
+                            android:id="@+id/imie"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Imię"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/line3"
+                            app:layout_constraintTop_toTopOf="@+id/line3"
+                            app:layout_constraintStart_toStartOf="@+id/line3" android:layout_marginStart="16dp"
+                            android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:visibility="gone"
+                    />
+
+                    <EditText
+                            android:id="@+id/profile_firstname"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000"
+                            android:visibility="gone"
+                            android:maxLines="1"
+                            android:inputType="text"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/imie"
+                    />
+
+                    <View
+                            android:id="@+id/line5"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:background="#000000"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_firstname"
+                            android:visibility="gone"
+                    />
+                    <TextView
+                            android:id="@+id/nazwisko"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nazwisko"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/line5"
+                            app:layout_constraintTop_toTopOf="@+id/line5"
+                            app:layout_constraintStart_toStartOf="@+id/line5" android:layout_marginStart="16dp"
+                            android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:visibility="gone"
+                    />
+
+
+                    <EditText
+                            android:id="@+id/profile_lastname"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/nazwisko"
+                            android:textColor="#000000"
+                            android:visibility="gone"
+                            android:maxLines="1"
+                            android:inputType="text"
+                    />
+
+                    <View
+                            android:id="@+id/line7"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:background="#000000"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_lastname"
+                            android:visibility="gone"
+                    />
+                    <TextView
+                            android:id="@+id/phone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Telefon"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/line7"
+                            app:layout_constraintTop_toTopOf="@+id/line7"
+                            app:layout_constraintStart_toStartOf="@+id/line7" android:layout_marginStart="16dp"
+                            android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:visibility="gone"
+
+                    />
+
+                    <EditText
+                            android:id="@+id/profile_phone"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/phone"
+                            android:textColor="#000000"
+                            android:visibility="gone"
+                            android:maxLines="1"
+                            android:inputType="phone"
+                            android:maxLength="9"
+                    />
+
+                    <View
+                            android:id="@+id/line9"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:background="#000000"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_phone"
+                    />
+                    <TextView
+                            android:id="@+id/city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Miasto"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/line9"
+                            app:layout_constraintTop_toTopOf="@+id/line9"
+                            app:layout_constraintStart_toStartOf="@+id/line9" android:layout_marginStart="16dp"
+                            android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                    />
+
+
+                    <RelativeLayout
+                            android:id="@+id/profile_city"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/profil_spinner_background"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/city">
+
+                        <Spinner
+                                android:id="@+id/profile_city_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:background="@android:color/transparent"
+                                android:popupBackground="@drawable/profil_spinner_background"
+
+                                android:spinnerMode="dropdown"
                         />
+                        <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+                    </RelativeLayout>
 
-                <EditText
-                        android:id="@+id/profile_firstname"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:visibility="gone"
-                        android:maxLines="1"
-                        android:inputType="text"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/imie"
-                />
-
-                <View
-                        android:id="@+id/line5"
-                        android:layout_marginTop="16dp"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_firstname"
-                        android:visibility="gone"
-                />
-                <TextView
-                        android:id="@+id/nazwisko"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nazwisko"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/line5"
-                        app:layout_constraintTop_toTopOf="@+id/line5"
-                        app:layout_constraintStart_toStartOf="@+id/line5" android:layout_marginStart="16dp"
-                        android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:visibility="gone"
-                />
-
-
-                <EditText
-                        android:id="@+id/profile_lastname"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/nazwisko"
-                        android:textColor="#000000"
-                        android:visibility="gone"
-                        android:maxLines="1"
-                        android:inputType="text"
-                />
-
-                <View
-                        android:id="@+id/line7"
-                        android:layout_marginTop="16dp"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_lastname"
-                        android:visibility="gone"
-                />
-                <TextView
-                        android:id="@+id/phone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Telefon"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/line7"
-                        app:layout_constraintTop_toTopOf="@+id/line7"
-                        app:layout_constraintStart_toStartOf="@+id/line7" android:layout_marginStart="16dp"
-                        android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:visibility="gone"
-
-                />
-
-                <EditText
-                        android:id="@+id/profile_phone"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/phone"
-                        android:textColor="#000000"
-                        android:visibility="gone"
-                        android:maxLines="1"
-                        android:inputType="phone"
-                        android:maxLength="9"
-                />
-
-                <View
-                        android:id="@+id/line9"
-                        android:layout_marginTop="16dp"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_phone"
-                />
-                <TextView
-                        android:id="@+id/city"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Miasto"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/line9"
-                        app:layout_constraintTop_toTopOf="@+id/line9"
-                        app:layout_constraintStart_toStartOf="@+id/line9" android:layout_marginStart="16dp"
-                        android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                />
-
-
-                <RelativeLayout
-                        android:id="@+id/profile_city"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/profil_spinner_background"
-                        android:orientation="horizontal"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/city">
-
-                    <Spinner
-                            android:id="@+id/profile_city_spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@android:color/transparent"
-                            android:popupBackground="@drawable/profil_spinner_background"
-
-                            android:spinnerMode="dropdown"
+                    <View
+                            android:id="@+id/line11"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:background="#000000"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_city"
                     />
-                    <ImageView
+                    <TextView
+                            android:id="@+id/office"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="15dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
-                </RelativeLayout>
-
-                <View
-                        android:id="@+id/line11"
-                        android:layout_marginTop="16dp"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_city"
-                />
-                <TextView
-                        android:id="@+id/office"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Biurowiec"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/line11"
-                        app:layout_constraintTop_toTopOf="@+id/line11"
-                        app:layout_constraintStart_toStartOf="@+id/line11" android:layout_marginStart="16dp"
-                        android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                />
-
-
-                <RelativeLayout
-                        android:id="@+id/profile_office"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/profil_spinner_background"
-                        android:orientation="horizontal"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/office">
-
-                    <Spinner
-                            android:id="@+id/profile_office_spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@android:color/transparent"
-                            android:popupBackground="@drawable/profil_spinner_background"
-                            android:gravity="center"
-                            android:spinnerMode="dropdown"
+                            android:text="Biurowiec"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/line11"
+                            app:layout_constraintTop_toTopOf="@+id/line11"
+                            app:layout_constraintStart_toStartOf="@+id/line11" android:layout_marginStart="16dp"
+                            android:background="@color/colorBackgroudItem" android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
                     />
-                    <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="15dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
-                </RelativeLayout>
 
+
+                    <RelativeLayout
+                            android:id="@+id/profile_office"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/profil_spinner_background"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/office">
+
+                        <Spinner
+                                android:id="@+id/profile_office_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:background="@android:color/transparent"
+                                android:popupBackground="@drawable/profil_spinner_background"
+                                android:gravity="center"
+                                android:spinnerMode="dropdown"
+                        />
+                        <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="15dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+                    </RelativeLayout>
+
+                    <Button
+                            android:id="@+id/profil"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Zmień Hasło"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_office"
+                            android:backgroundTint="@color/colorButton"
+                    />
+
+                </android.support.constraint.ConstraintLayout>
                 <Button
-                        android:id="@+id/profil"
-                        android:layout_width="0dp"
+                        android:id="@+id/logoutButton"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TEST"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_office"
-                        android:backgroundTint="@color/colorBackgroudItem"
-                />
-
+                        android:text="Wyloguj"
+                        android:layout_marginTop="20dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                        android:backgroundTint="@color/colorAccent"/>
             </android.support.constraint.ConstraintLayout>
 
-
         </android.support.v7.widget.CardView>
+
+
 
     </android.support.v4.widget.NestedScrollView>
 

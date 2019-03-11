@@ -70,8 +70,9 @@ class LoginUI : AppCompatActivity() {
                     {
                         startMenu()
                     }
-                    if (response.code() == 204) //Bad token
+                    if (response.code() == 400) //Bad token
                     {
+                        dialog.cancel()
                         Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
                     }
                 }
