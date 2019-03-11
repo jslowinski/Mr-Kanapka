@@ -75,19 +75,15 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/nestedScrollView2">
 
-        <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="5dp"
-                app:cardUseCompatPadding="true"
 
-        >
 
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:background="@color/colorBackgroudView">
+                    android:layout_height="match_parent"
+                    android:background="@color/colorBackgroudView"
+                    android:padding="5dp"
+            >
 
                 <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
@@ -383,8 +379,6 @@
                         android:layout_marginTop="20dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
                         android:backgroundTint="@color/colorAccent"/>
             </android.support.constraint.ConstraintLayout>
-
-        </android.support.v7.widget.CardView>
 
 
 

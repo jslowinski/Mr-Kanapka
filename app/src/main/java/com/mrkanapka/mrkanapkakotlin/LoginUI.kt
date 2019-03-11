@@ -10,9 +10,11 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.util.Patterns
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestLogin
+import com.mrkanapka.mrkanapkakotlin.api.model.RequestResetPassword
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase
@@ -24,9 +26,15 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login_ui.*
+import kotlinx.android.synthetic.main.activity_register_ui.*
+import kotlinx.android.synthetic.main.reset_password_popup.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.view.Gravity
+import android.widget.Toast
+
+
 
 
 class LoginUI : AppCompatActivity() {
@@ -189,15 +197,51 @@ class LoginUI : AppCompatActivity() {
             resetPasswordPopup()
         }
     }
-
+    private lateinit var emailDialog: AlertDialog
     fun resetPasswordPopup() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.reset_password_popup, null)
         val editText  = dialogLayout.findViewById<EditText>(R.id.email_reset)
+        val buttonSend = dialogLayout.findViewById<Button>(R.id.restet_button)
+
+        buttonSend.setOnClickListener{
+            val email = editText.text.toString().trim()
+            if(validateEmail(email))
+            {
+                apiService.forgotPassword(RequestResetPassword(email))
+                    .enqueue(object : Callback<ResponseDefault>{
+                        override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                            Log.e("To ja: ", "twój przyjadziel błąd")
+                        }
+
+                        override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                            if (response.code() == 200){
+                                emailDialog.cancel()
+//                                val toast = Toast.makeText(applicationContext, "Message", Toast.LENGTH_SHORT)
+//                                toast.setGravity(Gravity.CENTER, 0, 0)
+//                                toast.show()
+                                Toast.makeText(applicationContext, "Na podany email wysłano link z resetem hasła", Toast.LENGTH_LONG).show()
+                            }
+                            else {
+                                emailDialog.cancel()
+                                Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
+                            }
+
+                        }
+
+                    })
+            }
+            else
+            {
+                editText.setError("Niepoprawny adres email")
+            }
+
+        }
         builder.setView(dialogLayout)
 
-        builder.show()
+        emailDialog = builder.create()
+        emailDialog.show()
     }
 
     fun hasNetwork(context: Context): Boolean? {
@@ -208,4 +252,9 @@ class LoginUI : AppCompatActivity() {
             isConnected = true
         return isConnected
     }
+
+    private fun validateEmail(email : String): Boolean {
+        return !(email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        }
 }
+
