@@ -57,6 +57,8 @@ class ProfilUI : AppCompatActivity() {
 
     private var id_destination_profile: Int = 0
 
+    private lateinit var progressDialog: AlertDialog
+
     @SuppressLint("CheckResult")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +71,15 @@ class ProfilUI : AppCompatActivity() {
         setSupportActionBar(toolbar)
         if (supportActionBar != null)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
+        val message = dialogView.findViewById<TextView>(R.id.textDialog)
+        message.text = "Sprawdzanie danych logowania..."
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+        progressDialog = builder.create()
+        progressDialog.show()
 
         tokenManager
             .getToken()
@@ -88,11 +99,16 @@ class ProfilUI : AppCompatActivity() {
             .enqueue(object : Callback<ResponseDefault>{
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
+                    progressDialog.cancel()
+                    Toast.makeText(applicationContext, "Błąd połączenia z serwerem, spróbuj ponownie później", Toast.LENGTH_LONG).show()
+
+
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     if (response.code() == 200) //Good token
                     {
+                        progressDialog.cancel()
                         Log.e("Status: ", "Good token")
                         disposables.add(
                             apiService
@@ -234,6 +250,7 @@ class ProfilUI : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val item = adapter.getItem(position)
                 println(item)
+                progressDialog.show()
                 disposables.add(
                     apiService
                         .fetchDestinations("destinations/" + cities[position])
@@ -255,6 +272,7 @@ class ProfilUI : AppCompatActivity() {
 
     private fun handleFetchDestinationsSuccess(destinations: List<DestinationDto>) {
 
+        progressDialog.cancel()
         val myDestination = ArrayList<String>()
         //myDestination.add("Wybierz biurowiec:")
         for(item in destinations) {

@@ -14,6 +14,8 @@ import android.view.View
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
+import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
+import com.mrkanapka.mrkanapkakotlin.api.model.ResponseProfile
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase.Companion.database
 import com.mrkanapka.mrkanapkakotlin.database.entity.CategoryEntity
 import com.mrkanapka.mrkanapkakotlin.database.entity.SellerEntity
@@ -27,6 +29,9 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -65,8 +70,47 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
+        apiService.fetchProfile(RequestToken(token.token))
+            .enqueue(object : Callback<ResponseProfile> {
+                override fun onFailure(call: Call<ResponseProfile>, t: Throwable) {
+                    print("blad")
+                    downloadData(1)
+                }
 
+                override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {
+                    Log.e("Wiadomość: ", "Pobrane")
+                    downloadData(response.body()!!.id_destination)
 
+                }
+            })
+
+    }
+
+    private fun downloadData(id_destination: Int) {
+        //From cache
+
+        println(id_destination)
+        tokenManager
+            .getSellers(id_destination) //w domysle id_destination klienta ktore powinno byc pobierane z api włącznie z tokenem
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                this::handleFetchSellerCacheSuccess,
+                this::handleFetchSellerCacheError
+            )
+            .addTo(disposables)
+
+        //From api
+        tokenManager
+            .downloadSellers("seller/" +id_destination, id_destination) //w domysle id_destination klienta ktore powinno byc pobierane z api włącznie z tokenem
+            .andThen(tokenManager.getSellers(id_destination))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {  } //funkcje np progressbar show
+            .doFinally {  } //funkcje np progressbar show
+            .subscribe(
+                this::handleFetchSellerSuccess,
+                this::handleFetchSellerError
+            )
+            .addTo(disposables)
     }
 
     private fun handleTokenCacheError(throwable: Throwable) {
@@ -126,50 +170,6 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         builder.setCancelable(false)
         dialog = builder.create()
         dialog.show()
-
-////      Funkcja od ikonki maila
-//        fab.setOnClickListener { //view ->
-////            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-////                .setAction("Action", null).show()
-//            val intent = Intent(this, CartActivity::class.java)
-//            startActivity(intent)
-//        }
-
-
-        //From cache
-        tokenManager
-            .getSellers(1) //w domysle id_destination klienta ktore powinno byc pobierane z api włącznie z tokenem
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                this::handleFetchSellerCacheSuccess,
-                this::handleFetchSellerCacheError
-            )
-            .addTo(disposables)
-
-        //From api
-        tokenManager
-            .downloadSellers("seller/" + 1, 1) //w domysle id_destination klienta ktore powinno byc pobierane z api włącznie z tokenem
-            .andThen(tokenManager.getSellers(1))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe {  } //funkcje np progressbar show
-            .doFinally {  } //funkcje np progressbar show
-            .subscribe(
-                this::handleFetchSellerSuccess,
-                this::handleFetchSellerError
-            )
-            .addTo(disposables)
-
-//        disposables.add(
-//            apiService
-//                .fetchSellers("seller/" + 1) //tutaj w domysle id_destination wybrane w profilu!!!
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .map { it.seller }
-//                .subscribe(
-//                    { handleFetchSellerSuccess(it) },
-//                    { handleFetchSellerError(it) }
-//                )
-//        )
 
 
         tokenManager
