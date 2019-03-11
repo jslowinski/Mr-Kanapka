@@ -41,4 +41,7 @@ interface ApiService {
   @PUT("token_check")
   fun checkToken(@Body body: RequestToken): Call<ResponseDefault>
 
+  @POST("forgot")
+  fun forgotPassword(@Body body: RequestResetPassword): Call<ResponseDefault>
+
 }
