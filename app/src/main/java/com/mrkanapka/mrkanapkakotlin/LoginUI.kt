@@ -70,6 +70,7 @@ class LoginUI : AppCompatActivity() {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
                     Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    dialog.cancel()
                     startMenu()
                 }
 
@@ -141,30 +142,29 @@ class LoginUI : AppCompatActivity() {
 
                         @SuppressLint("CheckResult")
                         override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
-                            if(response.code() == 200)
-                            {
-                                //Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
-                                Completable.fromAction {
-                                    database
-                                        .tokenDao()
-                                        .removeAndInsert(TokenEntity(response.body()!!.message))
-                                }.subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe {
-                                        // data updated
-                                    }
-                                startActivityForResult(main,1)
-                                finish()
-                            }
-                            else if (response.code() == 202)
-                            {
-                                dialog.cancel()
-                                Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
-                            }
-                            else
-                            {
-                                dialog.cancel()
-                                Toast.makeText(applicationContext,"Bład przy logowaniu", Toast.LENGTH_LONG).show()
+                            when {
+                                response.code() == 200 -> {
+                                    //Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
+                                    Completable.fromAction {
+                                        database
+                                            .tokenDao()
+                                            .removeAndInsert(TokenEntity(response.body()!!.message))
+                                    }.subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe {
+                                            // data updated
+                                        }
+                                    startActivityForResult(main,1)
+                                    finish()
+                                }
+                                response.code() == 202 -> {
+                                    dialog.cancel()
+                                    Toast.makeText(applicationContext,"Niepoprawne dane logowania", Toast.LENGTH_LONG).show()
+                                }
+                                else -> {
+                                    dialog.cancel()
+                                    Toast.makeText(applicationContext,"Bład przy logowaniu", Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
 

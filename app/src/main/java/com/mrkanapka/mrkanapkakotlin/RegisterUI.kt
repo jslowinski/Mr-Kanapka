@@ -138,12 +138,14 @@ class RegisterUI : AppCompatActivity() {
 
     private fun handleFetchCitiesSuccess(cities: List<CityDto>) {
         val myCities = ArrayList<String>()
+        val myCitiesInt = ArrayList<Int>()
         //myCities.add("Wybierz miasto:")
         for(item in cities) {
-            Log.i("miasto: ", item.city)
+            Log.i("miasto: ", item.city.toString())
+            myCitiesInt.add(item.id_city!!)
             myCities.add(item.city!!)
         }
-        setCitySpinner(myCities)
+        setCitySpinner(myCities,myCitiesInt)
         //setOfficeSpinner()
 
     }
@@ -154,7 +156,7 @@ class RegisterUI : AppCompatActivity() {
         finish()
     }
 
-    private fun setCitySpinner(cities: ArrayList<String>) {
+    private fun setCitySpinner(cities: ArrayList<String>, citiesInt: ArrayList<Int>) {
         val citySpinner: Spinner = findViewById(R.id.city_register)
         val adapter = ArrayAdapter(this, R.layout.spinner_item, cities)
         citySpinner.adapter = adapter
@@ -164,12 +166,9 @@ class RegisterUI : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val item = adapter.getItem(position)
-                println(item)
-
                 disposables.add(
                     apiService
-                        .fetchDestinations("destinations/" + cities[position])
+                        .fetchDestinations("destinations/" + citiesInt[position])
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .map { it.destinations }

@@ -57,7 +57,11 @@ class ProfilUI : AppCompatActivity() {
 
     private var id_destination_profile: Int = 0
 
+    private var id_city_profile: Int = 0
+
     private lateinit var progressDialog: AlertDialog
+
+    private lateinit var dialog: AlertDialog
 
     @SuppressLint("CheckResult")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -89,7 +93,6 @@ class ProfilUI : AppCompatActivity() {
                 this::handleTokenCacheError
             )
             .addTo(disposables)
-
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
@@ -101,38 +104,14 @@ class ProfilUI : AppCompatActivity() {
                     Log.e("Status: ", "Fail connection")
                     progressDialog.cancel()
                     Toast.makeText(applicationContext, "Błąd połączenia z serwerem, spróbuj ponownie później", Toast.LENGTH_LONG).show()
-
-
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
-                    if (response.code() == 200) //Good token
-                    {
-                        progressDialog.cancel()
-                        Log.e("Status: ", "Good token")
-                        disposables.add(
-                            apiService
-                                .fetchCities()
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .map { it.cities }
-                                .subscribe(
-                                    { handleFetchCitiesSuccess(it) },
-                                    { handleFetchCitiesError(it) }
-                                )
-                        )
+                    if (response.code() == 200) { //Good token
 
                         getProfileData(token.token)
-                        val edit_profile = findViewById<ImageView>(R.id.edit_profile)
-                        val edit_profile_accept = findViewById<ImageView>(R.id.edit_profile_accept)
-                        val edit_profile_cancel = findViewById<ImageView>(R.id.edit_profile_cancel)
-
-                        val button : Button = findViewById(R.id.profil)
-
-
-                        button.setOnClickListener{
-                            Toast.makeText(applicationContext, access_token, Toast.LENGTH_LONG).show()
-                        }
+                        progressDialog.cancel()
+                        Log.e("Status: ", "Good token")
 
                         edit_profile.setOnClickListener{
                             editMode()
@@ -158,18 +137,13 @@ class ProfilUI : AppCompatActivity() {
                                 }
                             logout()
                         }
-
-
+                        Log.i("ID: ", "z response $id")
                     }
-                    if (response.code() == 400) //Bad token
-                    {
+                    if (response.code() == 400) {//Bad token
                         logout()
                     }
                 }
             })
-
-
-
     }
 
     private fun handleTokenCacheError(throwable: Throwable) {
@@ -177,8 +151,7 @@ class ProfilUI : AppCompatActivity() {
         // Log an error.
     }
 
-    private fun editMode()
-    {
+    private fun editMode() {
         edit_profile.visibility = View.GONE
         edit_profile_accept.visibility = View.VISIBLE
         edit_profile_cancel.visibility = View.VISIBLE
@@ -199,14 +172,55 @@ class ProfilUI : AppCompatActivity() {
         phone.visibility = View.VISIBLE
         //mail
         profile_email.setTextColor(Color.rgb(103,98,94))
+        //spinners
+        profile_city_spinner.isEnabled = true
+        profile_office_spinner.isEnabled = true
         flag = true
     }
 
     private fun updateProfile(){
         editProfile(access_token)
+        flag = false
     }
 
+    private fun cancelEdit(){
+        edit_profile_cancel.visibility = View.GONE
+        edit_profile_accept.visibility = View.GONE
+        edit_profile.visibility = View.VISIBLE
+        profile_email.setTextColor(Color.BLACK)
+        profile_firstname.setText("")
+        profile_firstname.hideKeyboard()
+        profile_lastname.setText("")
+        profile_lastname.hideKeyboard()
+        profile_phone.setText("")
+        profile_phone.hideKeyboard()
+        profile_city_spinner.isEnabled = false
+        profile_office_spinner.isEnabled = false
+        getProfileData(access_token)
+        flag = false
+    }
 
+    fun confirmCancel() {
+
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.confirm_cancel_popup, null)
+        val buttonNo  = dialogLayout.findViewById<Button>(R.id.confirm_no)
+        val buttonYes  = dialogLayout.findViewById<Button>(R.id.confirm_yes)
+
+        buttonYes.setOnClickListener{
+            dialog.cancel()
+            cancelEdit()
+        }
+
+        buttonNo.setOnClickListener{
+            dialog.cancel()
+        }
+
+        builder.setView(dialogLayout)
+        dialog = builder.create()
+        dialog.show()
+    }
 
     private fun handleFetchCitiesError(throwable: Throwable?) {
         Handler().postDelayed({
@@ -226,21 +240,39 @@ class ProfilUI : AppCompatActivity() {
 
     }
 
+    var id2 = 0
+    var flag2 = false
     private fun handleFetchCitiesSuccess(cities: List<CityDto>) {
         val myCities = ArrayList<String>()
+        val myCitiesInt = ArrayList<Int>()
         //myCities.add("Wybierz miasto:")
         for(item in cities) {
-            Log.i("miasto: ", item.city)
+            Log.i("miasto: ", item.city.toString())
+            Log.i("Id z item city: ", item.id_city.toString())
+            Log.i("Id z get city: ", id_city_profile.toString())
+            myCitiesInt.add(item.id_city!!)
             myCities.add(item.city!!)
+            if (id_city_profile == item.id_city){
+                flag2 = true
+            }
+            else if (!flag2){
+                id2++
+            }
+            Log.i("ID: ", "do ustawienia $id2")
         }
-        setCitySpinner(myCities)
+        setCitySpinner(myCities,myCitiesInt)
+        Log.i("ID: ", "do ustawienia $id2")
+        profile_city_spinner.setSelection(id2)
+        Log.i("Ustawiłem ", "na id:  $id2")
+        id2 = 0
+        Log.i("ID: ", "$id2")
+        flag2 = false
         //setOfficeSpinner()
 
     }
-    private fun setCitySpinner(cities: ArrayList<String>) {
+    private fun setCitySpinner(cities: ArrayList<String>, citiesInt: ArrayList<Int>) {
         val citySpinner: Spinner = findViewById(R.id.profile_city_spinner)
-        val adapter = ArrayAdapter(this, R.layout.spinner_item, cities)
-
+        val adapter = ArrayAdapter(this, R.layout.spinner_profile, cities)
         citySpinner.adapter = adapter
         citySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -250,10 +282,9 @@ class ProfilUI : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val item = adapter.getItem(position)
                 println(item)
-                progressDialog.show()
                 disposables.add(
                     apiService
-                        .fetchDestinations("destinations/" + cities[position])
+                        .fetchDestinations("destinations/" + citiesInt[position])
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .map { it.destinations }
@@ -262,7 +293,6 @@ class ProfilUI : AppCompatActivity() {
                             { handleFetchDestinationsError(it) }
                         )
                 )
-
             }
         }
     }
@@ -270,32 +300,53 @@ class ProfilUI : AppCompatActivity() {
     private fun handleFetchDestinationsError(throwable: Throwable) {
     }
 
+    var id = 0
+    var flagspinner = false
     private fun handleFetchDestinationsSuccess(destinations: List<DestinationDto>) {
 
         progressDialog.cancel()
         val myDestination = ArrayList<String>()
         //myDestination.add("Wybierz biurowiec:")
         for(item in destinations) {
-            Log.i("miasto: ", item.name + " " + item.street + " " + item.house_number)
+            Log.i("Id z item: ", item.id_destination.toString())
+            Log.i("Id z get ?: ", id_destination_profile.toString())
             myDestination.add(item.name + " " + item.street + " " + item.house_number)
+            if (id_destination_profile == item.id_destination){
+                flagspinner = true
+            }
+            else if (!flagspinner){
+                id++
+            }
+            Log.i("ID: ", "do ustawienia $id")
+
+        }
+        setOfficeSpinner(myDestination, destinations)
+        Log.i("ID: ", "do ustawienia $id")
+        val officeSpinner: Spinner = findViewById(R.id.profile_office_spinner)
+        if (destinations.lastIndex < id) {
+            officeSpinner.setSelection(destinations.lastIndex - destinations.lastIndex)
+        }
+        else{
+            officeSpinner.setSelection(id)
         }
 
-        setOfficeSpinner(myDestination, destinations)
-
+        Log.i("Ustawiłem ", "na id:  $id")
+        id = 0
+        Log.i("ID: ", "$id")
+        flagspinner = false
     }
 
     private fun setOfficeSpinner(myDestination: ArrayList<String>, destinations: List<DestinationDto>) {
-        val citySpinner: Spinner = findViewById(R.id.profile_office_spinner)
-        val adapter = ArrayAdapter(this, R.layout.spinner_item, myDestination)
-        citySpinner.adapter = adapter
-        citySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        val officeSpinner: Spinner = findViewById(R.id.profile_office_spinner)
+        val adapter = ArrayAdapter(this, R.layout.spinner_profile, myDestination)
+        officeSpinner.adapter = adapter
+        officeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 id_destination = destinations[position].id_destination
-
             }
         }
     }
@@ -311,28 +362,26 @@ class ProfilUI : AppCompatActivity() {
                 override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {
                     Log.e("Wiadomość: ", "Pobrane")
                     profile_email.setText(response.body()!!.email)
-                    if(response.body()?.first_name == null || response.body()!!.first_name.equals("NULL"))
-                    {
+
+                    if(response.body()?.first_name == null || response.body()!!.first_name.equals("NULL")) {
                         profile_firstname.visibility = View.GONE
                         line3.visibility = View.GONE
                         imie.visibility = View.GONE
                     }
-                    else
-                    {
+                    else {
                         profile_firstname.visibility = View.VISIBLE
                         profile_firstname.isEnabled = false
                         line3.visibility = View.VISIBLE
                         imie.visibility = View.VISIBLE
                         profile_firstname.setText(response.body()?.first_name)
                     }
-                    if(response.body()?.last_name == null || response.body()!!.last_name.equals("NULL"))
-                    {
+
+                    if(response.body()?.last_name == null || response.body()!!.last_name.equals("NULL")) {
                         profile_lastname.visibility = View.GONE
                         line5.visibility = View.GONE
                         nazwisko.visibility = View.GONE
                     }
-                    else
-                    {
+                    else {
                         profile_lastname.visibility = View.VISIBLE
                         profile_lastname.isEnabled = false
                         line5.visibility = View.VISIBLE
@@ -340,15 +389,12 @@ class ProfilUI : AppCompatActivity() {
                         profile_lastname.setText(response.body()!!.last_name)
                     }
 
-                    if(response.body()?.telephone == null || response.body()!!.telephone.equals("NULL"))
-                    {
+                    if(response.body()?.telephone == null || response.body()!!.telephone.equals("NULL")) {
                         profile_phone.visibility = View.GONE
                         line7.visibility = View.GONE
                         phone.visibility = View.GONE
                     }
-                    else
-                    {
-
+                    else {
                         profile_phone.visibility = View.VISIBLE
                         profile_phone.isEnabled = false
                         line7.visibility = View.VISIBLE
@@ -356,9 +402,22 @@ class ProfilUI : AppCompatActivity() {
                         profile_phone.setText(response.body()!!.telephone)
                     }
                     id_destination_profile = response.body()!!.id_destination
-//                    Toast.makeText(applicationContext, response.body()!!.email, Toast.LENGTH_LONG).show()
-                }
+                    id_city_profile = response.body()!!.id_city
+                    profile_city_spinner.isEnabled = false
+                    profile_office_spinner.isEnabled = false
 
+                    disposables.add(
+                        apiService
+                            .fetchCities()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .map { it.cities }
+                            .subscribe(
+                                { handleFetchCitiesSuccess(it) },
+                                { handleFetchCitiesError(it) }
+                            )
+                    )
+                }
             })
     }
 
@@ -368,28 +427,26 @@ class ProfilUI : AppCompatActivity() {
         var emailInput : String = profile_email.text.toString().trim()
         var phoneInput : String = profile_phone.text.toString().trim()
 
-        if (nameInput.equals(""))
-        {
+        if (nameInput.equals("")) {
             nameInput = "NULL"
             Log.e("Name: ", nameInput)
         }
-        if(lastnameInput.equals(""))
-        {
+        if(lastnameInput.equals("")) {
             lastnameInput = "NULL"
         }
-        if(phoneInput.equals(""))
-        {
+        if(phoneInput.equals("")) {
             phoneInput = "NULL"
         }
-        apiService.editProfile(RequestProfileEdit(access_token,emailInput,nameInput,id_destination_profile,lastnameInput,phoneInput))
+
+        Log.e("ID: ",id_destination.toString())
+        apiService.editProfile(RequestProfileEdit(access_token,emailInput,nameInput,id_destination,lastnameInput,phoneInput))
             .enqueue(object : Callback<ResponseDefault>{
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
-                    if(response.code()== 200)
-                    {
+                    if(response.code()== 200) {
                         Log.e("Wiadomość: ", "Sukces pomyślnie wysłano")
                         edit_profile_cancel.visibility = View.GONE
                         edit_profile_accept.visibility = View.GONE
@@ -401,71 +458,45 @@ class ProfilUI : AppCompatActivity() {
                         getProfileData(access_token)
                     }
                 }
-
             })
     }
 
-    private fun cancelEdit(){
-        edit_profile_cancel.visibility = View.GONE
-        edit_profile_accept.visibility = View.GONE
-        edit_profile.visibility = View.VISIBLE
-        profile_email.setTextColor(Color.BLACK)
-        profile_firstname.setText("")
-        profile_firstname.hideKeyboard()
-        profile_lastname.setText("")
-        profile_lastname.hideKeyboard()
-        profile_phone.setText("")
-        profile_phone.hideKeyboard()
-        getProfileData(access_token)
-    }
+
 
     //Dziala z każdym edittextem
-    fun View.hideKeyboard() {
+    private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
     //Działa z api26 z StackOverflow
     //Działa globalnie dla danego okna
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         val view: View = if (currentFocus == null) View(this) else currentFocus
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
     private fun logout() {
         val main = Intent(this, LoginUI::class.java)
         startActivity(main)
         finish()
     }
 
-
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 
-    private lateinit var dialog: AlertDialog
-    fun confirmCancel() {
-
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogLayout = inflater.inflate(R.layout.confirm_cancel_popup, null)
-        val buttonNo  = dialogLayout.findViewById<Button>(R.id.confirm_no)
-        val buttonYes  = dialogLayout.findViewById<Button>(R.id.confirm_yes)
-
-        buttonYes.setOnClickListener{
-            dialog.cancel()
-            cancelEdit()
+    override fun onBackPressed() {
+        if (flag) {
+            confirmCancel()
+            flag = false
         }
-
-        buttonNo.setOnClickListener{
-            dialog.cancel()
+        else {
+            val intent = Intent(this, Main2Activity::class.java)
+            startActivity(intent)
+            finish()
         }
-
-        builder.setView(dialogLayout)
-
-        dialog = builder.create()
-        dialog.show()
     }
 }

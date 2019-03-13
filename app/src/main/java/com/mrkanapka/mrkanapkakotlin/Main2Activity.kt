@@ -317,6 +317,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.profile -> {
                 val intent = Intent(this, ProfilUI::class.java)
                 startActivity(intent)
+                finish()
             }
             else -> {
 
