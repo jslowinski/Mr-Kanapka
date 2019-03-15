@@ -44,4 +44,10 @@ interface ApiService {
   @POST("forgot")
   fun forgotPassword(@Body body: RequestResetPassword): Call<ResponseDefault>
 
+  @PUT("add_cart")
+  fun addCart(@Body body: RequestAddCart): Call<ResponseDefault>
+
+  @DELETE ("remove_all")
+  fun deleteProductCart(@Body body: RequestDeleteCart): Call<ResponseDefault>
+
 }

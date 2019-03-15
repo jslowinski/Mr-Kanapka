@@ -43,6 +43,8 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         TokenManager()
     }
 
+    private var token = ""
+
     private val disposables: CompositeDisposable = CompositeDisposable()
 
     private fun handleFetchCategorySuccess(category: List<CategoryEntity>) {
@@ -70,6 +72,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
+        this.token = token.token
         apiService.fetchProfile(RequestToken(token.token))
             .enqueue(object : Callback<ResponseProfile> {
                 override fun onFailure(call: Call<ResponseProfile>, t: Throwable) {
@@ -279,10 +282,10 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val fragment  = when (id) {
             R.id.main_menu -> {
                 // TU CHYBA PROBLEM
-                TabFragment.newInstance(category)
+                TabFragment.newInstance(category, token)
             }
             else -> {
-                TabFragment.newInstance(category)
+                TabFragment.newInstance(category, token)
             }
         }
         supportFragmentManager

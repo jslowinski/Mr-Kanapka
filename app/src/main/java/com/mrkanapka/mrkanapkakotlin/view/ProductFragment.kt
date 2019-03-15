@@ -24,18 +24,26 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_product.*
 import com.mikepenz.fastadapter.FastAdapter
 import android.support.v7.widget.RecyclerView
+import android.widget.Toast
 import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
+import com.mrkanapka.mrkanapkakotlin.api.model.RequestAddCart
+import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import kotlinx.android.synthetic.main.item_menu.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class ProductFragment  : Fragment() {
 
     companion object {
-        fun newInstance(category: Int): ProductFragment {
+        fun newInstance(category: Int, token: String): ProductFragment {
             val fragment = ProductFragment()
             val args = Bundle()
             args.putInt("category", category)
+            args.putString("token", token)
             fragment.arguments = args
             return fragment
         }
@@ -44,6 +52,10 @@ class ProductFragment  : Fragment() {
     //to swipe refresh
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
+
+    private val apiService by lazy {
+        ApiClient.create()
+    }
 
     private val fastItemAdapter: FastItemAdapter<ProductListItem> = FastItemAdapter()
     //region Tag
@@ -169,20 +181,47 @@ class ProductFragment  : Fragment() {
     }
 
     private fun onListItemClicked(view: View, item: ProductListItem){
-        var bool : Boolean = true
-        val model = item.model
-        for (item in Cart.cartList)
-        {
-          if(item.title == model.name) {
-            item.quantity++
-            bool = false
-          }
-        }
-        if(bool) {
-          val item = CartDto(model.id_product, model.name, model.price, 1, model.id_product,  model.photo_url)
-          Cart.setInfoItem(item)
-        }
-        Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+//        var bool : Boolean = true
+//        val model = item.model
+//        for (item in Cart.cartList)
+//        {
+//          if(item.title == model.name) {
+//            item.quantity++
+//            bool = false
+//          }
+//        }
+//        if(bool) {
+//          val item = CartDto(model.id_product, model.name, model.price, 1, model.id_product,  model.photo_url)
+//          Cart.setInfoItem(item)
+//        }
+
+        println("sukces" + token + " " + item.model.id_product + " " + 1)
+        apiService.addCart(RequestAddCart(token, item.model.id_product, 1))
+            .enqueue(object : Callback<ResponseDefault> {
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    Log.e("Status: ", "Fail connection")
+                    //Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    //dialog.cancel()
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    println("sukces")
+                    Log.e("Kod", response.code().toString())
+                    if (response.code() == 200) //Good token
+                    {
+                        println("sukces")
+
+                        Snackbar.make(root1, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+                    }
+                    if (response.code() == 400) //Bad token
+                    {
+                        println("cos poszlo nie tak")
+                        //Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+
+
 
     }
 
@@ -251,10 +290,11 @@ class ProductFragment  : Fragment() {
             .addTo(disposables)
 
     }
-
+    private var token = ""
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.getInt("category").let { category = it!! }
+        token = arguments?.getString("token").toString()
         initializeRecyclerView()
         // Initialize the handler instance
 

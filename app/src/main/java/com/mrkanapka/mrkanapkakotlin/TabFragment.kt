@@ -15,9 +15,10 @@ import com.mrkanapka.mrkanapkakotlin.view.ProductFragment
 class TabFragment : Fragment(){
 
     var category = ArrayList<CategoryDto>()
-
+    var token = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         category = arguments!!.getParcelableArrayList<CategoryDto>("category")
+        token = arguments!!.getString("token")
         for (item in category) println(item)
         val x =  inflater.inflate(R.layout.tab_layout,null)
         tabLayout = x.findViewById<View>(R.id.tabs) as TabLayout
@@ -36,7 +37,7 @@ class TabFragment : Fragment(){
     internal inner class MyAdapter (fm : FragmentManager) : FragmentPagerAdapter(fm){
 
         override fun getItem(position: Int): Fragment? {
-            return ProductFragment.newInstance(category[position].id_category)
+            return ProductFragment.newInstance(category[position].id_category, token)
         }
 
         override fun getCount(): Int {
@@ -55,10 +56,11 @@ class TabFragment : Fragment(){
         var int_items = 0
 
 
-        fun newInstance(category: ArrayList<CategoryDto>): TabFragment {
+        fun newInstance(category: ArrayList<CategoryDto>, token: String): TabFragment {
             val fragment = TabFragment()
             val args = Bundle()
             args.putParcelableArrayList("category", category)
+            args.putString("token", token)
             fragment.arguments = args
             return fragment
         }
