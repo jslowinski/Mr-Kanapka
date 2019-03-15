@@ -195,7 +195,10 @@ class ProductFragment  : Fragment() {
 //          Cart.setInfoItem(item)
 //        }
 
-        println("sukces" + token + " " + item.model.id_product + " " + 1)
+        println("sukces " + token + " " + item.model.id_product + " " + 1)
+        Log.e("Token: ", token)
+        Log.e("ID: ", item.model.id_product.toString())
+
         apiService.addCart(RequestAddCart(token, item.model.id_product, 1))
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
@@ -232,6 +235,7 @@ class ProductFragment  : Fragment() {
 
         val foodDetail = Intent(context, FoodDetail::class.java)
         foodDetail.putExtra("intVariableName", product.id_product)
+        foodDetail.putExtra("token", token)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
         //Url.Detail_id = product.id_product

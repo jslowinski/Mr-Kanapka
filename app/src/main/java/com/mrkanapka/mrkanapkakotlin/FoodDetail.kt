@@ -3,6 +3,7 @@ package com.mrkanapka.mrkanapkakotlin
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -12,9 +13,12 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.mrkanapka.mrkanapkakotlin.api.Cart
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
+import com.mrkanapka.mrkanapkakotlin.api.model.RequestAddCart
+import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDetail
 
 import kotlinx.android.synthetic.main.activity_food_detail.*
+import kotlinx.android.synthetic.main.fragment_product.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,10 +31,13 @@ class FoodDetail : AppCompatActivity() {
     var photo_url = ""
     var url = 0
     var price = ""
+    var token = ""
     //val foodDetailBar : AppBarLayout = findViewById(R.id.food_detail_bar)
     //val nestedScrollView : NestedScrollView = findViewById(R.id.nestedScrollView)
 
-
+    private val apiService by lazy {
+        ApiClient.create()
+    }
 
 
 
@@ -48,6 +55,9 @@ class FoodDetail : AppCompatActivity() {
         progressBar2.visibility = View.VISIBLE
 
         url = intent.getIntExtra("intVariableName",0)
+        token = intent.getStringExtra("token")
+
+        Log.e("token", token)
         
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -59,19 +69,43 @@ class FoodDetail : AppCompatActivity() {
 
 
         button.setOnClickListener{
-            var bool : Boolean = true
-            for (item in Cart.cartList)
-            {
-                if(item.title == name) {
-                    item.quantity+=numberButton.number.toInt()
-                    bool = false
-                }
-            }
-            if(bool) {
-                val item = CartDto(url, name, price, numberButton.number.toInt(), url, photo_url)
-                Cart.setInfoItem(item)
-            }
-            Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+//            var bool : Boolean = true
+//            for (item in Cart.cartList)
+//            {
+//                if(item.title == name) {
+//                    item.quantity+=numberButton.number.toInt()
+//                    bool = false
+//                }
+//            }
+//            if(bool) {
+//                val item = CartDto(url, name, price, numberButton.number.toInt(), url, photo_url)
+//                Cart.setInfoItem(item)
+//            }
+//            Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+            apiService.addCart(RequestAddCart(token, url, numberButton.number.toInt()))
+                .enqueue(object : Callback<ResponseDefault> {
+                    override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                        Log.e("Status: ", "Fail connection")
+                        //Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                        //dialog.cancel()
+                    }
+
+                    override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                        println("sukces")
+                        Log.e("Kod", response.code().toString())
+                        if (response.code() == 200) //Good token
+                        {
+                            println("sukces")
+
+                            Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
+                        }
+                        if (response.code() == 400) //Bad token
+                        {
+                            println("cos poszlo nie tak")
+                            //Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                })
         }
 
 
