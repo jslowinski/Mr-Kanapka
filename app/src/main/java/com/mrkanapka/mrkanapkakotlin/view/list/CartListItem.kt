@@ -10,11 +10,12 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
+import com.mrkanapka.mrkanapkakotlin.api.model.ResponseCartDetail
 import java.util.*
 
 
 
-class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, CartListItem.CartListItemViewHolder>(model) {
+class CartListItem(model: ResponseCartDetail) : ModelAbstractItem<ResponseCartDetail, CartListItem, CartListItem.CartListItemViewHolder>(model) {
 
     override fun getType(): Int {
         return R.id.cart_type_id
@@ -44,9 +45,9 @@ class CartListItem(model: CartDto) : ModelAbstractItem<CartDto, CartListItem, Ca
             // Retrieve model.
             val model = item.model
             // Update view.
-            var price = model.price.toDouble() * model.quantity
-            titleText.text = model.title
-            countButton.number = model.quantity.toString()
+            var price = model.price.toFloat()
+            titleText.text = model.name
+            countButton.number = model.amount.toString()
             textViewPrice.text = price.toString()
             Glide.with(itemView).load(model.photo_url).into(imageView)
 

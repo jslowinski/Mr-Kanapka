@@ -50,4 +50,7 @@ interface ApiService {
   @DELETE ("remove_all")
   fun deleteProductCart(@Body body: RequestDeleteCart): Call<ResponseDefault>
 
+  @POST("show_cart")
+  fun fetchCart(@Body body: RequestToken): Single<ResponseCart<List<ResponseCartDetail>>>
+
 }
