@@ -271,7 +271,6 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.action_cart -> {
                 val intent = Intent(this, CartActivity::class.java)
                 startActivity(intent)
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 return super.onOptionsItemSelected(item)}
             R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
@@ -301,7 +300,6 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.action_cart ->  {
                 val intent = Intent(this, CartActivity::class.java)
                 startActivity(intent)
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
             R.id.logout ->  {
                 Completable.fromAction {

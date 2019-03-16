@@ -47,10 +47,10 @@ interface ApiService {
   @PUT("add_cart")
   fun addCart(@Body body: RequestAddCart): Call<ResponseDefault>
 
-  @DELETE ("remove_all")
+  @PUT ("remove_all")
   fun deleteProductCart(@Body body: RequestDeleteCart): Call<ResponseDefault>
 
   @POST("show_cart")
-  fun fetchCart(@Body body: RequestToken): Single<ResponseCart<List<ResponseCartDetail>>>
+  fun fetchCart(@Body body: RequestToken): Call<ResponseCart<List<ResponseCartDetail>>>
 
 }

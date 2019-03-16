@@ -18,9 +18,7 @@ import com.mrkanapka.mrkanapkakotlin.FoodDetail
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.Cart
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseCartDetail
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.api.model.*
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
 import com.mrkanapka.mrkanapkakotlin.view.list.CartListItem
@@ -51,6 +49,8 @@ class CartActivity : AppCompatActivity() {
         TokenManager()
     }
 
+    private var accessToken : String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
@@ -59,7 +59,7 @@ class CartActivity : AppCompatActivity() {
         actionBar!!.title = "Koszyk"
         actionBar.setDisplayHomeAsUpEnabled(true)
 
-        initializeRecyclerView()
+
         tokenManager
             .getToken()
             .observeOn(AndroidSchedulers.mainThread())
@@ -70,7 +70,7 @@ class CartActivity : AppCompatActivity() {
             .addTo(disposables)
     }
     private fun handleTokenCacheSuccess(token: TokenEntity) {
-
+        accessToken = token.token
         println(token.token)
         apiService.checkToken(RequestToken(token.token))
             .enqueue(object : Callback<ResponseDefault> {
@@ -83,17 +83,7 @@ class CartActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     if (response.code() == 200) //Good token
                     {
-                        disposables.add(
-                            apiService
-                                .fetchCart(RequestToken(token.token))
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .map { response -> response.cart }
-                                .subscribe(
-                                    { result -> handleFetchCartSuccess(result) },
-                                    { throwable -> handleFetchCartError(throwable) }
-                                )
-                        )
+                        showCart(token.token)
                     }
                     if (response.code() == 400) //Bad token
                     {
@@ -106,10 +96,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun handleFetchCartSuccess(films: List<ResponseCartDetail>) {
-
         // Log the fact.
-
-
         // Convert to list items.
         val items = films.map {
             CartListItem(it)
@@ -120,18 +107,11 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun handleFetchCartError(throwable: Throwable) {
-
         // Log an error.
-
-
-
     }
 
     private fun handleTokenCacheError(throwable: Throwable) {
-
-
         // Log an error.
-
     }
 
 
@@ -156,17 +136,24 @@ class CartActivity : AppCompatActivity() {
         cartRecyclerView.itemAnimator = DefaultItemAnimator()
         cartRecyclerView.adapter = adapter
 
-//        adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
-//        adapter.withEventHook(object : ClickEventHook<CartListItem>() {
-//            override fun onBindMany(viewHolder: RecyclerView.ViewHolder) =
-//                viewHolder.itemView.run { listOf(button2) }
-//
-//            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<CartListItem>?, item: CartListItem?) {
-//                if (view != null && item != null) {
-//                   // onListItemClicked(view, item)
-//                }
-//            }
-//        })
+        adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
+        adapter.withEventHook(object : ClickEventHook<CartListItem>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder) =
+                viewHolder.itemView.run { listOf(button2) }
+
+            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<CartListItem>?, item: CartListItem?) {
+                apiService.deleteProductCart(RequestDeleteCart(accessToken,item!!.model.id_product))
+                    .enqueue(object : Callback<ResponseDefault>{
+                        override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                            Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
+                        }
+
+                        override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                            showCart(accessToken)
+                        }
+                    })
+            }
+        })
 //        setRecyclerViewItemTouchListener()
     }
 
@@ -228,16 +215,43 @@ class CartActivity : AppCompatActivity() {
         //foodDetail.putExtra("OpeningCrawl", "z koszyka")
         //foodDetail.putExtra("Name", itemCart.title)
         foodDetail.putExtra("intVariableName", itemCart.id_product)
+        foodDetail.putExtra("token", accessToken)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
+        finish()
         //Url.Detail_id = itemCart.id_product
-
         return true
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         return true
+    }
+
+    private fun showCart(token : String){
+        apiService.fetchCart(RequestToken(token))
+            .enqueue(object : Callback<ResponseCart<List<ResponseCartDetail>>>{
+                override fun onFailure(
+                    call: Call<ResponseCart<List<ResponseCartDetail>>>,
+                    t: Throwable
+                ) {
+                    Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseCart<List<ResponseCartDetail>>>,
+                    response: Response<ResponseCart<List<ResponseCartDetail>>>
+                ) {
+                    if (response.body()!!.count == 0) {
+                        imageView2.visibility = View.VISIBLE
+                        textView3.visibility = View.VISIBLE
+                    } else {
+                        imageView2.visibility = View.GONE
+                        textView3.visibility = View.GONE
+                    }
+                    handleFetchCartSuccess(response.body()!!.cart)
+                    initializeRecyclerView()
+                }
+            })
     }
 }

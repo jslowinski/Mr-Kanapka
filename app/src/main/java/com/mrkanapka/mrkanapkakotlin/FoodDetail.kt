@@ -45,7 +45,6 @@ class FoodDetail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_food_detail)
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
 
         val button : Button = findViewById(R.id.add_to_order_button)
         val numberButton : ElegantNumberButton = findViewById(R.id.number_button)
@@ -113,7 +112,6 @@ class FoodDetail : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         return true
     }
 
