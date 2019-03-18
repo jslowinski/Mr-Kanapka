@@ -50,7 +50,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private val disposables: CompositeDisposable = CompositeDisposable()
 
-    private fun handleFetchCategorySuccess(category: List<CategoryEntity>) {
+    private fun handleFetchCategorySuccess( category: List<CategoryEntity>, id_seller: Int) {
 
         // Log the fact.
         Log.i("tabfragment", "Successfully fetched categories.")
@@ -61,7 +61,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             arrayList.add(CategoryDto(item.id_category, item.name))
         }
 
-        displayScreen(R.id.main_menu, arrayList)
+        displayScreen(R.id.main_menu, arrayList, id_seller)
         dialog.cancel()
     }
 
@@ -124,8 +124,11 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Log an error.
     }
 
+    lateinit var sellers: List<SellerEntity>
+
     private fun handleFetchSellerSuccess(seller: List<SellerEntity>) {
 
+        sellers = seller
         val mySeller = ArrayList<String>()
         for (item in seller) {
             println(item)
@@ -212,23 +215,13 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 //id_destination = destinations[position].id_destination
                 dialog.show()
-//                disposables.add(
-//                    apiService
-//                        .fetchCategory("products/seller/" + seller[position].id_seller)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .map { it.category }
-//                        .subscribe(
-//                            { handleFetchCategorySuccess(it) },
-//                            { handleFetchCategoryError(it) }
-//                        )
-//                )
+
                 //From cache
                 tokenManager
                     .getCategory(seller[position].id_seller)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                        { handleFetchCategorySuccess(it) },
+                        { handleFetchCategorySuccess(it, seller[position].id_seller) },
                         { handleFetchCategoryError(it) }
                     )
                     .addTo(disposables)
@@ -241,7 +234,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     .doOnSubscribe {  } //funkcje np progressbar show
                     .doFinally {  } //funkcje np progressbar show
                     .subscribe(
-                        { handleFetchCategorySuccess(it) },
+                        { handleFetchCategorySuccess(it, seller[position].id_seller) },
                         { handleFetchCategoryError(it) }
                     )
                     .addTo(disposables)
@@ -280,14 +273,18 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    fun displayScreen(id: Int, category: ArrayList<CategoryDto>) {
+    fun displayScreen(
+        id: Int,
+        category: ArrayList<CategoryDto>,
+        id_seller: Int
+    ) {
         val fragment  = when (id) {
             R.id.main_menu -> {
                 // TU CHYBA PROBLEM
-                TabFragment.newInstance(category, token)
+                TabFragment.newInstance(category, token, id_seller)
             }
             else -> {
-                TabFragment.newInstance(category, token)
+                TabFragment.newInstance(category, token, id_seller)
             }
         }
         supportFragmentManager

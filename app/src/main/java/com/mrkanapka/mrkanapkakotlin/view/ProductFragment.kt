@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mrkanapka.mrkanapkakotlin.FoodDetail
 import com.mrkanapka.mrkanapkakotlin.R
-import com.mrkanapka.mrkanapkakotlin.api.Cart
 import com.mrkanapka.mrkanapkakotlin.database.entity.ProductEntity
 import com.mrkanapka.mrkanapkakotlin.manager.ProductsManager
 import com.mrkanapka.mrkanapkakotlin.view.list.ProductListItem
@@ -24,10 +23,8 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_product.*
 import com.mikepenz.fastadapter.FastAdapter
 import android.support.v7.widget.RecyclerView
-import android.widget.Toast
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestAddCart
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import kotlinx.android.synthetic.main.item_menu.view.*
@@ -39,10 +36,11 @@ import retrofit2.Response
 class ProductFragment  : Fragment() {
 
     companion object {
-        fun newInstance(category: Int, token: String): ProductFragment {
+        fun newInstance(category: Int, token: String, id_seller: Int): ProductFragment {
             val fragment = ProductFragment()
             val args = Bundle()
             args.putInt("category", category)
+            args.putInt("seller", id_seller)
             args.putString("token", token)
             fragment.arguments = args
             return fragment
@@ -72,12 +70,6 @@ class ProductFragment  : Fragment() {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
     //endregion
-
-
-    override fun onResume() {
-        super.onResume()
-        //Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
-    }
 
     override fun onPause() {
         disposables.clear()
@@ -236,6 +228,7 @@ class ProductFragment  : Fragment() {
         val foodDetail = Intent(context, FoodDetail::class.java)
         foodDetail.putExtra("intVariableName", product.id_product)
         foodDetail.putExtra("token", token)
+        foodDetail.putExtra("fromCart", 0)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
         //Url.Detail_id = product.id_product
@@ -272,7 +265,7 @@ class ProductFragment  : Fragment() {
         imageView5.visibility = View.GONE
         //From cache
         productsManager
-            .getProducts(category)
+            .getProducts(category, id_seller)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 this::handleFetchSandwichsCacheSuccess,
@@ -282,8 +275,8 @@ class ProductFragment  : Fragment() {
 
         //From api
         productsManager
-            .downloadProducts("products/" + category, category)
-            .andThen(productsManager.getProducts(category))
+            .downloadProducts("products/" + category + "/seller/" + id_seller, category, id_seller)
+            .andThen(productsManager.getProducts(category, id_seller))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showProgress() }
             .doFinally { hideProgress() }
@@ -295,9 +288,11 @@ class ProductFragment  : Fragment() {
 
     }
     private var token = ""
+    private var id_seller: Int = 0
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.getInt("category").let { category = it!! }
+        id_seller = arguments!!.getInt("seller")
         token = arguments?.getString("token").toString()
         initializeRecyclerView()
         // Initialize the handler instance

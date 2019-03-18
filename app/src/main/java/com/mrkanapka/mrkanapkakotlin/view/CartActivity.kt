@@ -216,6 +216,7 @@ class CartActivity : AppCompatActivity() {
         //foodDetail.putExtra("Name", itemCart.title)
         foodDetail.putExtra("intVariableName", itemCart.id_product)
         foodDetail.putExtra("token", accessToken)
+        foodDetail.putExtra("fromCart", 1)
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
         finish()
@@ -227,6 +228,8 @@ class CartActivity : AppCompatActivity() {
         onBackPressed()
         return true
     }
+
+
 
     private fun showCart(token : String){
         apiService.fetchCart(RequestToken(token))

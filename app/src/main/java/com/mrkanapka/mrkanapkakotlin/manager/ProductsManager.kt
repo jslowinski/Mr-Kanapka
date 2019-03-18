@@ -15,11 +15,11 @@ class ProductsManager {
         ApiClient.create()
     }
 
-    fun downloadProducts(url: String, category: Int): Completable =
+    fun downloadProducts(url: String, category: Int, id_seller: Int): Completable =
         apiService
             .fetchProducts(url)
             .flatMapCompletable {
-                saveProducts(it.product, category)
+                saveProducts(it.product, category, id_seller)
             }
             .subscribeOn(Schedulers.io())
 
@@ -31,7 +31,11 @@ class ProductsManager {
         AndroidDatabase.database
     }
 
-    private fun saveProducts(productsDto: List<ProductsDto>, category: Int) =
+    private fun saveProducts(
+        productsDto: List<ProductsDto>,
+        category: Int,
+        id_seller: Int
+    ) =
         Completable.fromAction {
             val entities = productsDto.map {
                 ProductEntity(
@@ -41,16 +45,17 @@ class ProductsManager {
                     it.photo_url,
                     it.price,
                     it.description,
-                    category
+                    category,
+                    id_seller
                 )
             }
-            database.productDao().removeAndInsert(entities, category)
+            database.productDao().removeAndInsert(entities, category, id_seller)
         }.subscribeOn(Schedulers.io())
 
 
-    fun getProducts(position: Int): Maybe<List<ProductEntity>> =
+    fun getProducts(position: Int, id_seller: Int): Maybe<List<ProductEntity>> =
         database
             .productDao()
-            .getProducts(position)
+            .getProducts(position, id_seller)
             .subscribeOn(Schedulers.io())
 }

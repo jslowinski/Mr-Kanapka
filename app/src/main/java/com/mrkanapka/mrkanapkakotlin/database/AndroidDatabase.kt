@@ -15,7 +15,7 @@ import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 
 
 @Database(
-    version = 13,
+    version = 14,
     exportSchema = false,
     entities = [
         ProductEntity::class,

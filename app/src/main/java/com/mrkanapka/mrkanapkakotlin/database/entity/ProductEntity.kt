@@ -27,7 +27,8 @@ data class ProductEntity(
     var description: String,
 
     @ColumnInfo(name = "id_category")
-    var id_category: Int
+    var id_category: Int,
+    var id_seller1: Int
 
 ) {
 

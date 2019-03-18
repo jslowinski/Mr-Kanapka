@@ -1,5 +1,6 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -16,6 +17,7 @@ import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
 import com.mrkanapka.mrkanapkakotlin.api.model.RequestAddCart
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDetail
+import com.mrkanapka.mrkanapkakotlin.view.CartActivity
 
 import kotlinx.android.synthetic.main.activity_food_detail.*
 import kotlinx.android.synthetic.main.fragment_product.*
@@ -34,11 +36,10 @@ class FoodDetail : AppCompatActivity() {
     var token = ""
     //val foodDetailBar : AppBarLayout = findViewById(R.id.food_detail_bar)
     //val nestedScrollView : NestedScrollView = findViewById(R.id.nestedScrollView)
-
+    var flag = 0
     private val apiService by lazy {
         ApiClient.create()
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +56,7 @@ class FoodDetail : AppCompatActivity() {
 
         url = intent.getIntExtra("intVariableName",0)
         token = intent.getStringExtra("token")
-
+        flag = intent.getIntExtra("fromCart", 0)
         Log.e("token", token)
         
         val actionBar = supportActionBar
@@ -113,6 +114,19 @@ class FoodDetail : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onBackPressed() {
+
+        if (flag == 1) {
+            val intent = Intent(this, CartActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else{
+            finish()
+        }
+
     }
 
     fun callDetail(){

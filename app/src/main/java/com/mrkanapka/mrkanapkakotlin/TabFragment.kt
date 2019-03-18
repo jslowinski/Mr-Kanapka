@@ -16,9 +16,13 @@ class TabFragment : Fragment(){
 
     var category = ArrayList<CategoryDto>()
     var token = ""
+
+    var id_seller: Int = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         category = arguments!!.getParcelableArrayList<CategoryDto>("category")
         token = arguments!!.getString("token")
+        id_seller = arguments!!.getInt("seller")
         for (item in category) println(item)
         val x =  inflater.inflate(R.layout.tab_layout,null)
         tabLayout = x.findViewById<View>(R.id.tabs) as TabLayout
@@ -37,7 +41,7 @@ class TabFragment : Fragment(){
     internal inner class MyAdapter (fm : FragmentManager) : FragmentPagerAdapter(fm){
 
         override fun getItem(position: Int): Fragment? {
-            return ProductFragment.newInstance(category[position].id_category, token)
+            return ProductFragment.newInstance(category[position].id_category, token, id_seller)
         }
 
         override fun getCount(): Int {
@@ -56,11 +60,16 @@ class TabFragment : Fragment(){
         var int_items = 0
 
 
-        fun newInstance(category: ArrayList<CategoryDto>, token: String): TabFragment {
+        fun newInstance(
+            category: ArrayList<CategoryDto>,
+            token: String,
+            id_seller: Int
+        ): TabFragment {
             val fragment = TabFragment()
             val args = Bundle()
             args.putParcelableArrayList("category", category)
             args.putString("token", token)
+            args.putInt("seller", id_seller)
             fragment.arguments = args
             return fragment
         }
