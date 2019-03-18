@@ -65,6 +65,7 @@ class LoginUI : AppCompatActivity() {
     private fun handleTokenCacheSuccess(token: TokenEntity) {
 
         println(token.token)
+
         apiService.checkToken(RequestToken(token.token))
             .enqueue(object : Callback<ResponseDefault>{
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
@@ -74,6 +75,7 @@ class LoginUI : AppCompatActivity() {
                     startMenu()
                 }
 
+                @SuppressLint("CheckResult")
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     if (response.code() == 200) //Good token
                     {
@@ -81,12 +83,27 @@ class LoginUI : AppCompatActivity() {
                     }
                     if (response.code() == 400) //Bad token
                     {
-                        dialog.cancel()
-                        Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                        if (token.token.equals("offline"))
+                        {
+                            dialog.cancel()
+                        } else {
+                            dialog.cancel()
+                            Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                            Completable.fromAction {
+                                database
+                                    .tokenDao()
+                                    .removeAndInsert(TokenEntity("offline"))
+                            }.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    // data updated
+                                }
+                        }
+                        Log.e("Token: ", token.token)
+
                     }
                 }
-        })
-
+            })
 
     }
 
@@ -136,8 +153,8 @@ class LoginUI : AppCompatActivity() {
                 apiService.login(RequestLogin(emailInput,passwordInput))
                     .enqueue(object : Callback<ResponseDefault>{
                         override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                            print("blad")
                             dialog.cancel()
+                            Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
                         }
 
                         @SuppressLint("CheckResult")
@@ -212,7 +229,8 @@ class LoginUI : AppCompatActivity() {
                 apiService.forgotPassword(RequestResetPassword(email))
                     .enqueue(object : Callback<ResponseDefault>{
                         override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                            Log.e("To ja: ", "twój przyjadziel błąd")
+                            emailDialog.cancel()
+                            Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
                         }
 
                         override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {

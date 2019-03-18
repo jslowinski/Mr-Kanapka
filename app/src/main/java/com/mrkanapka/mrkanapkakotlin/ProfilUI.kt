@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -79,7 +81,7 @@ class ProfilUI : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
         val message = dialogView.findViewById<TextView>(R.id.textDialog)
-        message.text = "Sprawdzanie danych logowania..."
+        message.text = "Sprawdzanie danych"
         builder.setView(dialogView)
         builder.setCancelable(false)
         progressDialog = builder.create()
@@ -114,16 +116,24 @@ class ProfilUI : AppCompatActivity() {
                         Log.e("Status: ", "Good token")
 
                         edit_profile.setOnClickListener{
-                            editMode()
+                            if(hasNetwork(applicationContext)) {
+                                editMode()
+                            } else {
+                                Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
+                            }
                         }
 
                         edit_profile_accept.setOnClickListener{
-                            updateProfile()
+                            if(hasNetwork(applicationContext)) {
+                                updateProfile()
+                            } else {
+                                Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
+                            }
                         }
 
-                        edit_profile_cancel.setOnClickListener{
-                            confirmCancel()
-                        }
+//                        edit_profile_cancel.setOnClickListener{
+//                            confirmCancel()
+//                        }
 
                         logoutButton.setOnClickListener{
                             Completable.fromAction {
@@ -154,7 +164,7 @@ class ProfilUI : AppCompatActivity() {
     private fun editMode() {
         edit_profile.visibility = View.GONE
         edit_profile_accept.visibility = View.VISIBLE
-        edit_profile_cancel.visibility = View.VISIBLE
+//        edit_profile_cancel.visibility = View.VISIBLE
         //edycja imienia
         profile_firstname.visibility = View.VISIBLE
         profile_firstname.isEnabled = true
@@ -184,7 +194,7 @@ class ProfilUI : AppCompatActivity() {
     }
 
     private fun cancelEdit(){
-        edit_profile_cancel.visibility = View.GONE
+//        edit_profile_cancel.visibility = View.GONE
         edit_profile_accept.visibility = View.GONE
         edit_profile.visibility = View.VISIBLE
         profile_email.setTextColor(Color.BLACK)
@@ -356,7 +366,7 @@ class ProfilUI : AppCompatActivity() {
         apiService.fetchProfile(RequestToken(access_token))
             .enqueue(object : Callback<ResponseProfile>{
                 override fun onFailure(call: Call<ResponseProfile>, t: Throwable) {
-                    print("blad")
+                    Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {
@@ -442,13 +452,14 @@ class ProfilUI : AppCompatActivity() {
         apiService.editProfile(RequestProfileEdit(access_token,emailInput,nameInput,id_destination,lastnameInput,phoneInput))
             .enqueue(object : Callback<ResponseDefault>{
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    cancelEdit()
+                    Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     if(response.code()== 200) {
                         Log.e("Wiadomość: ", "Sukces pomyślnie wysłano")
-                        edit_profile_cancel.visibility = View.GONE
+//                        edit_profile_cancel.visibility = View.GONE
                         edit_profile_accept.visibility = View.GONE
                         edit_profile.visibility = View.VISIBLE
                         profile_email.setTextColor(Color.BLACK)
@@ -498,5 +509,13 @@ class ProfilUI : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+    fun hasNetwork(context: Context): Boolean {
+        var isConnected: Boolean? = false // Initial Value
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnected)
+            isConnected = true
+        return isConnected!!
     }
 }

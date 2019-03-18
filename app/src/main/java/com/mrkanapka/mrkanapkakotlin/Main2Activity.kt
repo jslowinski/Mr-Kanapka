@@ -1,6 +1,9 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -316,9 +319,15 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 finish()
             }
             R.id.profile -> {
-                val intent = Intent(this, ProfilUI::class.java)
-                startActivity(intent)
-                finish()
+                if (this.hasNetwork(applicationContext)!!){
+                    val intent = Intent(this, ProfilUI::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                else
+                {
+                    Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
+                }
             }
             else -> {
 
@@ -327,5 +336,14 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun hasNetwork(context: Context): Boolean? {
+        var isConnected: Boolean? = false // Initial Value
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnected)
+            isConnected = true
+        return isConnected
     }
 }

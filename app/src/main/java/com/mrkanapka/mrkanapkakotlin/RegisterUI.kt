@@ -78,7 +78,7 @@ class RegisterUI : AppCompatActivity() {
         val main = Intent(this, Main2Activity::class.java)
 
 
-        if (validateEmail() && validatePassword())
+        if (validateEmail() && validatePassword() && validateCheckbox())
         {
             // println("$emailInput $passwordInput $id_destination")
             //.instance.register(emailInput,passwordInput,id_destination.toString())
@@ -244,14 +244,24 @@ class RegisterUI : AppCompatActivity() {
         passwordInput = password_register.text.toString().trim()
 
         if (passwordInput.isEmpty()) {
-            password_register.setError("Pole nie może być puste")
+            password_register.error = "Pole nie może być puste"
             return false
         } else if (!PASSWORD_PATTERN.matcher(passwordInput).matches()) {
-            password_register.setError("Hasło musi zawierać od 6 do 32 znaków, jedną cyfrę, jedną wielką literę oraz jedną małą literę.")
+            password_register.error = "Hasło musi zawierać od 6 do 32 znaków, jedną cyfrę, jedną wielką literę oraz jedną małą literę."
             return false
         } else {
-            password_register.setError(null)
+            password_register.error = null
             return true
+        }
+    }
+
+    private fun validateCheckbox(): Boolean {
+        if(checkboxSelect.isChecked){
+            return true
+        }
+        else {
+            checkboxSelect.error = ""
+            return false
         }
     }
 
