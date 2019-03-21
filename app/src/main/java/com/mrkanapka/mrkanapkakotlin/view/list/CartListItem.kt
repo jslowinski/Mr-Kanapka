@@ -39,7 +39,7 @@ class CartListItem(model: ResponseCartDetail) : ModelAbstractItem<ResponseCartDe
         private val textViewPrice: TextView = itemView.findViewById(R.id.textViewPrice)
         //private val button: Button = itemView.findViewById(R.id.button2)
         private val imageView: ImageView = itemView.findViewById(R.id.image)
-        private val countButton: ElegantNumberButton = itemView.findViewById(R.id.number_button)
+        private val countButton: ElegantNumberButton = itemView.findViewById(R.id.number_button_cart)
         override fun bindView(item: CartListItem, payloads: MutableList<Any>) {
 
             // Retrieve model.

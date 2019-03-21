@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
@@ -27,6 +29,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_cart.*
+import kotlinx.android.synthetic.main.activity_food_detail.*
 import kotlinx.android.synthetic.main.item_in_cart.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -154,6 +157,24 @@ class CartActivity : AppCompatActivity() {
                     })
             }
         })
+
+        adapter.withEventHook(object : ClickEventHook<CartListItem>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder) =
+                viewHolder.itemView.run { listOf(findViewById<Button>(com.cepheuen.elegantnumberbutton.R.id.add_btn)) }
+
+            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<CartListItem>?, item: CartListItem?) {
+               addOne(accessToken, item!!.model.id_product)
+            }
+        })
+
+        adapter.withEventHook(object : ClickEventHook<CartListItem>() {
+            override fun onBindMany(viewHolder: RecyclerView.ViewHolder) =
+                viewHolder.itemView.run { listOf(findViewById<Button>(com.cepheuen.elegantnumberbutton.R.id.subtract_btn)) }
+
+            override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<CartListItem>?, item: CartListItem?) {
+                removeOne(accessToken, item!!.model.id_product)
+            }
+        })
 //        setRecyclerViewItemTouchListener()
     }
 
@@ -229,8 +250,6 @@ class CartActivity : AppCompatActivity() {
         return true
     }
 
-
-
     private fun showCart(token : String){
         apiService.fetchCart(RequestToken(token))
             .enqueue(object : Callback<ResponseCart<List<ResponseCartDetail>>>{
@@ -254,6 +273,56 @@ class CartActivity : AppCompatActivity() {
                     }
                     handleFetchCartSuccess(response.body()!!.cart)
                     initializeRecyclerView()
+                }
+            })
+    }
+
+    private fun addOne(token : String, id : Int){
+        apiService.addCart(RequestAddCart(token, id, 1))
+            .enqueue(object : Callback<ResponseDefault> {
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    Log.e("Status: ", "Fail connection")
+                    //Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    //dialog.cancel()
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    println("sukces")
+                    Log.e("Kod", response.code().toString())
+                    if (response.code() == 200) //Good token
+                    {
+                        showCart(accessToken)
+                    }
+                    if (response.code() == 400) //Bad token
+                    {
+                        println("cos poszlo nie tak")
+                        //Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+    }
+
+    private fun removeOne(token : String, id : Int){
+        apiService.removeOne(RequestRemoveOne(token, id))
+            .enqueue(object : Callback<ResponseDefault> {
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    Log.e("Status: ", "Fail connection")
+                    //Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    //dialog.cancel()
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    println("sukces")
+                    Log.e("Kod", response.code().toString())
+                    if (response.code() == 200) //Good token
+                    {
+                        showCart(accessToken)
+                    }
+                    if (response.code() == 400) //Bad token
+                    {
+                        println("cos poszlo nie tak")
+                        //Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                    }
                 }
             })
     }

@@ -39,7 +39,7 @@
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                 android:layout_width="80dp"
                 android:layout_height="37dp"
-                android:id="@+id/number_button"
+                android:id="@+id/number_button_cart"
                 app:textSize="8sp"
                 app:backGroundColor="@color/colorAccent"
                 app:initialNumber="1"

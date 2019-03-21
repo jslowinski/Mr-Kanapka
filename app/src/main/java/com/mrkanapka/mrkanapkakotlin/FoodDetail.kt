@@ -49,7 +49,7 @@ class FoodDetail : AppCompatActivity() {
 
         val button : Button = findViewById(R.id.add_to_order_button)
         val numberButton : ElegantNumberButton = findViewById(R.id.number_button)
-
+        
         food_detail_bar.visibility = View.INVISIBLE
         nestedScrollView.visibility = View.INVISIBLE
         progressBar2.visibility = View.VISIBLE
@@ -181,13 +181,7 @@ class FoodDetail : AppCompatActivity() {
                     Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
                     return
                 }
-
-
-
-
             }
-
         })
-
     }
 }
