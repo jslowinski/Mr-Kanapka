@@ -282,7 +282,7 @@ class CartActivity : AppCompatActivity() {
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
-                    //Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Sprawdź swoje połączenie z internetem", Toast.LENGTH_LONG).show()
                     //dialog.cancel()
                 }
 
@@ -307,7 +307,7 @@ class CartActivity : AppCompatActivity() {
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
-                    //Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Sprawdź swoje połączenie z internetem", Toast.LENGTH_LONG).show()
                     //dialog.cancel()
                 }
 
