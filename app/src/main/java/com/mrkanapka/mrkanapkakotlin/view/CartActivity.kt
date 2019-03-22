@@ -40,8 +40,6 @@ class CartActivity : AppCompatActivity() {
 
     private val adapter: FastItemAdapter<CartListItem> = FastItemAdapter()
 
-    //private val items = Cart.infoItem().map { CartListItem(it) }.toMutableList()
-
     private val apiService by lazy {
         ApiClient.create()
     }
@@ -57,11 +55,16 @@ class CartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
-
+        val button : Button = this.findViewById(R.id.button2)
         val actionBar = supportActionBar
         actionBar!!.title = "Koszyk"
         actionBar.setDisplayHomeAsUpEnabled(true)
 
+        button.setOnClickListener{
+            val main = Intent(this, OrderSummaryActivity::class.java)
+            startActivity(main)
+
+        }
 
         tokenManager
             .getToken()

@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toTopOf="@+id/button2">
     </android.support.v7.widget.RecyclerView>
     <Button
-            android:text="Zamów"
+            android:text="Przejdź do podsumowania"
             android:backgroundTint="@color/colorButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
