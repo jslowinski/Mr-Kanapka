@@ -54,7 +54,7 @@
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                 android:layout_width="80dp"
                 android:layout_height="37dp"
-                android:id="@+id/number_button"
+                android:id="@+id/number_button_cart"
                 app:textSize="8sp"
                 app:backGroundColor="@color/colorAccent"
                 app:initialNumber="1"
@@ -78,6 +78,7 @@
                 android:layout_marginStart="8dp" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/number_button" android:textSize="18sp"
                 android:textStyle="bold" android:textColor="@color/colorPrimaryDark"/>
+
         <TextView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"

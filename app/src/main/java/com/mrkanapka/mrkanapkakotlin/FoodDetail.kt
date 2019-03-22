@@ -1,6 +1,8 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -29,17 +31,18 @@ import retrofit2.Response
 class FoodDetail : AppCompatActivity() {
 
     var message = ""
-    var name = ""
-    var photo_url = ""
-    var url = 0
+    var name = "Szczegóły"
+    var photoUrl = ""
+    private var url = 0
     var price = ""
     var token = ""
     //val foodDetailBar : AppBarLayout = findViewById(R.id.food_detail_bar)
     //val nestedScrollView : NestedScrollView = findViewById(R.id.nestedScrollView)
-    var flag = 0
+    private var flag = 0
     private val apiService by lazy {
         ApiClient.create()
     }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,10 +61,10 @@ class FoodDetail : AppCompatActivity() {
         token = intent.getStringExtra("token")
         flag = intent.getIntExtra("fromCart", 0)
         Log.e("token", token)
-        
+
         val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar.title = "Szczegóły"
+            actionBar.title = name
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
         callDetail()
@@ -126,10 +129,9 @@ class FoodDetail : AppCompatActivity() {
         else{
             finish()
         }
-
     }
 
-    fun callDetail(){
+    private fun callDetail(){
 
         val apiService = ApiClient.createDetail("http://zespol9-server.herokuapp.com/api/details/")
         val call = apiService.fetchDetail(url.toString())
@@ -139,19 +141,20 @@ class FoodDetail : AppCompatActivity() {
                 Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<ResponseDetail>, response: Response<ResponseDetail>) {
                 val body = response.body()
                 val title = body?.name
                 val test = body?.component // Lista składników
                 val description = body?.description
                 val priceS = body?.price
-                var range = test?.size
+                val range = test?.size
 
                 var skladnik = ""
                 //Odwoływanie się do składników
                 if (range != null && title != null ) {
                     for(i  in 0 until range){
-                        skladnik += "- " + test!!.get(i).name.toString()
+                        skladnik += "- " + test[i].name.toString()
                         if (i == range-1)
                         {}
                         else skladnik += "\n"
@@ -159,35 +162,43 @@ class FoodDetail : AppCompatActivity() {
                     price = priceS.toString()
                     name = title.toString()
                     message = description + "\n\n" + skladnik
-                    photo_url = body.photo_url.toString()
+                    photoUrl = body.photo_url.toString()
 
-                    val titleText: TextView = findViewById(R.id.food_name)
-                    titleText.text = name
+                    val actionBar = supportActionBar
+                    if (actionBar != null) {
+                        actionBar.title = name
+                        actionBar.setDisplayHomeAsUpEnabled(true)
+                    }
+                    food_name.text = name
 
                     val priceText: TextView = findViewById(R.id.food_price)
-                    priceText.text = price
+                    priceText.text = "$price zł"
 
                     findViewById<TextView>(R.id.food_description).apply {
                         text = message
                     }
 
+                    Log.e("Url: ", photoUrl)
                     val imageView: ImageView = findViewById(R.id.img_food)
-                    Glide.with(this@FoodDetail).load(photo_url).into(imageView)
-                    food_detail_bar.visibility = View.VISIBLE
-                    nestedScrollView.visibility = View.VISIBLE
+                    if (photoUrl.equals("https://res.cloudinary.com/daaothls9/"))
+                    {
+                        collapsing.visibility = View.GONE
+                        nestedScrollView.visibility = View.VISIBLE
+                    }
+                    else{
+                        Glide.with(this@FoodDetail).load(photoUrl).into(imageView)
+                        food_detail_bar.visibility = View.VISIBLE
+                        nestedScrollView.visibility = View.VISIBLE
+                    }
+
+
                     }
                 else {
                     progressBar2.visibility = View.GONE
                     Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
                     return
                 }
-
-
-
-
             }
-
         })
-
     }
 }

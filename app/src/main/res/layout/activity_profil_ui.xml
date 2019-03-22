@@ -304,7 +304,6 @@
                         <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="15dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:layout_gravity="center"
@@ -357,11 +356,11 @@
                                 android:popupBackground="@drawable/profil_spinner_background"
                                 android:gravity="center"
                                 android:spinnerMode="dropdown"
-                        />
+                                />
                         <ImageView
+                                android:id="@+id/arrow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="15dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:layout_gravity="center"

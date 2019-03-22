@@ -26,10 +26,12 @@
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".view.CartActivity">
+                android:name=".view.CartActivity"
+        >
         </activity>
         <activity
-                android:name=".FoodDetail">
+                android:name=".FoodDetail"
+        >
         </activity>
         <activity
                 android:name=".LoginUI"
