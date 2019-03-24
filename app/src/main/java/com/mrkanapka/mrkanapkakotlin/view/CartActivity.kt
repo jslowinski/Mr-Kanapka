@@ -1,6 +1,13 @@
 package com.mrkanapka.mrkanapkakotlin.view
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -52,6 +59,12 @@ class CartActivity : AppCompatActivity() {
 
     private var accessToken : String = ""
 
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        var fa: Activity? = null
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
@@ -60,10 +73,17 @@ class CartActivity : AppCompatActivity() {
         actionBar!!.title = "Koszyk"
         actionBar.setDisplayHomeAsUpEnabled(true)
 
-        button.setOnClickListener{
-            val main = Intent(this, OrderSummaryActivity::class.java)
-            startActivity(main)
+        fa = this
 
+        button.setOnClickListener{
+                if(this.hasNetwork(applicationContext)!!){
+                    val orderActivity = Intent(this, OrderSummaryActivity::class.java)
+                    orderActivity.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(orderActivity)
+                }
+                else{
+                    Toast.makeText(applicationContext, "Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
+                }
         }
 
         tokenManager
@@ -74,6 +94,8 @@ class CartActivity : AppCompatActivity() {
                 this::handleTokenCacheError
             )
             .addTo(disposables)
+
+
     }
     private fun handleTokenCacheSuccess(token: TokenEntity) {
         accessToken = token.token
@@ -241,6 +263,7 @@ class CartActivity : AppCompatActivity() {
         foodDetail.putExtra("intVariableName", itemCart.id_product)
         foodDetail.putExtra("token", accessToken)
         foodDetail.putExtra("fromCart", 1)
+        foodDetail.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
         finish()
@@ -270,9 +293,16 @@ class CartActivity : AppCompatActivity() {
                     if (response.body()!!.count == 0) {
                         imageView2.visibility = View.VISIBLE
                         textView3.visibility = View.VISIBLE
+                        button2.isEnabled = false
+                        sellerCartName.visibility = View.GONE
+                        sellerField.visibility = View.GONE
                     } else {
                         imageView2.visibility = View.GONE
                         textView3.visibility = View.GONE
+                        button2.isEnabled = true
+                        sellerCartName.visibility = View.VISIBLE
+                        sellerField.visibility = View.VISIBLE
+                        sellerField.text = response.body()!!.seller_name
                     }
                     handleFetchCartSuccess(response.body()!!.cart)
                     initializeRecyclerView()
@@ -328,5 +358,13 @@ class CartActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+    fun hasNetwork(context: Context): Boolean? {
+        var isConnected: Boolean? = false // Initial Value
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnected)
+            isConnected = true
+        return isConnected
     }
 }

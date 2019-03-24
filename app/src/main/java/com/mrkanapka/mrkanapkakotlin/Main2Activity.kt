@@ -266,6 +266,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         when (item.itemId) {
             R.id.action_cart -> {
                 val intent = Intent(this, CartActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
                 return super.onOptionsItemSelected(item)}
             R.id.action_settings -> return true

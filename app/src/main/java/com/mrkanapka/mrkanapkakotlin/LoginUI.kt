@@ -70,6 +70,7 @@ class LoginUI : AppCompatActivity() {
             .enqueue(object : Callback<ResponseDefault>{
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
+                    Log.e("Token ", token.token)
                     Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
                     dialog.cancel()
                     startMenu()
@@ -83,6 +84,7 @@ class LoginUI : AppCompatActivity() {
                     }
                     if (response.code() == 400) //Bad token
                     {
+                        //Zmień token na offline żeby wejść bez neta w tryb wyświetlania, ale nie wyświetlaj za każdym razem komunikatu, że zalogowano się z innego urządzenia
                         if (token.token.equals("offline"))
                         {
                             dialog.cancel()

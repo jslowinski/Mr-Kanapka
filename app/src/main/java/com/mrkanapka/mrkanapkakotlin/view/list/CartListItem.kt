@@ -1,5 +1,6 @@
 package com.mrkanapka.mrkanapkakotlin.view.list
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -40,16 +41,19 @@ class CartListItem(model: ResponseCartDetail) : ModelAbstractItem<ResponseCartDe
         //private val button: Button = itemView.findViewById(R.id.button2)
         private val imageView: ImageView = itemView.findViewById(R.id.image)
         private val countButton: ElegantNumberButton = itemView.findViewById(R.id.number_button_cart)
+        private val textViewPriceSingle: TextView = itemView.findViewById(R.id.textViewPrice2)
+        @SuppressLint("SetTextI18n")
         override fun bindView(item: CartListItem, payloads: MutableList<Any>) {
 
             // Retrieve model.
             val model = item.model
             // Update view.
-            var price = model.price.toFloat()
+            var price = model.price.toDouble()
             titleText.text = model.name
             countButton.number = model.amount.toString()
-            textViewPrice.text = price.toString()
+            textViewPrice.text = "%.2f".format(price) + " zł"
             Glide.with(itemView).load(model.photo_url).into(imageView)
+            textViewPriceSingle.text = "%.2f zł".format(model.price_per_one.toDouble())
 
         }
 

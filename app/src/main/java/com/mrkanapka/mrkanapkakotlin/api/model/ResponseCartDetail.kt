@@ -5,5 +5,6 @@ data class ResponseCartDetail(
     var id_product: Int,
     var name: String,
     var photo_url: String,
-    var price: String
+    var price: String,
+    var price_per_one: String
 )

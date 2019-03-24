@@ -6,5 +6,8 @@ data class ResponseProfile (
     val id_city: Int,
     val id_destination: Int,
     val last_name: String,
-    val telephone: String
+    val telephone: String,
+    val name: String,
+    val street: String,
+    val house_number: Int
 )

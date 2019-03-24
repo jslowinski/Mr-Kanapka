@@ -21,10 +21,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView12" android:textSize="18sp"
-                    app:layout_constraintStart_toEndOf="@+id/textView11"
+                    app:layout_constraintStart_toEndOf="@+id/sellerName"
                     android:layout_marginStart="8dp"
-                    app:layout_constraintTop_toTopOf="@+id/textView11"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView11"/>
+                    app:layout_constraintTop_toTopOf="@+id/sellerName"
+                    app:layout_constraintBottom_toBottomOf="@+id/sellerName"/>
             <android.support.v7.widget.RecyclerView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" android:layout_marginTop="8dp"
@@ -44,7 +44,7 @@
                     android:text="Sprzedawca:"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView11" android:textSize="18sp"
+                    android:id="@+id/sellerName" android:textSize="18sp"
                     android:textStyle="bold" android:layout_marginTop="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/summaryRecyclerView" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"/>
@@ -83,14 +83,14 @@
                     android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textView14"
-                    android:background="@color/colorAccent"/>
+                    android:backgroundTint="@color/colorAccent"/>
             <TextView
                     android:text="Biurowiec:"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView13" android:textSize="18sp"
                     android:textStyle="bold" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/textView11" android:layout_marginStart="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/sellerName" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"/>
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -101,7 +101,7 @@
             android:id="@+id/order_summary_button" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:elevation="0dp" android:background="@color/colorButton"
+            android:elevation="0dp" android:backgroundTint="@color/colorButton"
             app:layout_constraintHorizontal_bias="0.0"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
     <TextView

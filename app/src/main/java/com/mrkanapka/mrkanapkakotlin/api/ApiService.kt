@@ -56,4 +56,7 @@ interface ApiService {
   @POST("show_cart")
   fun fetchCart(@Body body: RequestToken): Call<ResponseCart<List<ResponseCartDetail>>>
 
+  @POST("create_order")
+  fun createOrder(@Body body: RequestOrder): Call<ResponseOrder>
+
 }

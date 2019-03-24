@@ -78,8 +78,6 @@ class ProductFragment  : Fragment() {
 
     private fun handleFetchSandwichsSuccess(products: List<ProductEntity>) {
 
-        textView5.visibility = View.GONE
-        imageView4.visibility = View.GONE
         // Log the fact.
         Log.i(TAG, "Successfully fetched Sandwichs.")
         // Convert to list items.
@@ -103,15 +101,8 @@ class ProductFragment  : Fragment() {
         }
         // Display result.
         fastItemAdapter.setNewList(items)
-        if(items.isEmpty()) {
-            textView6.visibility = View.VISIBLE
-            imageView5.visibility = View.VISIBLE
-        }
-        else {
-            //Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
-            swipe_refresh_layout.isRefreshing = false
-            cacheSucces = true
-        }
+        swipe_refresh_layout.isRefreshing = false
+        cacheSucces = true
 
     }
 
@@ -126,8 +117,7 @@ class ProductFragment  : Fragment() {
             Snackbar.make(root1, "Brak połączenia z internetem, tryb offline", Snackbar.LENGTH_SHORT).show()
         }
         else {
-            textView5.visibility = View.VISIBLE
-            imageView4.visibility = View.VISIBLE
+
         }
 
 
@@ -141,8 +131,6 @@ class ProductFragment  : Fragment() {
 
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
         swipe_refresh_layout.isRefreshing = false
-        textView5.visibility = View.VISIBLE
-        imageView4.visibility = View.VISIBLE
         cacheSucces = false
     }
 
@@ -229,6 +217,7 @@ class ProductFragment  : Fragment() {
         foodDetail.putExtra("intVariableName", product.id_product)
         foodDetail.putExtra("token", token)
         foodDetail.putExtra("fromCart", 0)
+        foodDetail.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
         //Url.Detail_id = product.id_product
@@ -259,10 +248,7 @@ class ProductFragment  : Fragment() {
 
     private fun addAndFetchSandwiches(progressbar: Boolean)
     {
-        textView5.visibility = View.GONE
-        imageView4.visibility = View.GONE
-        textView6.visibility = View.GONE
-        imageView5.visibility = View.GONE
+
         //From cache
         productsManager
             .getProducts(category, id_seller)
