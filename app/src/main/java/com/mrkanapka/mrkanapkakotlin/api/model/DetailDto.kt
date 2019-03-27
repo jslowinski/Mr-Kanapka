@@ -1,11 +1,10 @@
 package com.mrkanapka.mrkanapkakotlin.api.model
 
-import com.google.gson.annotations.SerializedName
+data class DetailDto (
+    var name: String
+)
 
-class DetailDto {
 
-    @SerializedName("name")
-    var name: String? = null
 
-}
+
 

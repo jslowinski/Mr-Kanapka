@@ -5,10 +5,15 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mrkanapka.mrkanapkakotlin.R
@@ -22,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_order_summary.*
+import kotlinx.android.synthetic.main.order_info_popup.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,6 +57,8 @@ class OrderSummaryActivity : AppCompatActivity() {
     private var monthS: String = ""
     private var yearS: String = ""
 
+    private lateinit var orderDialog: AlertDialog
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +71,6 @@ class OrderSummaryActivity : AppCompatActivity() {
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-
-
 
         datapicker_button.setOnClickListener {
             val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, mYear, mMonth, mDay ->
@@ -87,9 +93,8 @@ class OrderSummaryActivity : AppCompatActivity() {
 
                 date_textView.text = "$dayS/$monthS/$yearS"
 
-
             }, year, month, day)
-            dpd.datePicker.minDate = c.timeInMillis
+            dpd.datePicker.minDate = c.timeInMillis + 86400000
             dpd.datePicker.maxDate = c.timeInMillis + 601200000//518400000
 
             dpd.show()
@@ -117,10 +122,10 @@ class OrderSummaryActivity : AppCompatActivity() {
                         }
 
                         override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
-                            Log.e("Number", response.body()!!.order_number)
-                            Toast.makeText(applicationContext, "Zamówienie złożone", Toast.LENGTH_LONG).show()
+                            Log.e("Number", response.body()!!.id_status.toString())
                             CartActivity.fa!!.finish()
-                            finish()
+                            val productsList = response.body()!!.products // Lista składników
+                            orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
                         }
 
                     })
@@ -128,6 +133,43 @@ class OrderSummaryActivity : AppCompatActivity() {
 
         }
     }
+
+    var flag = false
+    @SuppressLint("SetTextI18n", "InflateParams")
+    fun orderPopup(orderId: String, orderDate: String, orderList: List<ResponseCartDetail>, orderPrice: String) {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.order_info_popup, null)
+        val orderIdText  = dialogLayout.findViewById<TextView>(R.id.OrderId)
+        val orderDateText = dialogLayout.findViewById<TextView>(R.id.OrderDate)
+        val orderListText = dialogLayout.findViewById<TextView>(R.id.OrderList)
+        val orderPriceText = dialogLayout.findViewById<TextView>(R.id.OrderPrice)
+        val buttonClose = dialogLayout.findViewById<Button>(R.id.OkButton)
+
+        buttonClose.setOnClickListener{
+            orderDialog.cancel()
+            finish()
+        }
+        val range = orderList.size
+        var productList = "Produkty:\n"
+        for(i  in 0 until range){
+            productList += " - " + orderList[i].name + " x" + orderList[i].amount
+            if (i == range - 1)
+            {}
+            else productList += "\n"
+        }
+        orderListText.text = productList
+        orderIdText.text = "Numer zamówienia: $orderId"
+        orderDateText.text = "Data: $orderDate"
+        orderPriceText.text = "Wartość: $orderPrice zł"
+        builder.setView(dialogLayout)
+        orderDialog = builder.create()
+        orderDialog.show()
+        orderDialog.setCanceledOnTouchOutside(false)
+        orderDialog.setCancelable(false)
+        flag = true
+    }
+
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
         accessToken = token.token
@@ -137,9 +179,7 @@ class OrderSummaryActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
                     Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
-
                 }
-
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     if (response.code() == 200) //Good token
                     {
@@ -152,8 +192,6 @@ class OrderSummaryActivity : AppCompatActivity() {
                     }
                 }
             })
-
-
     }
 
     private fun handleFetchCartSuccess(films: List<ResponseCartDetail>) {
@@ -208,7 +246,6 @@ class OrderSummaryActivity : AppCompatActivity() {
                 ) {
                     Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
                 }
-
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(
                     call: Call<ResponseCart<List<ResponseCartDetail>>>,
@@ -228,13 +265,11 @@ class OrderSummaryActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<ResponseProfile>, t: Throwable) {
                     Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
                 }
-
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {
                     textView14.text =
                         "${response.body()!!.name}\n${response.body()!!.street} ${response.body()!!.house_number}"
                 }
-
             })
     }
 }

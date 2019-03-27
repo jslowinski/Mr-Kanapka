@@ -66,7 +66,7 @@
     <android.support.v4.widget.NestedScrollView
             android:background="@color/colorBackgroudView"
             android:id="@+id/nestedScrollView"
-            android:clipToPadding="false"
+            android:clipToPadding="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"

@@ -127,6 +127,7 @@ class FoodDetail : AppCompatActivity() {
                 val intent = Intent(this, CartActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
+                finish()
                 return super.onOptionsItemSelected(item)}
             R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
@@ -170,7 +171,7 @@ class FoodDetail : AppCompatActivity() {
                 val range = test?.size
 
                 var skladnik = ""
-                //Odwoływanie się do składników
+                //region Odwoływanie się do składników
                 if (range != null && title != null ) {
                     for(i  in 0 until range){
                         skladnik += "- " + test[i].name.toString()
@@ -178,6 +179,7 @@ class FoodDetail : AppCompatActivity() {
                         {}
                         else skladnik += "\n"
                     }
+                    //endregion
                     price = priceS.toString()
                     name = title.toString()
                     message = description + "\n\n" + skladnik
@@ -196,21 +198,20 @@ class FoodDetail : AppCompatActivity() {
                     findViewById<TextView>(R.id.food_description).apply {
                         text = message
                     }
-
-                    Log.e("Url: ", photoUrl)
-                    val imageView: ImageView = findViewById(R.id.img_food)
-                    if (photoUrl.equals("https://res.cloudinary.com/daaothls9/"))
-                    {
-                        collapsing.visibility = View.GONE
-                        nestedScrollView.visibility = View.VISIBLE
-                    }
-                    else{
-                        Glide.with(this@FoodDetail).load(photoUrl).into(imageView)
-                        food_detail_bar.visibility = View.VISIBLE
-                        nestedScrollView.visibility = View.VISIBLE
-                    }
-
-
+                        //region Ukrywanie zdjęcia jak go nie ma
+                        Log.e("Url: ", photoUrl)
+                        val imageView: ImageView = findViewById(R.id.img_food)
+                        if (photoUrl.equals("https://res.cloudinary.com/daaothls9/"))
+                        {
+                            collapsing.visibility = View.GONE
+                            nestedScrollView.visibility = View.VISIBLE
+                        }
+                        else{
+                            Glide.with(this@FoodDetail).load(photoUrl).into(imageView)
+                            food_detail_bar.visibility = View.VISIBLE
+                            nestedScrollView.visibility = View.VISIBLE
+                        }
+                        //endregion
                     }
                 else {
                     progressBar2.visibility = View.GONE

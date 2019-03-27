@@ -293,13 +293,13 @@ class CartActivity : AppCompatActivity() {
                     if (response.body()!!.count == 0) {
                         imageView2.visibility = View.VISIBLE
                         textView3.visibility = View.VISIBLE
-                        button2.isEnabled = false
+                        button2.visibility = View.GONE
                         sellerCartName.visibility = View.GONE
                         sellerField.visibility = View.GONE
                     } else {
                         imageView2.visibility = View.GONE
                         textView3.visibility = View.GONE
-                        button2.isEnabled = true
+                        button2.visibility = View.VISIBLE
                         sellerCartName.visibility = View.VISIBLE
                         sellerField.visibility = View.VISIBLE
                         sellerField.text = response.body()!!.seller_name
