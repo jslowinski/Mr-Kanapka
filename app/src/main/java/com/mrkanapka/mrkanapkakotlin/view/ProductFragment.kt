@@ -84,7 +84,7 @@ class ProductFragment  : Fragment() {
         val items = products.map {
             ProductListItem(it)
         }
-
+        swipe_refresh_layout.isRefreshing = false
         // Display result.
         fastItemAdapter.setNewList(items)
         Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()

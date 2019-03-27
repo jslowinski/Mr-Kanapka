@@ -16,6 +16,8 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:icon,android:theme">
+        <activity android:name=".view.HistoryOrderActivity">
+        </activity>
         <activity android:name=".view.OrderSummaryActivity">
         </activity>
         <activity
@@ -27,8 +29,7 @@
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity
-                android:name=".view.CartActivity">
+        <activity android:name=".view.CartActivity">
         </activity>
         <activity android:name=".FoodDetail">
         </activity>
