@@ -64,4 +64,10 @@ interface ApiService {
   @POST("show_history")
   fun fetchHistory(@Body body: RequestHistory): Call<ResponseHistory<List<ResponseHistoryList>>>
 
+  @POST("order_details")
+  fun fetchHistoryDetail(@Body body: RequestHistoryDetail): Call<ResponseHistoryDetail<List<ResponseHistoryDetailProduct>>>
+
+  @PUT("order_cancel")
+  fun cancelOrder(@Body body: RequestHistoryDetail): Call<ResponseDefault>
+
 }

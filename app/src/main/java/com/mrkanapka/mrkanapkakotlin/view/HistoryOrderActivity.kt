@@ -1,5 +1,7 @@
 package com.mrkanapka.mrkanapkakotlin.view
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -52,6 +54,11 @@ class HistoryOrderActivity : AppCompatActivity() {
 
     private var accessToken : String = ""
 
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        var pa: Activity? = null
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +77,8 @@ class HistoryOrderActivity : AppCompatActivity() {
                 this::handleTokenCacheError
             )
             .addTo(disposables)
+
+        pa = this
 
         initializeRecyclerView()
     }
@@ -113,7 +122,9 @@ class HistoryOrderActivity : AppCompatActivity() {
         apiService.fetchHistory(RequestHistory(token, index))
             .enqueue(object : Callback<ResponseHistory<List<ResponseHistoryList>>>{
                 override fun onFailure(call: Call<ResponseHistory<List<ResponseHistoryList>>>, t: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Toast.makeText(applicationContext, "Nie można wczytać więcej danych.\nSprawdź swoje połaczenie z internetem", Toast.LENGTH_LONG).show()
+                    progressBarHistory.visibility = View.GONE
+                    loading = true
                 }
 
                 override fun onResponse(
@@ -192,7 +203,6 @@ class HistoryOrderActivity : AppCompatActivity() {
 
         val historyDetail = Intent(this, HistoryDetail::class.java)
         historyDetail.putExtra("orderNumber", itemHistory.order_number)
-        historyDetail.putExtra("token", accessToken)
         historyDetail.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         startActivity(historyDetail)

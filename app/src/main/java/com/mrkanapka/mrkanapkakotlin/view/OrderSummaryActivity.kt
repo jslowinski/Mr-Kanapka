@@ -125,7 +125,7 @@ class OrderSummaryActivity : AppCompatActivity() {
                         }
 
                         override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
-                            Log.e("Number", response.body()!!.id_status)
+                            //Log.e("Number", response.body()!!.id_status)
                             CartActivity.fa!!.finish()
                             val productsList = response.body()!!.products // Lista składników
                             orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
