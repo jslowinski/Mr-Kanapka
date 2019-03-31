@@ -1,4 +1,4 @@
-package com.mrkanapka.mrkanapkakotlin.api.model
+package com.mrkanapka.mrkanapkakotlin.api.model.Response
 
 data class ResponseProfile (
     val email: String,

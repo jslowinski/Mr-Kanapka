@@ -16,6 +16,8 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:icon,android:theme">
+        <activity android:name=".HistoryDetail">
+        </activity>
         <activity android:name=".view.HistoryOrderActivity">
         </activity>
         <activity android:name=".view.OrderSummaryActivity">

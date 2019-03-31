@@ -1,4 +1,4 @@
-package com.mrkanapka.mrkanapkakotlin.api.model
+package com.mrkanapka.mrkanapkakotlin.api.model.Request
 
 data class RequestDeleteCart(
     var access_token: String,

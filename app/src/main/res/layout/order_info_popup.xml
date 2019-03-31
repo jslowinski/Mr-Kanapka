@@ -76,18 +76,16 @@
                     android:textSize="17sp"
                     android:id="@+id/OrderStatus"
             />
+            <Button
+                    android:id="@+id/OkButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:backgroundTint="@color/colorButton"
+                    android:text="Zamknij"/>
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
-    <Button
-            android:id="@+id/OkButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/colorButton"
-            android:text="Zamknij"/>
-
 </LinearLayout>

@@ -17,14 +17,15 @@ import android.view.View
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseProfile
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestToken
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseProfile
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase.Companion.database
 import com.mrkanapka.mrkanapkakotlin.database.entity.CategoryEntity
 import com.mrkanapka.mrkanapkakotlin.database.entity.SellerEntity
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
 import com.mrkanapka.mrkanapkakotlin.view.CartActivity
+import com.mrkanapka.mrkanapkakotlin.view.HistoryOrderActivity
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -326,6 +327,10 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 {
                     Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
                 }
+            }
+            R.id.history ->{
+                val intent = Intent(this, HistoryOrderActivity::class.java)
+                startActivity(intent)
             }
             else -> {
 

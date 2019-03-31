@@ -1,11 +1,8 @@
 package com.mrkanapka.mrkanapkakotlin.api
 
-import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
-import com.mrkanapka.mrkanapkakotlin.LoginUI
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestToken
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
 import io.reactivex.android.schedulers.AndroidSchedulers

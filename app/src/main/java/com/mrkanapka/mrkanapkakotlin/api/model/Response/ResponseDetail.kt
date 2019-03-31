@@ -1,6 +1,7 @@
-package com.mrkanapka.mrkanapkakotlin.api.model
+package com.mrkanapka.mrkanapkakotlin.api.model.Response
 
 import com.google.gson.annotations.SerializedName
+import com.mrkanapka.mrkanapkakotlin.api.model.DetailDto
 
 data class ResponseDetail(
     @SerializedName("c_count")

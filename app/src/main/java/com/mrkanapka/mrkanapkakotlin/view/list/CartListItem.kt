@@ -1,7 +1,6 @@
 package com.mrkanapka.mrkanapkakotlin.view.list
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,8 +9,7 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.mrkanapka.mrkanapkakotlin.R
-import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseCartDetail
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseCartDetail
 import java.util.*
 
 

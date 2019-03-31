@@ -2,32 +2,28 @@ package com.mrkanapka.mrkanapkakotlin.view
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import android.view.KeyEvent
-import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.model.*
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestOrder
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestToken
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.*
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
-import com.mrkanapka.mrkanapkakotlin.view.list.CartListItem
 import com.mrkanapka.mrkanapkakotlin.view.list.SummaryListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_order_summary.*
-import kotlinx.android.synthetic.main.order_info_popup.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -115,14 +111,21 @@ class OrderSummaryActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Wybierz datę", Toast.LENGTH_LONG).show()
 
             }else{
-                apiService.createOrder(RequestOrder(accessToken,dayS,monthS, yearS))
+                apiService.createOrder(
+                    RequestOrder(
+                        accessToken,
+                        dayS,
+                        monthS,
+                        yearS
+                    )
+                )
                     .enqueue(object : Callback<ResponseOrder>{
                         override fun onFailure(call: Call<ResponseOrder>, t: Throwable) {
                             Toast.makeText(applicationContext, "Wystąpił błąd spróbuj ponownie później", Toast.LENGTH_LONG).show()
                         }
 
                         override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
-                            Log.e("Number", response.body()!!.id_status.toString())
+                            Log.e("Number", response.body()!!.id_status)
                             CartActivity.fa!!.finish()
                             val productsList = response.body()!!.products // Lista składników
                             orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
@@ -236,6 +239,7 @@ class OrderSummaryActivity : AppCompatActivity() {
         summaryRecyclerView.itemAnimator = DefaultItemAnimator()
         summaryRecyclerView.adapter = adapter
         summaryRecyclerView.isClickable = false
+
     }
     private fun showCart(token : String){
         apiService.fetchCart(RequestToken(token))

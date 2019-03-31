@@ -7,16 +7,15 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.util.Patterns
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestLogin
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestResetPassword
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestToken
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestLogin
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestResetPassword
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestToken
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
@@ -26,12 +25,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login_ui.*
-import kotlinx.android.synthetic.main.activity_register_ui.*
-import kotlinx.android.synthetic.main.reset_password_popup.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.view.Gravity
 import android.widget.Toast
 
 
@@ -152,7 +148,12 @@ class LoginUI : AppCompatActivity() {
 
             if(this!!.hasNetwork(applicationContext)!!)
             {
-                apiService.login(RequestLogin(emailInput,passwordInput))
+                apiService.login(
+                    RequestLogin(
+                        emailInput,
+                        passwordInput
+                    )
+                )
                     .enqueue(object : Callback<ResponseDefault>{
                         override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                             dialog.cancel()

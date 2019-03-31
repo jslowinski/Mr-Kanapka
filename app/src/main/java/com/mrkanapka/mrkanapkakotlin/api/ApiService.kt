@@ -1,6 +1,8 @@
 package com.mrkanapka.mrkanapkakotlin.api
 
 import com.mrkanapka.mrkanapkakotlin.api.model.*
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.*
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.*
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.*
@@ -58,5 +60,8 @@ interface ApiService {
 
   @POST("create_order")
   fun createOrder(@Body body: RequestOrder): Call<ResponseOrder>
+
+  @POST("show_history")
+  fun fetchHistory(@Body body: RequestHistory): Call<ResponseHistory<List<ResponseHistoryList>>>
 
 }

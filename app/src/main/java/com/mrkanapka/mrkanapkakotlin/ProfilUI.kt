@@ -19,8 +19,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.TokenCheck
 import com.mrkanapka.mrkanapkakotlin.api.model.*
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestProfileEdit
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestToken
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseProfile
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
@@ -449,7 +452,16 @@ class ProfilUI : AppCompatActivity() {
         }
 
         Log.e("ID: ",id_destination.toString())
-        apiService.editProfile(RequestProfileEdit(access_token,emailInput,nameInput,id_destination,lastnameInput,phoneInput))
+        apiService.editProfile(
+            RequestProfileEdit(
+                access_token,
+                emailInput,
+                nameInput,
+                id_destination,
+                lastnameInput,
+                phoneInput
+            )
+        )
             .enqueue(object : Callback<ResponseDefault>{
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     cancelEdit()

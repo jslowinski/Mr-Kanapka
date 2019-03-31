@@ -1,4 +1,4 @@
-package com.mrkanapka.mrkanapkakotlin.api.model
+package com.mrkanapka.mrkanapkakotlin.api.model.Request
 
 data class RequestAddCart(
     var access_token: String,

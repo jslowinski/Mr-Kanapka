@@ -2,7 +2,6 @@ package com.mrkanapka.mrkanapkakotlin
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -15,16 +14,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-import com.mrkanapka.mrkanapkakotlin.api.Cart
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.model.CartDto
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestAddCart
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDetail
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestAddCart
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDetail
 import com.mrkanapka.mrkanapkakotlin.view.CartActivity
 
 import kotlinx.android.synthetic.main.activity_food_detail.*
-import kotlinx.android.synthetic.main.fragment_product.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -85,7 +81,13 @@ class FoodDetail : AppCompatActivity() {
 //                Cart.setInfoItem(item)
 //            }
 //            Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
-            apiService.addCart(RequestAddCart(token, url, numberButton.number.toInt()))
+            apiService.addCart(
+                RequestAddCart(
+                    token,
+                    url,
+                    numberButton.number.toInt()
+                )
+            )
                 .enqueue(object : Callback<ResponseDefault> {
                     override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                         Log.e("Status: ", "Fail connection")

@@ -25,8 +25,8 @@ import com.mikepenz.fastadapter.FastAdapter
 import android.support.v7.widget.RecyclerView
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestAddCart
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestAddCart
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
 import kotlinx.android.synthetic.main.item_menu.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -179,7 +179,13 @@ class ProductFragment  : Fragment() {
         Log.e("Token: ", token)
         Log.e("ID: ", item.model.id_product.toString())
 
-        apiService.addCart(RequestAddCart(token, item.model.id_product, 1))
+        apiService.addCart(
+            RequestAddCart(
+                token,
+                item.model.id_product,
+                1
+            )
+        )
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")

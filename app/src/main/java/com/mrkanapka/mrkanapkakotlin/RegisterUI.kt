@@ -2,10 +2,7 @@ package com.mrkanapka.mrkanapkakotlin
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,7 +12,7 @@ import android.view.View
 import android.widget.*
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CityDto
-import com.mrkanapka.mrkanapkakotlin.api.model.ResponseDefault
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.api.model.DestinationDto
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -25,7 +22,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.regex.Pattern
-import com.mrkanapka.mrkanapkakotlin.api.model.RequestRegister
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestRegister
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase.Companion.database
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import io.reactivex.Completable
@@ -82,7 +79,13 @@ class RegisterUI : AppCompatActivity() {
         {
             // println("$emailInput $passwordInput $id_destination")
             //.instance.register(emailInput,passwordInput,id_destination.toString())
-            apiService.register(RequestRegister(emailInput, passwordInput, id_destination.toString()))
+            apiService.register(
+                RequestRegister(
+                    emailInput,
+                    passwordInput,
+                    id_destination.toString()
+                )
+            )
                 .enqueue(object : Callback<ResponseDefault>{
                     override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                         Toast.makeText(applicationContext, "Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()

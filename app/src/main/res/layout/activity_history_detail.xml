@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.mrkanapka.mrkanapkakotlin.HistoryDetail">
+
+    <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBackgroudView"
+    >
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+        >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Szczegóły zamówienia"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                    android:id="@+id/textView6" android:autoText="false"/>
+            <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            >
+                <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:background="@color/colorBackgroudItem">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Numer zamówienia: "
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                            android:id="@+id/historyDetailNumber"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="@+id/historyDetailNumber"
+                            app:layout_constraintTop_toTopOf="@+id/historyDetailNumber"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@+id/historyDetailNumber"
+                            android:layout_marginStart="20dp"
+                            android:id="@+id/historyDetailNumberText"/>
+                    <TextView
+                            android:layout_width="37dp"
+                            android:layout_height="19dp"
+                            android:text="Data:"
+                            android:id="@+id/historyDate" android:layout_marginTop="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/historyDetailNumber"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/historyDateText"
+                            app:layout_constraintTop_toTopOf="@+id/historyDate"
+                            app:layout_constraintBottom_toBottomOf="@+id/historyDate"
+                            app:layout_constraintStart_toStartOf="@+id/historyDetailNumberText"
+                    />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sprzedawca: "
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            android:id="@+id/historySeller" android:layout_marginTop="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/historyDate"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/historySellerText"
+                            app:layout_constraintTop_toTopOf="@+id/historySeller" android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/historySeller"
+                            app:layout_constraintStart_toStartOf="@+id/historyDateText"
+                    />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Biurowiec: "
+                            android:id="@+id/historyOffice"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/historySeller"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/historyOfficeText"
+                            app:layout_constraintBottom_toBottomOf="@+id/historyOffice"
+                            app:layout_constraintTop_toTopOf="@+id/historyOffice"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/historySellerText"
+                    />
+
+
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Status: "
+                            android:id="@+id/historyStatus"
+                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/historyOffice" android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/historyStatusText"
+                            app:layout_constraintTop_toTopOf="@+id/historyStatus"
+                            app:layout_constraintBottom_toBottomOf="@+id/historyStatus"
+                            app:layout_constraintStart_toStartOf="@+id/historyOfficeText"
+                    />
+
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/buttonCancelOrder"
+                            android:text="Anuluj"
+                            app:layout_constraintTop_toTopOf="@+id/historyStatus"
+                            app:layout_constraintBottom_toBottomOf="@+id/historyStatus"
+                            android:textAllCaps="false"
+                            app:layout_constraintVertical_bias="0.482"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="8dp"/>
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -2,41 +2,39 @@ package com.mrkanapka.mrkanapkakotlin.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mrkanapka.mrkanapkakotlin.FoodDetail
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
-import com.mrkanapka.mrkanapkakotlin.api.Cart
-import com.mrkanapka.mrkanapkakotlin.api.model.*
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestAddCart
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestDeleteCart
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestRemoveOne
+import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestToken
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseCart
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseCartDetail
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
 import com.mrkanapka.mrkanapkakotlin.database.entity.TokenEntity
 import com.mrkanapka.mrkanapkakotlin.manager.TokenManager
 import com.mrkanapka.mrkanapkakotlin.view.list.CartListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_cart.*
-import kotlinx.android.synthetic.main.activity_food_detail.*
 import kotlinx.android.synthetic.main.item_in_cart.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -119,8 +117,6 @@ class CartActivity : AppCompatActivity() {
                     }
                 }
             })
-
-
     }
 
     private fun handleFetchCartSuccess(films: List<ResponseCartDetail>) {
@@ -170,7 +166,12 @@ class CartActivity : AppCompatActivity() {
                 viewHolder.itemView.run { listOf(button2) }
 
             override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<CartListItem>?, item: CartListItem?) {
-                apiService.deleteProductCart(RequestDeleteCart(accessToken,item!!.model.id_product))
+                apiService.deleteProductCart(
+                    RequestDeleteCart(
+                        accessToken,
+                        item!!.model.id_product
+                    )
+                )
                     .enqueue(object : Callback<ResponseDefault>{
                         override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                             Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
