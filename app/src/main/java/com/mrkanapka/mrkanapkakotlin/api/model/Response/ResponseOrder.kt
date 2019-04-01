@@ -5,5 +5,6 @@ data class ResponseOrder (
     var full_price: String,
     var order_number: String,
     var date: String,
+    var message: String,
     var products: List<ResponseCartDetail>
     )

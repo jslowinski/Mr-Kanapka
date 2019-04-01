@@ -134,21 +134,20 @@ class ProfilUI : AppCompatActivity() {
                             }
                         }
 
+                        saveButton.setOnClickListener{
+                            if(hasNetwork(applicationContext)) {
+                                updateProfile()
+                            } else {
+                                Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
 //                        edit_profile_cancel.setOnClickListener{
 //                            confirmCancel()
 //                        }
 
                         logoutButton.setOnClickListener{
-                            Completable.fromAction {
-                                AndroidDatabase.database
-                                    .tokenDao()
-                                    .removeToken()
-                            }.subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
-                                    // data updated
-                                }
-                            logout()
+                            logoutPopup()
                         }
                         Log.i("ID: ", "z response $id")
                     }
@@ -167,6 +166,7 @@ class ProfilUI : AppCompatActivity() {
     private fun editMode() {
         edit_profile.visibility = View.GONE
         edit_profile_accept.visibility = View.VISIBLE
+        saveButton.visibility = View.VISIBLE
 //        edit_profile_cancel.visibility = View.VISIBLE
         //edycja imienia
         profile_firstname.visibility = View.VISIBLE
@@ -199,6 +199,7 @@ class ProfilUI : AppCompatActivity() {
     private fun cancelEdit(){
 //        edit_profile_cancel.visibility = View.GONE
         edit_profile_accept.visibility = View.GONE
+        saveButton.visibility = View.GONE
         edit_profile.visibility = View.VISIBLE
         profile_email.setTextColor(Color.BLACK)
         profile_firstname.setText("")
@@ -228,6 +229,7 @@ class ProfilUI : AppCompatActivity() {
 
         buttonNo.setOnClickListener{
             dialog.cancel()
+            //flag = true
         }
 
         builder.setView(dialogLayout)
@@ -473,14 +475,38 @@ class ProfilUI : AppCompatActivity() {
                         Log.e("Wiadomość: ", "Sukces pomyślnie wysłano")
 //                        edit_profile_cancel.visibility = View.GONE
                         edit_profile_accept.visibility = View.GONE
+                        saveButton.visibility = View.GONE
                         edit_profile.visibility = View.VISIBLE
                         profile_email.setTextColor(Color.BLACK)
                         profile_firstname.hideKeyboard()
                         profile_lastname.hideKeyboard()
                         profile_phone.hideKeyboard()
                         getProfileData(access_token)
+                        //usuniecie koszyka gdy zmieniam swoj profil
+                        removeCart(access_token)
+
                     }
                 }
+            })
+    }
+
+
+    private fun removeCart(access_token : String){
+        apiService.removeCart(RequestToken(access_token))
+            .enqueue(object : Callback<ResponseDefault>{
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    Log.e("...","blad przy usuwaniu koszyka")
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    if (response.code() == 200){
+                        Log.e("...",response.body()!!.message)
+                    }
+                    else {
+                        Log.e("...","blad usuwania koszyka po stronie serwera")
+                    }
+                }
+
             })
     }
 
@@ -500,6 +526,38 @@ class ProfilUI : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private lateinit var logoutDialog: AlertDialog
+
+    private fun logoutPopup(){
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.logout_popup, null)
+        val buttonYes = dialogLayout.findViewById<Button>(R.id.logoutPopupYes)
+        val buttonNo = dialogLayout.findViewById<Button>(R.id.logoutPopupNo)
+
+        buttonNo.setOnClickListener{
+            logoutDialog.cancel()
+        }
+
+        buttonYes.setOnClickListener{
+            Completable.fromAction {
+                AndroidDatabase.database
+                    .tokenDao()
+                    .removeToken()
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    // data updated
+                }
+            logoutDialog.cancel()
+            logout()
+
+        }
+        builder.setView(dialogLayout)
+        logoutDialog = builder.create()
+        logoutDialog.show()
+    }
+
     private fun logout() {
         val main = Intent(this, LoginUI::class.java)
         startActivity(main)
@@ -514,7 +572,7 @@ class ProfilUI : AppCompatActivity() {
     override fun onBackPressed() {
         if (flag) {
             confirmCancel()
-            flag = false
+            //flag = false
         }
         else {
             val intent = Intent(this, Main2Activity::class.java)

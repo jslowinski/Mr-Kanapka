@@ -112,30 +112,32 @@ class OrderSummaryActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Wybierz datę", Toast.LENGTH_LONG).show()
 
             }else{
-                apiService.createOrder(
-                    RequestOrder(
-                        accessToken,
-                        dayS,
-                        monthS,
-                        yearS
-                    )
-                )
+                apiService.createOrder(RequestOrder(accessToken, dayS, monthS, yearS))
                     .enqueue(object : Callback<ResponseOrder>{
                         override fun onFailure(call: Call<ResponseOrder>, t: Throwable) {
                             Toast.makeText(applicationContext, "Wystąpił błąd spróbuj ponownie później", Toast.LENGTH_LONG).show()
                         }
 
                         override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
-                            //Log.e("Number", response.body()!!.id_status)
-                            CartActivity.fa!!.finish()
-                            //Gdy produkty są wybrane z listy zamówień i okna wiszą w tle odpowiedno zamyka okna i otwiera żeby informacje były na bierząco
-                            if(HistoryDetail.pa != null){
-                                HistoryDetail.flag = true
-                                HistoryOrderActivity.pa!!.finish()
+                            if (response.code() == 200)
+                            {
+                                //Log.e("Number", response.body()!!.id_status)
+                                CartActivity.fa!!.finish()
+                                //Gdy produkty są wybrane z listy zamówień i okna wiszą w tle odpowiedno zamyka okna i otwiera żeby informacje były na bierząco
+                                if(HistoryDetail.pa != null){
+                                    HistoryDetail.flag = true
+                                    HistoryOrderActivity.pa!!.finish()
+                                }
+                                Log.e("flaga", HistoryDetail.flag.toString())
+                                val productsList = response.body()!!.products // Lista składników
+                                orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
+                            } else if (response.code() == 202)
+                            {
+
+                                //print(response.body()!!.message)
+                                Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
                             }
-                            Log.e("flaga", HistoryDetail.flag.toString())
-                            val productsList = response.body()!!.products // Lista składników
-                            orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
+
                         }
 
                     })

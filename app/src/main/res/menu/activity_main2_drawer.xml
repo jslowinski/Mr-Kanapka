@@ -18,8 +18,8 @@
                 android:title="Profil"/>
         <item
                 android:id="@+id/history"
-                android:icon="@drawable/ic_drafts_black_24dp"
-                android:title="Zamówienia"/>
+                android:icon="@drawable/ic_local_mall_black_24dp"
+                android:title="Historia zamówień"/>
 
         <item
                 android:id="@+id/logout"
