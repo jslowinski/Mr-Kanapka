@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mrkanapka.mrkanapkakotlin.HistoryDetail
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestOrder
@@ -127,6 +128,12 @@ class OrderSummaryActivity : AppCompatActivity() {
                         override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
                             //Log.e("Number", response.body()!!.id_status)
                             CartActivity.fa!!.finish()
+                            //Gdy produkty są wybrane z listy zamówień i okna wiszą w tle odpowiedno zamyka okna i otwiera żeby informacje były na bierząco
+                            if(HistoryDetail.pa != null){
+                                HistoryDetail.flag = true
+                                HistoryOrderActivity.pa!!.finish()
+                            }
+                            Log.e("flaga", HistoryDetail.flag.toString())
                             val productsList = response.body()!!.products // Lista składników
                             orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
                         }

@@ -49,8 +49,8 @@ class FoodDetail : AppCompatActivity() {
         val button : Button = findViewById(R.id.add_to_order_button)
         val numberButton : ElegantNumberButton = findViewById(R.id.number_button)
 
-        food_detail_bar.visibility = View.INVISIBLE
-        nestedScrollView.visibility = View.INVISIBLE
+        food_detail_bar.visibility = View.GONE
+        nestedScrollView.visibility = View.GONE
         progressBar2.visibility = View.VISIBLE
 
         url = intent.getIntExtra("intVariableName",0)
@@ -205,7 +205,6 @@ class FoodDetail : AppCompatActivity() {
                         val imageView: ImageView = findViewById(R.id.img_food)
                         if (photoUrl.equals("https://res.cloudinary.com/daaothls9/"))
                         {
-                            collapsing.visibility = View.GONE
                             nestedScrollView.visibility = View.VISIBLE
                         }
                         else{

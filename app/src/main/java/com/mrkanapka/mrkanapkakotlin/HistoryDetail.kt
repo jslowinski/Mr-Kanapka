@@ -1,12 +1,17 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
@@ -27,6 +32,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_history_detail.*
 import kotlinx.android.synthetic.main.activity_order_summary.*
 import kotlinx.android.synthetic.main.item_menu.*
+import kotlinx.android.synthetic.main.order_cancel_popup.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,10 +51,16 @@ class HistoryDetail : AppCompatActivity() {
         TokenManager()
     }
 
+    private lateinit var cancelDialog: AlertDialog
+
     var accessToken = ""
     var orderNumber = ""
 
-    var flag = false
+    companion object {
+        var flag: Boolean = false
+        @SuppressLint("StaticFieldLeak")
+        var pa: Activity? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +68,14 @@ class HistoryDetail : AppCompatActivity() {
 
         orderNumber = intent.getStringExtra("orderNumber")
         Log.e("OrderNumber", orderNumber)
-
+        HistoryDetail.flag = false
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.title = "Zamówienie $orderNumber"
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
+
+        pa = this
 
         tokenManager
             .getToken()
@@ -73,40 +87,7 @@ class HistoryDetail : AppCompatActivity() {
             .addTo(disposables)
 
         buttonCancelOrder.setOnClickListener{
-            apiService.checkToken(RequestToken(accessToken))
-                .enqueue(object : Callback<ResponseDefault> {
-                    override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                        Log.e("Status: ", "Fail connection")
-                        Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
-
-                    }
-
-                    override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
-                        if (response.code() == 200) //Good token
-                        {
-                            apiService.cancelOrder(RequestHistoryDetail(accessToken,orderNumber))
-                                .enqueue(object : Callback<ResponseDefault>{
-                                    override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
-                                        Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
-                                    }
-
-                                    override fun onResponse(
-                                        call: Call<ResponseDefault>,
-                                        response: Response<ResponseDefault>
-                                    ) {
-                                        historyStatusText.text = response.body()!!.id_status
-                                        buttonCancelOrder.visibility = View.GONE
-                                        HistoryOrderActivity.pa!!.finish()
-                                        flag = true
-                                    }
-                                })
-                        }
-                        if (response.code() == 400) //Bad token
-                        {
-                            Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                })
+            cancelPopup()
         }
 
         initializeRecyclerView()
@@ -189,22 +170,79 @@ class HistoryDetail : AppCompatActivity() {
     }
 
     private fun onItemClicked(item: HistoryDetailListItem): Boolean {
-
         // Retrieve model.
         val product = item.model
-
         val foodDetail = Intent(this, FoodDetail::class.java)
-        //foodDetail.putExtra("OpeningCrawl", "z koszyka")
-        //foodDetail.putExtra("Name", itemCart.title)
         foodDetail.putExtra("intVariableName", product.id)
         foodDetail.putExtra("token", accessToken)
         foodDetail.putExtra("fromCart", 0)
         foodDetail.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        //foodDetail.putExtra("Name",film.title)
         startActivity(foodDetail)
-        //Url.Detail_id = itemCart.id_product
         return true
     }
+
+    //region cancelOrder
+
+    private fun cancelPopup(){
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.order_cancel_popup, null)
+        val buttonYes = dialogLayout.findViewById<Button>(R.id.cancelPopupYes)
+        val buttonNo = dialogLayout.findViewById<Button>(R.id.cancelPopupNo)
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        buttonNo.setOnClickListener{
+            cancelDialog.cancel()
+        }
+
+        buttonYes.setOnClickListener{
+            cancelOrder()
+            cancelDialog.cancel()
+        }
+        builder.setView(dialogLayout)
+        cancelDialog = builder.create()
+        cancelDialog.show()
+    }
+
+    private fun cancelOrder(){
+        apiService.checkToken(RequestToken(accessToken))
+            .enqueue(object : Callback<ResponseDefault> {
+                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    Log.e("Status: ", "Fail connection")
+                    Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+
+                }
+
+                override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    if (response.code() == 200) //Good token
+                    {
+                        apiService.cancelOrder(RequestHistoryDetail(accessToken,orderNumber))
+                            .enqueue(object : Callback<ResponseDefault>{
+                                override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                                    Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
+                                }
+
+                                override fun onResponse(
+                                    call: Call<ResponseDefault>,
+                                    response: Response<ResponseDefault>
+                                ) {
+                                    historyStatusText.text = response.body()!!.id_status
+                                    buttonCancelOrder.visibility = View.GONE
+                                    HistoryOrderActivity.pa!!.finish()
+                                    flag = true
+                                }
+                            })
+                    }
+                    if (response.code() == 400) //Bad token
+                    {
+                        Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+    }
+
+    //endregion
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -212,12 +250,15 @@ class HistoryDetail : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        Log.e("Flaga",flag.toString())
         if(flag){
             val intent = Intent(this, HistoryOrderActivity::class.java)
             startActivity(intent)
             finish()
+            Log.e("...","otwieram na nowo")
         }
         else{
+            Log.e("...","wykonuje sie normalnie")
             super.onBackPressed()
         }
 
