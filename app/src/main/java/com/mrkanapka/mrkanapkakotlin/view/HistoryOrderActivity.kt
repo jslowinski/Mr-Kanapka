@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -31,13 +32,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-
-
-
-
-
-
 class HistoryOrderActivity : AppCompatActivity() {
 
     private val adapter: FastItemAdapter<HistoryOrderListItem> = FastItemAdapter()
@@ -59,7 +53,8 @@ class HistoryOrderActivity : AppCompatActivity() {
         var pa: Activity? = null
     }
 
-
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +63,24 @@ class HistoryOrderActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = "Historia zamówień"
         actionBar.setDisplayHomeAsUpEnabled(true)
+
+        mHandler = Handler()
+        swipeHistoryOrder.setOnRefreshListener {
+            adapter.clear()
+            mRunnable = Runnable{
+                tokenManager
+                    .getToken()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { showProgress()}
+                    .doFinally{ hideProgress()}
+                    .subscribe(
+                        this::handleTokenCacheSuccess,
+                        this::handleTokenCacheError
+                    )
+                    .addTo(disposables)
+            }
+            mHandler.post(mRunnable)
+        }
 
         tokenManager
             .getToken()
@@ -82,6 +95,13 @@ class HistoryOrderActivity : AppCompatActivity() {
 
         initializeRecyclerView()
     }
+    private fun showProgress() {
+        swipeHistoryOrder.isRefreshing = true
+    }
+
+    private fun hideProgress() {
+        swipeHistoryOrder.isRefreshing = false
+    }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
         accessToken = token.token
@@ -90,7 +110,8 @@ class HistoryOrderActivity : AppCompatActivity() {
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
-                    Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Nie można wczytać danych.\n" +
+                            "Sprawdź swoje połaczenie z internetem", Toast.LENGTH_LONG).show()
 
                 }
 
@@ -122,7 +143,7 @@ class HistoryOrderActivity : AppCompatActivity() {
         apiService.fetchHistory(RequestHistory(token, index))
             .enqueue(object : Callback<ResponseHistory<List<ResponseHistoryList>>>{
                 override fun onFailure(call: Call<ResponseHistory<List<ResponseHistoryList>>>, t: Throwable) {
-                    Toast.makeText(applicationContext, "Nie można wczytać więcej danych.\nSprawdź swoje połaczenie z internetem", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Nie można wczytać danych.\nSprawdź swoje połaczenie z internetem", Toast.LENGTH_LONG).show()
                     progressBarHistory.visibility = View.GONE
                     loading = true
                 }

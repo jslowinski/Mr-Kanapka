@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_order_summary.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 
 class OrderSummaryActivity : AppCompatActivity() {
@@ -96,6 +97,13 @@ class OrderSummaryActivity : AppCompatActivity() {
 
             dpd.show()
         }
+        val sdf = SimpleDateFormat("dd/MM/yyyy")
+        val currentDate = sdf.format(c.timeInMillis + 86400000)
+        val splitDate = currentDate.split("/")
+        dayS = splitDate[0]
+        monthS = splitDate[1]
+        yearS = splitDate[2]
+        date_textView.text = currentDate
 
         tokenManager
             .getToken()
@@ -107,7 +115,7 @@ class OrderSummaryActivity : AppCompatActivity() {
             .addTo(disposables)
 
         order_summary_button.setOnClickListener{
-            if (dayS.equals("") && monthS.equals("") && yearS.equals(""))
+            if (date_textView.text.equals(""))
             {
                 Toast.makeText(applicationContext, "Wybierz datę", Toast.LENGTH_LONG).show()
 

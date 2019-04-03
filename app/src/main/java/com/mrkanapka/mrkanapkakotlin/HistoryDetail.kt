@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -30,6 +31,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_history_detail.*
+import kotlinx.android.synthetic.main.activity_history_order.*
 import kotlinx.android.synthetic.main.activity_order_summary.*
 import kotlinx.android.synthetic.main.item_menu.*
 import kotlinx.android.synthetic.main.order_cancel_popup.*
@@ -56,6 +58,9 @@ class HistoryDetail : AppCompatActivity() {
     var accessToken = ""
     var orderNumber = ""
 
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
+
     companion object {
         var flag: Boolean = false
         @SuppressLint("StaticFieldLeak")
@@ -67,7 +72,6 @@ class HistoryDetail : AppCompatActivity() {
         setContentView(R.layout.activity_history_detail)
 
         orderNumber = intent.getStringExtra("orderNumber")
-        Log.e("OrderNumber", orderNumber)
         HistoryDetail.flag = false
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -86,11 +90,37 @@ class HistoryDetail : AppCompatActivity() {
             )
             .addTo(disposables)
 
+        mHandler = Handler()
+        swipeHistoryOrderDetail.setOnRefreshListener {
+            adapter.clear()
+            mRunnable = Runnable{
+                tokenManager
+                    .getToken()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { showProgress()}
+                    .doFinally{ hideProgress()}
+                    .subscribe(
+                        this::handleTokenCacheSuccess,
+                        this::handleTokenCacheError
+                    )
+                    .addTo(disposables)
+            }
+            mHandler.post(mRunnable)
+        }
+
         buttonCancelOrder.setOnClickListener{
             cancelPopup()
         }
 
         initializeRecyclerView()
+    }
+
+    private fun showProgress() {
+        swipeHistoryOrderDetail.isRefreshing = true
+    }
+
+    private fun hideProgress() {
+        swipeHistoryOrderDetail.isRefreshing = false
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
@@ -139,7 +169,7 @@ class HistoryDetail : AppCompatActivity() {
                     historyOfficeText.text = response.body()!!.destination
                     historySellerText.text = response.body()!!.seller
                     historyStatusText.text = response.body()!!.name
-                    historyTotalPriceText.text = "%.2f zł".format(response.body()!!.full_price.toDouble())
+                    historyTotalPriceText.text = "%.2f zł".format(response.body()!!.full_price)
                     fetchHistoryProducts(response.body()!!.products)
                     if ( response.body()!!.flag == 1)
                     {

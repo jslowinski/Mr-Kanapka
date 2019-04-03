@@ -39,7 +39,6 @@ abstract class AndroidDatabase : RoomDatabase() {
                 .fallbackToDestructiveMigration()
                 .build()
         }
-
     }
 
     //region Dao
