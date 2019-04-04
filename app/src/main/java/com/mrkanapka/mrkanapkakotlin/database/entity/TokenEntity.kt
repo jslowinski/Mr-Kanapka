@@ -9,7 +9,9 @@ import android.arch.persistence.room.PrimaryKey
 data class TokenEntity(
 
     @ColumnInfo(name = "token")
-    var token: String
+    var token: String,
+    @ColumnInfo(name = "id_destination")
+    var id_destination: Int
 ) {
 
     @PrimaryKey(autoGenerate = true)

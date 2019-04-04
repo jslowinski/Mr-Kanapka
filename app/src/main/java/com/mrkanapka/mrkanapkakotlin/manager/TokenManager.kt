@@ -21,9 +21,9 @@ class TokenManager {
         ApiClient.create()
     }
 
-    fun saveToken(token: String) =
+    fun saveToken(token: String, id_destination: Int) =
         Completable.fromAction {
-            val tokenEntity = TokenEntity(token)
+            val tokenEntity = TokenEntity(token, id_destination)
             database.tokenDao().removeAndInsert(tokenEntity)
         }.subscribeOn(Schedulers.io())
 

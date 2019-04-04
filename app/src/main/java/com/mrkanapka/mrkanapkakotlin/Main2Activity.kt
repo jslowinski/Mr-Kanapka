@@ -81,7 +81,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             .enqueue(object : Callback<ResponseProfile> {
                 override fun onFailure(call: Call<ResponseProfile>, t: Throwable) {
                     print("blad")
-                    downloadData(2)
+                    downloadData(token.id_destination)
                 }
 
                 override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {

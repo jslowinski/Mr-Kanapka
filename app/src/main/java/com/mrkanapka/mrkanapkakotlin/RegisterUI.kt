@@ -103,7 +103,7 @@ class RegisterUI : AppCompatActivity() {
                             Completable.fromAction {
                                 database
                                     .tokenDao()
-                                    .removeAndInsert(TokenEntity(response.body()!!.message))
+                                    .removeAndInsert(TokenEntity(response.body()!!.message, id_destination))
                             }.subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe {

@@ -29,8 +29,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.widget.Toast
-
-
+import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseProfile
 
 
 class LoginUI : AppCompatActivity() {
@@ -90,7 +89,7 @@ class LoginUI : AppCompatActivity() {
                             Completable.fromAction {
                                 database
                                     .tokenDao()
-                                    .removeAndInsert(TokenEntity("offline"))
+                                    .removeAndInsert(TokenEntity("offline", -1))
                             }.subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe {
@@ -165,17 +164,31 @@ class LoginUI : AppCompatActivity() {
                             when {
                                 response.code() == 200 -> {
                                     //Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
-                                    Completable.fromAction {
-                                        database
-                                            .tokenDao()
-                                            .removeAndInsert(TokenEntity(response.body()!!.message))
-                                    }.subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe {
-                                            // data updated
-                                        }
-                                    startActivityForResult(main,1)
-                                    finish()
+                                    val token = response.body()!!.message
+                                    apiService.fetchProfile(RequestToken(token))
+                                        .enqueue(object : Callback<ResponseProfile>{
+                                            override fun onFailure(call: Call<ResponseProfile>, t: Throwable) {
+                                                Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
+                                            }
+
+                                            override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {
+
+                                                val id_destination_profile = response.body()!!.id_destination
+                                                Completable.fromAction {
+                                                    database
+                                                        .tokenDao()
+                                                        .removeAndInsert(TokenEntity(token, id_destination_profile))
+                                                }.subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe {
+                                                        // data updated
+                                                    }
+                                                startActivityForResult(main,1)
+                                                finish()
+                                            }
+                                        })
+
+
                                 }
                                 response.code() == 202 -> {
                                     dialog.cancel()

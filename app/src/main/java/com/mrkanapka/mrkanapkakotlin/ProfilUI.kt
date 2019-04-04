@@ -470,6 +470,7 @@ class ProfilUI : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
                 }
 
+                @SuppressLint("CheckResult")
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     if(response.code()== 200) {
                         Log.e("Wiadomość: ", "Sukces pomyślnie wysłano")
@@ -485,6 +486,15 @@ class ProfilUI : AppCompatActivity() {
                         //usuniecie koszyka gdy zmieniam swoj profil
                         removeCart(access_token)
 
+                        Completable.fromAction {
+                            AndroidDatabase.database
+                                .tokenDao()
+                                .removeAndInsert(TokenEntity(access_token, id_destination))
+                        }.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
+                                // data updated
+                            }
                     }
                 }
             })
