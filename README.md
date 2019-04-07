@@ -1,6 +1,6 @@
 # Mr Kanapka
 
-Tutaj kiedyś będzie opis (może)
+Mr.Kanapka to system gromadzący oferty lokalnych sprzedawców. Aplikacja mobilna pozwala szybko i łatwo znaleźć sprzedawców w Twojej okolicy. Użytkownik zamawiając produkty u Pana Kanapki ma pewność o dostarczeniu jej następnego dnia.
 
 # Tools
 
