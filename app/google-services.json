@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "991933767538",
+    "firebase_url": "https://mr-kanapka.firebaseio.com",
+    "project_id": "mr-kanapka",
+    "storage_bucket": "mr-kanapka.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991933767538:android:611e636207b49a8e",
+        "android_client_info": {
+          "package_name": "com.mrkanpka.mrkanapkakotlin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAg-J07yOJaPLFzixNqlmv5k8q9RYlblh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991933767538-qr740j77gn60lt66q2mep4nn1vciuouv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
