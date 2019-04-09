@@ -71,7 +71,23 @@ class HistoryDetail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history_detail)
 
-        orderNumber = intent.getStringExtra("orderNumber")
+
+        if(intent.extras != null)
+        {
+            for(key in intent?.extras!!.keySet())
+            {
+                Log.e("...", key)
+                if(key.equals("orderNr"))
+                {
+                    orderNumber = intent.extras?.getString(key)!!
+                }
+                else if (key.equals("orderNumber"))
+                {
+                    orderNumber = intent.getStringExtra("orderNumber")
+                }
+            }
+        }
+
         HistoryDetail.flag = false
         val actionBar = supportActionBar
         if (actionBar != null) {
