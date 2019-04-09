@@ -20,6 +20,7 @@ import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
 import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestToken
 import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseProfile
+import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase
 import com.mrkanapka.mrkanapkakotlin.database.AndroidDatabase.Companion.database
 import com.mrkanapka.mrkanapkakotlin.database.entity.CategoryEntity
 import com.mrkanapka.mrkanapkakotlin.database.entity.SellerEntity
@@ -31,11 +32,13 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -307,18 +310,33 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 startActivity(intent)
             }
             R.id.logout ->  {
-                Completable.fromAction {
-                    database
-                        .tokenDao()
-                        .removeToken()
-                }.subscribeOn(Schedulers.io())
+                apiService.logout(RequestToken(token))
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        // data updated
-                    }
-                val intent = Intent(this, LoginUI::class.java)
-                startActivity(intent)
-                finish()
+                    .unsubscribeOn(Schedulers.io())
+                    .subscribeBy(
+                        onSuccess = {
+                            Log.e("...",it.message)
+                            Completable.fromAction {
+                                AndroidDatabase.database
+                                    .tokenDao()
+                                    .removeToken()
+                            }.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    // data updated
+                                }
+                            val intent = Intent(this, LoginUI::class.java)
+                            startActivity(intent)
+                            finish()
+                        },
+                        onError = {
+                            if (it is HttpException)
+                                Toast.makeText(applicationContext,it.message(), Toast.LENGTH_LONG).show()
+                            else
+                                Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
+                        }
+                    )
             }
             R.id.profile -> {
                 if (this.hasNetwork(applicationContext)!!){

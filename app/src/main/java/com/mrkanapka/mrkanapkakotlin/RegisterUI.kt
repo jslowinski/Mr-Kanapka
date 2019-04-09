@@ -10,6 +10,9 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.*
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.CityDto
 import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
@@ -34,6 +37,8 @@ class RegisterUI : AppCompatActivity() {
     private var emailInput: String = ""
     private var passwordInput: String = ""
     private var id_destination: Int = 0
+    private var registrationID: String = ""
+
     private val apiService by lazy {
         ApiClient.create()
     }
@@ -43,6 +48,22 @@ class RegisterUI : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_ui)
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                registrationID = task.result!!.token
+
+
+
+
+                Log.e("...", registrationID)
+            })
 
         val myCities = ArrayList<String>()
         myCities.add("Miasto")
@@ -83,7 +104,9 @@ class RegisterUI : AppCompatActivity() {
                 RequestRegister(
                     emailInput,
                     passwordInput,
-                    id_destination.toString()
+                    id_destination.toString(),
+                    registrationID
+
                 )
             )
                 .enqueue(object : Callback<ResponseDefault>{
@@ -108,6 +131,16 @@ class RegisterUI : AppCompatActivity() {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe {
                                     // data updated
+//                                }
+
+//                            FirebaseMessaging.getInstance().subscribeToTopic(id_destination.toString())
+//                                .addOnCompleteListener { task ->
+//                                    var msg = id_destination.toString()
+//                                    if (!task.isSuccessful) {
+//                                        msg = "blad"
+//                                    }
+//                                    Log.d(TAG, msg)
+//                                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                                 }
                             startActivity(main)
                             finish()
@@ -123,7 +156,7 @@ class RegisterUI : AppCompatActivity() {
     //spinnery
     private fun handleFetchCitiesError(throwable: Throwable?) {
         Handler().postDelayed({
-            Log.e("Czas",LocalDateTime.now().toString())
+            //Log.e("Czas",LocalDateTime.now().toString())
             disposables.add(
                 apiService
                     .fetchCities()

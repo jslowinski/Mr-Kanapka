@@ -34,6 +34,9 @@ interface ApiService {
   @PUT("login")
   fun login(@Body body : RequestLogin): Call<ResponseDefault>
 
+  @PUT("logout")
+  fun logout(@Body body: RequestToken): Single<ResponseDefault>
+
   @PUT("profile")
   fun fetchProfile(@Body body: RequestToken): Call<ResponseProfile>
 

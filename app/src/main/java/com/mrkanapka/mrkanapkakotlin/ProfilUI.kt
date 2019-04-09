@@ -31,10 +31,12 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_profil_ui.*
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 import java.time.LocalDateTime
 
@@ -45,10 +47,6 @@ class ProfilUI : AppCompatActivity() {
         ApiClient.create()
     }
     private val disposables: CompositeDisposable = CompositeDisposable()
-
-    private val database by lazy {
-        AndroidDatabase.database
-    }
 
     private val tokenManager by lazy {
         TokenManager()
@@ -239,7 +237,7 @@ class ProfilUI : AppCompatActivity() {
 
     private fun handleFetchCitiesError(throwable: Throwable?) {
         Handler().postDelayed({
-            Log.e("Czas", LocalDateTime.now().toString())
+            //Log.e("Czas", LocalDateTime.now().toString())
             disposables.add(
                 apiService
                     .fetchCities()
@@ -550,17 +548,33 @@ class ProfilUI : AppCompatActivity() {
         }
 
         buttonYes.setOnClickListener{
-            Completable.fromAction {
-                AndroidDatabase.database
-                    .tokenDao()
-                    .removeToken()
-            }.subscribeOn(Schedulers.io())
+            apiService.logout(RequestToken(access_token))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    // data updated
-                }
+                .unsubscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onSuccess = {
+                        Log.e("...",it.message)
+                        Completable.fromAction {
+                            AndroidDatabase.database
+                                .tokenDao()
+                                .removeToken()
+                        }.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
+                                // data updated
+                            }
+                        logout()
+                    },
+                    onError = {
+                        if (it is HttpException)
+                            Toast.makeText(applicationContext,it.message(), Toast.LENGTH_LONG).show()
+                        else
+                            Toast.makeText(applicationContext,"Sprawdź połączenie z internetem", Toast.LENGTH_LONG).show()
+                    }
+                )
+
             logoutDialog.cancel()
-            logout()
 
         }
         builder.setView(dialogLayout)

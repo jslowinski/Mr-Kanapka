@@ -39,6 +39,7 @@ class LoginUI : AppCompatActivity() {
 
     private var emailInput: String = ""
     private var passwordInput: String = ""
+    private var registrationID: String = ""
 
     private val apiService by lazy {
         ApiClient.create()
@@ -122,6 +123,7 @@ class LoginUI : AppCompatActivity() {
         setContentView(R.layout.activity_login_ui)
 
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -130,12 +132,12 @@ class LoginUI : AppCompatActivity() {
                 }
 
                 // Get new Instance ID token
-                val token = task.result?.token
+                registrationID = task.result!!.token
 
 
 
-                Log.e("...", token)
-                Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+
+                Log.e("...", registrationID)
             })
 
         val button : Button = this.findViewById(R.id.login_button)
@@ -168,10 +170,12 @@ class LoginUI : AppCompatActivity() {
 
             if(this!!.hasNetwork(applicationContext)!!)
             {
+                Log.e("Z login", registrationID)
                 apiService.login(
                     RequestLogin(
                         emailInput,
-                        passwordInput
+                        passwordInput,
+                        registrationID
                     )
                 )
                     .enqueue(object : Callback<ResponseDefault>{
