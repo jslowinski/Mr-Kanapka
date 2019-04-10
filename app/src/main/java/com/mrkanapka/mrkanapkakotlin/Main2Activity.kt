@@ -55,19 +55,41 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private val disposables: CompositeDisposable = CompositeDisposable()
 
+    private var boolCacheCategory = false
+
+    private var boolCacheSellers= false
+
+    private lateinit var categoryCache: List<CategoryEntity>
+
+    private lateinit var sellersCache: List<SellerEntity>
+
+    private var counterek = 0
+
     private fun handleFetchCategorySuccess( category: List<CategoryEntity>, id_seller: Int) {
 
         // Log the fact.
         Log.i("tabfragment", "Successfully fetched categories.")
+        var different = false
 
-
-        val arrayList = ArrayList<CategoryDto>()
-        for (item in category) {
-            arrayList.add(CategoryDto(item.id_category, item.name))
+        if (boolCacheCategory) {
+            if (category.size != categoryCache.size) {
+                println("rozmiar arrayList: " + category.size + " rozmiar tego drugiego: " + categoryCache.size)
+                different = true
+            }
+            else {
+                for ((index, item) in category.withIndex()) {
+                    if (item.id_category != categoryCache[index].id_category && item.name != categoryCache[index].name)
+                        different = true
+                }
+            }
         }
 
-        displayScreen(R.id.main_menu, arrayList, id_seller)
-        dialog.cancel()
+        if (different) {
+            val arrayList = ArrayList<CategoryDto>()
+            for (item in category)
+                arrayList.add(CategoryDto(item.id_category, item.name))
+            displayFragmentCategory(arrayList, id_seller)
+        }
     }
 
     private fun handleFetchCategoryError(throwable: Throwable) {
@@ -75,7 +97,28 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Log an error.
         Log.e("tabfragment", "An error occurred while fetching categories.")
         Log.e("tabfragment", throwable.localizedMessage)
-        dialog.cancel()
+        //Snackbar.make(root, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun handleFetchCategoryCacheSuccess( category: List<CategoryEntity>, id_seller: Int) {
+        categoryCache = category
+        // Log the fact.
+        Log.i("tabfragment", "Successfully fetched categories.")
+        val arrayList = ArrayList<CategoryDto>()
+        for (item in category) {
+            arrayList.add(CategoryDto(item.id_category, item.name))
+        }
+        displayFragmentCategory(arrayList, id_seller)
+
+        boolCacheCategory = true
+
+    }
+
+    private fun handleFetchCategoryCacheError(throwable: Throwable) {
+
+        // Log an error.
+        Log.e("tabfragment", "An error occurred while fetching categories.")
+        Log.e("tabfragment", throwable.localizedMessage)
         //Snackbar.make(root, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
     }
 
@@ -112,7 +155,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         //From api
         tokenManager
-            .downloadSellers("seller/" +id_destination, id_destination) //w domysle id_destination klienta ktore powinno byc pobierane z api włącznie z tokenem
+            .downloadSellers("seller/$id_destination", id_destination) //w domysle id_destination klienta ktore powinno byc pobierane z api włącznie z tokenem
             .andThen(tokenManager.getSellers(id_destination))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {  } //funkcje np progressbar show
@@ -129,64 +172,66 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // Log an error.
     }
 
-    lateinit var sellers: List<SellerEntity>
+
 
     private fun handleFetchSellerSuccess(seller: List<SellerEntity>) {
 
-        sellers = seller
-        val mySeller = ArrayList<String>()
-        for (item in seller) {
-            println(item)
-            mySeller.add(item.sellername!!)
+        var different = false
+        if (boolCacheSellers) {
+            println("rozmiar arrayList: " + seller.size + " rozmiar tego drugiego: " + sellersCache.size)
+            if (seller.size != sellersCache.size) {
+                different = true
+            }
+            else {
+                for ((index, item) in seller.withIndex()) {
+                    if (item.id_seller != sellersCache[index].id_seller && item.sellername != sellersCache[index].sellername)
+                        different = true
+                }
+            }
         }
 
-        setSellerSpinner(mySeller, seller)
-        dialog.cancel()
+        if (different)
+        {
+            val mySeller = ArrayList<String>()
+            for (item in seller) {
+                println(item)
+                mySeller.add(item.sellername)
+            }
 
+            setSellerSpinner(mySeller, seller)
+        }
     }
 
     private fun handleFetchSellerError(throwable: Throwable?) {
-        dialog.cancel()
+
     }
 
     private fun handleFetchSellerCacheSuccess(seller: List<SellerEntity>) {
-
+        sellersCache = seller
         val mySeller = ArrayList<String>()
         for (item in seller) {
             println(item)
-            mySeller.add(item.sellername!!)
+            mySeller.add(item.sellername)
         }
 
         setSellerSpinner(mySeller, seller)
-        dialog.cancel()
+
+        boolCacheSellers = true
+
 
     }
 
     private fun handleFetchSellerCacheError(throwable: Throwable?) {
-        dialog.cancel()
+
     }
 
 
-
-    private lateinit var dialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         setSupportActionBar(toolbar)
-
-
-
-        val builder = AlertDialog.Builder(this)
-        val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
-        val message = dialogView.findViewById<TextView>(R.id.textDialog)
-        message.text = "Pobieranie danych..."
-        builder.setView(dialogView)
-        builder.setCancelable(false)
-        dialog = builder.create()
-        dialog.show()
-
 
         tokenManager
             .getToken()
@@ -221,15 +266,14 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 //id_destination = destinations[position].id_destination
-                dialog.show()
 
                 //From cache
                 tokenManager
                     .getCategory(seller[position].id_seller)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                        { handleFetchCategorySuccess(it, seller[position].id_seller) },
-                        { handleFetchCategoryError(it) }
+                        { handleFetchCategoryCacheSuccess(it, seller[position].id_seller) },
+                        { handleFetchCategoryCacheError(it) }
                     )
                     .addTo(disposables)
 
@@ -281,20 +325,13 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    fun displayScreen(
-        id: Int,
+    fun displayFragmentCategory(
         category: ArrayList<CategoryDto>,
         id_seller: Int
     ) {
-        val fragment  = when (id) {
-            R.id.main_menu -> {
-                // TU CHYBA PROBLEM
-                TabFragment.newInstance(category, token, id_seller)
-            }
-            else -> {
-                TabFragment.newInstance(category, token, id_seller)
-            }
-        }
+        counterek++
+        println(counterek)
+        val fragment  = TabFragment.newInstance(category, token, id_seller)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.relativeLayout, fragment)
@@ -362,7 +399,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         return true
     }
 
-    fun hasNetwork(context: Context): Boolean? {
+    private fun hasNetwork(context: Context): Boolean? {
         var isConnected: Boolean? = false // Initial Value
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo

@@ -1,6 +1,7 @@
 package com.mrkanapka.mrkanapkakotlin.view
 
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
@@ -46,6 +47,8 @@ class ProductFragment  : Fragment() {
             return fragment
         }
     }
+    private var token = ""
+    private var id_seller: Int = 0
     private var category = 0
     //to swipe refresh
     private lateinit var mHandler: Handler
@@ -61,7 +64,7 @@ class ProductFragment  : Fragment() {
     private val TAG = ProductFragment::class.java.simpleName
 
     //endregion
-    private var cacheSucces : Boolean = false
+
     //region API
 
     private val productsManager by lazy {
@@ -84,9 +87,10 @@ class ProductFragment  : Fragment() {
         val items = products.map {
             ProductListItem(it)
         }
-        swipe_refresh_layout.isRefreshing = false
         // Display result.
         fastItemAdapter.setNewList(items)
+        imageView4.visibility = View.GONE
+        textView27.visibility = View.GONE
         Snackbar.make(root1, R.string.fetchSuccess, Snackbar.LENGTH_SHORT).show()
 
     }
@@ -101,9 +105,8 @@ class ProductFragment  : Fragment() {
         }
         // Display result.
         fastItemAdapter.setNewList(items)
-        swipe_refresh_layout.isRefreshing = false
-        cacheSucces = true
-
+        imageView4.visibility = View.GONE
+        textView27.visibility = View.GONE
     }
 
     private fun handleFetchSandwichsError(throwable: Throwable) {
@@ -111,16 +114,7 @@ class ProductFragment  : Fragment() {
         // Log an error.
         Log.e(TAG, "An error occurred while fetching Sandwichs.")
         Log.e(TAG, throwable.localizedMessage)
-        swipe_refresh_layout.isRefreshing = false
-        //zaslepka internet z pobraniem z bazy
-        if(cacheSucces) {
-            Snackbar.make(root1, "Brak połączenia z internetem, tryb offline", Snackbar.LENGTH_SHORT).show()
-        }
-        else {
-
-        }
-
-
+        Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun handleFetchSandwichsCacheError(throwable: Throwable) {
@@ -128,10 +122,8 @@ class ProductFragment  : Fragment() {
         // Log an error.
         Log.e(TAG, "An error occurred while fetching Sandwichs.")
         Log.e(TAG, throwable.localizedMessage)
-
         Snackbar.make(root1, R.string.fetchError, Snackbar.LENGTH_SHORT).show()
-        swipe_refresh_layout.isRefreshing = false
-        cacheSucces = false
+
     }
 
     //endregion
@@ -161,20 +153,6 @@ class ProductFragment  : Fragment() {
     }
 
     private fun onListItemClicked(view: View, item: ProductListItem){
-//        var bool : Boolean = true
-//        val model = item.model
-//        for (item in Cart.cartList)
-//        {
-//          if(item.title == model.name) {
-//            item.quantity++
-//            bool = false
-//          }
-//        }
-//        if(bool) {
-//          val item = CartDto(model.id_product, model.name, model.price, 1, model.id_product,  model.photo_url)
-//          Cart.setInfoItem(item)
-//        }
-
         println("sukces " + token + " " + item.model.id_product + " " + 1)
         Log.e("Token: ", token)
         Log.e("ID: ", item.model.id_product.toString())
@@ -209,9 +187,6 @@ class ProductFragment  : Fragment() {
                     }
                 }
             })
-
-
-
     }
 
     private fun onItemClicked(item: ProductListItem): Boolean {
@@ -254,7 +229,6 @@ class ProductFragment  : Fragment() {
 
     private fun addAndFetchSandwiches(progressbar: Boolean)
     {
-
         //From cache
         productsManager
             .getProducts(category, id_seller)
@@ -264,23 +238,34 @@ class ProductFragment  : Fragment() {
                 this::handleFetchSandwichsCacheError
             )
             .addTo(disposables)
-
         //From api
-        productsManager
-            .downloadProducts("products/" + category + "/seller/" + id_seller, category, id_seller)
-            .andThen(productsManager.getProducts(category, id_seller))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showProgress() }
-            .doFinally { hideProgress() }
-            .subscribe(
-                this::handleFetchSandwichsSuccess,
-                this::handleFetchSandwichsError
-            )
-            .addTo(disposables)
+        if (progressbar) {
+            productsManager
+                .downloadProducts("products/" + category + "/seller/" + id_seller, category, id_seller)
+                .andThen(productsManager.getProducts(category, id_seller))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { showProgress() }
+                .doFinally { hideProgress() }
+                .subscribe(
+                    this::handleFetchSandwichsSuccess,
+                    this::handleFetchSandwichsError
+                )
+                .addTo(disposables)
+        }
+        else {
+            productsManager
+                .downloadProducts("products/" + category + "/seller/" + id_seller, category, id_seller)
+                .andThen(productsManager.getProducts(category, id_seller))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    this::handleFetchSandwichsSuccess,
+                    this::handleFetchSandwichsError
+                )
+                .addTo(disposables)
+        }
 
     }
-    private var token = ""
-    private var id_seller: Int = 0
+
     //TO NAJWAŻNIEJSZE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.getInt("category").let { category = it!! }
@@ -288,13 +273,13 @@ class ProductFragment  : Fragment() {
         token = arguments?.getString("token").toString()
         initializeRecyclerView()
         // Initialize the handler instance
-
+        addAndFetchSandwiches(false)
         mHandler = Handler()
         // Set an on refresh listener for swipe refresh layout
         swipe_refresh_layout.setOnRefreshListener {
             // Initialize a new Runnable
             mRunnable = Runnable {
-                addAndFetchSandwiches(false)
+                addAndFetchSandwiches(true)
                 // Hide swipe to refresh icon animation
                 //swipe_refresh_layout.isRefreshing = false
                 //chowane jest w handleFetchSucces/false
@@ -302,7 +287,6 @@ class ProductFragment  : Fragment() {
             // Execute the task
             mHandler.post(mRunnable)
         }
-        if(savedInstanceState == null)
-            addAndFetchSandwiches(true)
+
     }
 }

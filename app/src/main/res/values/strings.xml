@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Mr Kanapka</string>
-    <string name="fetchError">Wystąpił błąd podczas pobierania elementów.</string>
+    <string name="fetchError">Błąd podczas aktualizowania danych.\nSprawdź swoje połączenie z internetem.</string>
     <string name="fetchSuccess">Pomyślnie pobrano elementy.</string>
     <string name="cartSuccess">Pomyślnie dodano element do koszyka.</string>
     <string name="cartDelete">Pomyślnie usunięto element z koszyka.</string>
