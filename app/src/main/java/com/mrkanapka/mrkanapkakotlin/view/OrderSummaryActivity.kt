@@ -66,14 +66,19 @@ class OrderSummaryActivity : AppCompatActivity() {
         actionBar.setDisplayHomeAsUpEnabled(true)
 
         val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
+        var year = c.get(Calendar.YEAR)
+        var month = c.get(Calendar.MONTH)
+        var day = c.get(Calendar.DAY_OF_MONTH)
 
         datapicker_button.setOnClickListener {
+            datapicker_button.isEnabled = false
             val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, mYear, mMonth, mDay ->
+                day = mDay
+                month = mMonth
+                year = mYear
                 if (mDay < 10){
                     dayS = "0$mDay"
+
                     monthS = if (mMonth < 10){
                         "0${mMonth + 1}"
                     } else{
@@ -91,11 +96,18 @@ class OrderSummaryActivity : AppCompatActivity() {
 
                 date_textView.text = "$dayS/$monthS/$yearS"
 
+                datapicker_button.isEnabled = true
             }, year, month, day)
+
+            dpd.setOnCancelListener{
+                datapicker_button.isEnabled = true
+            }
+
             dpd.datePicker.minDate = c.timeInMillis + 86400000
             dpd.datePicker.maxDate = c.timeInMillis + 601200000//518400000
 
             dpd.show()
+
         }
         val sdf = SimpleDateFormat("dd/MM/yyyy")
         val currentDate = sdf.format(c.timeInMillis + 86400000)
@@ -113,43 +125,49 @@ class OrderSummaryActivity : AppCompatActivity() {
                 this::handleTokenCacheError
             )
             .addTo(disposables)
-
+        var click = true
         order_summary_button.setOnClickListener{
-            if (date_textView.text.equals(""))
-            {
-                Toast.makeText(applicationContext, "Wybierz datę", Toast.LENGTH_LONG).show()
+            if (click){
+                click = false
+                if (date_textView.text.equals(""))
+                {
+                    Toast.makeText(applicationContext, "Wybierz datę", Toast.LENGTH_LONG).show()
+                    click = true
 
-            }else{
-                apiService.createOrder(RequestOrder(accessToken, dayS, monthS, yearS))
-                    .enqueue(object : Callback<ResponseOrder>{
-                        override fun onFailure(call: Call<ResponseOrder>, t: Throwable) {
-                            Toast.makeText(applicationContext, "Wystąpił błąd spróbuj ponownie później", Toast.LENGTH_LONG).show()
-                        }
-
-                        override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
-                            if (response.code() == 200)
-                            {
-                                //Log.e("Number", response.body()!!.id_status)
-                                CartActivity.fa!!.finish()
-                                //Gdy produkty są wybrane z listy zamówień i okna wiszą w tle odpowiedno zamyka okna i otwiera żeby informacje były na bierząco
-                                if(HistoryDetail.pa != null){
-                                    HistoryDetail.flag = true
-                                    HistoryOrderActivity.pa!!.finish()
-                                }
-                                Log.e("flaga", HistoryDetail.flag.toString())
-                                val productsList = response.body()!!.products // Lista składników
-                                orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
-                            } else if (response.code() == 202)
-                            {
-
-                                //print(response.body()!!.message)
-                                Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
+                }else{
+                    apiService.createOrder(RequestOrder(accessToken, dayS, monthS, yearS))
+                        .enqueue(object : Callback<ResponseOrder>{
+                            override fun onFailure(call: Call<ResponseOrder>, t: Throwable) {
+                                Toast.makeText(applicationContext, "Wystąpił błąd spróbuj ponownie później", Toast.LENGTH_LONG).show()
+                                click = true
                             }
 
-                        }
+                            override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
+                                if (response.code() == 200)
+                                {
+                                    //Log.e("Number", response.body()!!.id_status)
+                                    CartActivity.fa!!.finish()
+                                    //Gdy produkty są wybrane z listy zamówień i okna wiszą w tle odpowiedno zamyka okna i otwiera żeby informacje były na bierząco
+                                    if(HistoryDetail.pa != null){
+                                        HistoryDetail.flag = true
+                                        HistoryOrderActivity.pa!!.finish()
+                                    }
+                                    Log.e("flaga", HistoryDetail.flag.toString())
+                                    val productsList = response.body()!!.products // Lista składników
+                                    orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
+                                } else if (response.code() == 202)
+                                {
+                                    //print(response.body()!!.message)
+                                    Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
+                                    click = true
+                                }
 
-                    })
+                            }
+
+                        })
+                }
             }
+
 
         }
     }
