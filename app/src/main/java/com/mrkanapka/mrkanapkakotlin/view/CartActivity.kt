@@ -71,6 +71,8 @@ class CartActivity : AppCompatActivity() {
         actionBar!!.title = "Koszyk"
         actionBar.setDisplayHomeAsUpEnabled(true)
 
+        initializeRecyclerView()
+
         fa = this
 
         button.setOnClickListener{
@@ -128,6 +130,7 @@ class CartActivity : AppCompatActivity() {
 
         // Display result.
         adapter.setNewList(items)
+        adapter.notifyDataSetChanged()
     }
 
     private fun handleFetchCartError(throwable: Throwable) {
@@ -159,6 +162,7 @@ class CartActivity : AppCompatActivity() {
         cartRecyclerView.layoutManager = LinearLayoutManager(this)
         cartRecyclerView.itemAnimator = DefaultItemAnimator()
         cartRecyclerView.adapter = adapter
+
 
         adapter.withOnClickListener { _, _, item, _ -> onItemClicked(item) }
         adapter.withEventHook(object : ClickEventHook<CartListItem>() {
@@ -306,7 +310,6 @@ class CartActivity : AppCompatActivity() {
                         sellerField.text = response.body()!!.seller_name
                     }
                     handleFetchCartSuccess(response.body()!!.cart)
-                    initializeRecyclerView()
                 }
             })
     }

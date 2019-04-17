@@ -32,6 +32,8 @@ class CartListItem(model: ResponseCartDetail) : ModelAbstractItem<ResponseCartDe
         return Objects.hash(model).toLong()
     }
 
+
+
     class CartListItemViewHolder(itemView: View) : FastAdapter.ViewHolder<CartListItem>(itemView) {
 
         private val titleText: TextView = itemView.findViewById(R.id.title)
