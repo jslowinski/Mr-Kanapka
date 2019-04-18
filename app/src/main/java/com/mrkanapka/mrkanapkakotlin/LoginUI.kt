@@ -62,7 +62,7 @@ class LoginUI : AppCompatActivity() {
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
-
+        dialog.show()
         println(token.token)
 
         apiService.checkToken(RequestToken(token.token))
@@ -147,7 +147,7 @@ class LoginUI : AppCompatActivity() {
         builder.setView(dialogView)
         builder.setCancelable(false)
         dialog = builder.create()
-        dialog.show()
+
         tokenManager
             .getToken()
             .observeOn(AndroidSchedulers.mainThread())
