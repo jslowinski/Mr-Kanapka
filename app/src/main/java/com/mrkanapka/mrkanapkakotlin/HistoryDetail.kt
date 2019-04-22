@@ -139,8 +139,15 @@ class HistoryDetail : AppCompatActivity() {
         swipeHistoryOrderDetail.isRefreshing = false
     }
 
+    private fun logout() {
+        val main = Intent(this, LoginUI::class.java)
+        startActivity(main)
+        finish()
+    }
+
     private fun handleTokenCacheSuccess(token: TokenEntity) {
         accessToken = token.token
+
         apiService.checkToken(RequestToken(token.token))
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
@@ -157,6 +164,7 @@ class HistoryDetail : AppCompatActivity() {
                     if (response.code() == 400) //Bad token
                     {
                         Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                        logout()
                     }
                 }
             })

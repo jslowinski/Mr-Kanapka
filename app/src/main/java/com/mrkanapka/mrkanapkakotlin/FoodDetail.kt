@@ -176,7 +176,7 @@ class FoodDetail : AppCompatActivity() {
                 //region Odwoływanie się do składników
                 if (range != null && title != null ) {
                     for(i  in 0 until range){
-                        skladnik += "- " + test[i].name.toString()
+                        skladnik += "- " + test[i].name
                         if (i == range-1)
                         {}
                         else skladnik += "\n"

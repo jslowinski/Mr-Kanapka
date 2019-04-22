@@ -2,6 +2,7 @@ package com.mrkanapka.mrkanapkakotlin.view
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mrkanapka.mrkanapkakotlin.HistoryDetail
+import com.mrkanapka.mrkanapkakotlin.LoginUI
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestOrder
@@ -227,9 +229,15 @@ class OrderSummaryActivity : AppCompatActivity() {
                     if (response.code() == 400) //Bad token
                     {
                         Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                        logout()
                     }
                 }
             })
+    }
+    private fun logout() {
+        val main = Intent(this, LoginUI::class.java)
+        startActivity(main)
+        finish()
     }
 
     private fun handleFetchCartSuccess(films: List<ResponseCartDetail>) {

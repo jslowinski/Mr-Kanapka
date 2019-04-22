@@ -19,6 +19,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mrkanapka.mrkanapkakotlin.FoodDetail
+import com.mrkanapka.mrkanapkakotlin.LoginUI
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestAddCart
@@ -97,9 +98,11 @@ class CartActivity : AppCompatActivity() {
 
 
     }
+
     private fun handleTokenCacheSuccess(token: TokenEntity) {
         accessToken = token.token
         println(token.token)
+        val main = Intent(this, LoginUI::class.java)
         apiService.checkToken(RequestToken(token.token))
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
@@ -116,9 +119,17 @@ class CartActivity : AppCompatActivity() {
                     if (response.code() == 400) //Bad token
                     {
                         Toast.makeText(applicationContext, "Zalogowano się z innego urządzenia\nZaloguj się ponownie", Toast.LENGTH_LONG).show()
+                        logout()
                     }
                 }
             })
+    }
+
+    private fun logout() {
+        finish()
+        val main = Intent(this, LoginUI::class.java)
+        startActivity(main)
+
     }
 
     private fun handleFetchCartSuccess(films: List<ResponseCartDetail>) {
