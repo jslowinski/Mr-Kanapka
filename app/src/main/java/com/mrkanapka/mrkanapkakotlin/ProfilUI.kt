@@ -376,7 +376,7 @@ class ProfilUI : AppCompatActivity() {
                     Log.e("Wiadomość: ", "Pobrane")
                     profile_email.setText(response.body()!!.email)
 
-                    if(response.body()?.first_name == null || response.body()!!.first_name.equals("NULL")) {
+                    if(response.body()?.first_name == null || response.body()!!.first_name.equals("")) {
                         profile_firstname.visibility = View.GONE
                         line3.visibility = View.GONE
                         imie.visibility = View.GONE
@@ -389,7 +389,7 @@ class ProfilUI : AppCompatActivity() {
                         profile_firstname.setText(response.body()?.first_name)
                     }
 
-                    if(response.body()?.last_name == null || response.body()!!.last_name.equals("NULL")) {
+                    if(response.body()?.last_name == null || response.body()!!.last_name.equals("")) {
                         profile_lastname.visibility = View.GONE
                         line5.visibility = View.GONE
                         nazwisko.visibility = View.GONE
@@ -402,7 +402,7 @@ class ProfilUI : AppCompatActivity() {
                         profile_lastname.setText(response.body()!!.last_name)
                     }
 
-                    if(response.body()?.telephone == null || response.body()!!.telephone.equals("NULL")) {
+                    if(response.body()?.telephone == null || response.body()!!.telephone.equals("")) {
                         profile_phone.visibility = View.GONE
                         line7.visibility = View.GONE
                         phone.visibility = View.GONE
@@ -441,14 +441,14 @@ class ProfilUI : AppCompatActivity() {
         var phoneInput : String = profile_phone.text.toString().trim()
 
         if (nameInput.equals("")) {
-            nameInput = "NULL"
+            nameInput = ""
             Log.e("Name: ", nameInput)
         }
         if(lastnameInput.equals("")) {
-            lastnameInput = "NULL"
+            lastnameInput = ""
         }
         if(phoneInput.equals("")) {
-            phoneInput = "NULL"
+            phoneInput = ""
         }
 
         Log.e("ID: ",id_destination.toString())

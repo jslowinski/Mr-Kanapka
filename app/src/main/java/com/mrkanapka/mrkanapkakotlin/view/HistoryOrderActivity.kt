@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mrkanapka.mrkanapkakotlin.HistoryDetail
 import com.mrkanapka.mrkanapkakotlin.LoginUI
+import com.mrkanapka.mrkanapkakotlin.Main2Activity
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestHistory
@@ -40,6 +41,7 @@ class HistoryOrderActivity : AppCompatActivity() {
     private val apiService by lazy{
         ApiClient.create()
     }
+
 
     private val disposables: CompositeDisposable = CompositeDisposable()
 
@@ -135,6 +137,7 @@ class HistoryOrderActivity : AppCompatActivity() {
         val main = Intent(this, LoginUI::class.java)
         startActivity(main)
         finish()
+        Main2Activity.menuActivity!!.finish()
     }
 
     private fun handleTokenCacheError(throwable: Throwable) {

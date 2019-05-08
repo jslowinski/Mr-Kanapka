@@ -1,5 +1,7 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -47,6 +49,11 @@ import retrofit2.Response
 
 class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        var menuActivity: Activity? = null
+    }
+
     private val apiService by lazy {
         ApiClient.create()
     }
@@ -84,6 +91,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setContentView(R.layout.activity_main2)
         setSupportActionBar(toolbar)
 
+        menuActivity = this
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
