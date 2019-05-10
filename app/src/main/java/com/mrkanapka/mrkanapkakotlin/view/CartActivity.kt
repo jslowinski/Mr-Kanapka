@@ -20,7 +20,6 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mrkanapka.mrkanapkakotlin.FoodDetail
 import com.mrkanapka.mrkanapkakotlin.LoginUI
-import com.mrkanapka.mrkanapkakotlin.Main2Activity
 import com.mrkanapka.mrkanapkakotlin.R
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestAddCart
@@ -128,7 +127,6 @@ class CartActivity : AppCompatActivity() {
 
     private fun logout() {
         finish()
-        Main2Activity.menuActivity!!.finish()
         val main = Intent(this, LoginUI::class.java)
         startActivity(main)
 
@@ -173,7 +171,7 @@ class CartActivity : AppCompatActivity() {
 //        adapter.setNewList(items)
         //TU TRZEBA BYŁO ZMIENIC THIS NA CONTEXT
         cartRecyclerView.layoutManager = LinearLayoutManager(this)
-        cartRecyclerView.itemAnimator = null
+        cartRecyclerView.itemAnimator = DefaultItemAnimator()
         cartRecyclerView.adapter = adapter
 
 

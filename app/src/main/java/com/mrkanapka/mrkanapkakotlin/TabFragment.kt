@@ -34,6 +34,7 @@ class TabFragment : Fragment(){
         tabLayout.post { (tabLayout.setupWithViewPager(viewPager)) }
         // TO DZIADOWSTWO TRZEBA BYŁO DODAC ABY NIE ODSWIEZALO CIAGLE PIREWSZEGO FRAGMENTU W TABIE
         viewPager.offscreenPageLimit = 9
+        viewPager.currentItem = 1
 
         return x
     }

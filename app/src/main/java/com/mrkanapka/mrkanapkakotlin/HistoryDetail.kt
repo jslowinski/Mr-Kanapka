@@ -143,9 +143,6 @@ class HistoryDetail : AppCompatActivity() {
         val main = Intent(this, LoginUI::class.java)
         startActivity(main)
         finish()
-        HistoryOrderActivity.pa!!.finish()
-        Main2Activity.menuActivity!!.finish()
-
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {

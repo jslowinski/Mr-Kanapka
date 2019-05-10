@@ -52,12 +52,7 @@ class CartListItem(model: ResponseCartDetail) : ModelAbstractItem<ResponseCartDe
             titleText.text = model.name
             countButton.number = model.amount.toString()
             textViewPrice.text = "%.2f".format(price) + " zł"
-            if(model.photo_url == "https://res.cloudinary.com/daaothls9/"){
-
-            } else{
-                Glide.with(itemView).load(model.photo_url).into(imageView)
-            }
-
+            Glide.with(itemView).load(model.photo_url).into(imageView)
             textViewPriceSingle.text = "%.2f zł".format(model.price_per_one.toDouble())
 
         }
