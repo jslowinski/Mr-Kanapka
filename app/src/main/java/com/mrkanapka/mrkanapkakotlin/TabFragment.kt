@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.mrkanapka.mrkanapkakotlin.api.model.CategoryDto
 import com.mrkanapka.mrkanapkakotlin.view.ProductFragment
-import kotlinx.android.synthetic.main.app_bar_main2.*
 
 class TabFragment : Fragment(){
 

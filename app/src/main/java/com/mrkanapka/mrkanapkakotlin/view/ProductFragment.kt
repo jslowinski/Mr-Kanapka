@@ -28,8 +28,6 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mrkanapka.mrkanapkakotlin.api.ApiClient
 import com.mrkanapka.mrkanapkakotlin.api.model.Request.RequestAddCart
 import com.mrkanapka.mrkanapkakotlin.api.model.Response.ResponseDefault
-import kotlinx.android.synthetic.main.app_bar_main2.*
-import kotlinx.android.synthetic.main.content_main2.*
 import kotlinx.android.synthetic.main.item_menu.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,6 +50,7 @@ class ProductFragment  : Fragment() {
     private var token = ""
     private var id_seller: Int = 0
     private var category = 0
+    //to swipe refresh
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
 
@@ -213,11 +212,11 @@ class ProductFragment  : Fragment() {
     //region Progress Bar
 
     private fun showProgress() {
-        //swipe_refresh_layout.isRefreshing = true
+        swipe_refresh_layout.isRefreshing = true
     }
 
     private fun hideProgress() {
-        //swipe_refresh_layout.isRefreshing = false
+        swipe_refresh_layout.isRefreshing = false
     }
 
 
@@ -228,7 +227,7 @@ class ProductFragment  : Fragment() {
         return inflater.inflate(R.layout.fragment_product, container, false)
     }
 
-    fun addAndFetchSandwiches(progressbar: Boolean)
+    private fun addAndFetchSandwiches(progressbar: Boolean)
     {
         //From cache
         productsManager
@@ -277,21 +276,17 @@ class ProductFragment  : Fragment() {
         addAndFetchSandwiches(false)
         mHandler = Handler()
         // Set an on refresh listener for swipe refresh layout
-        swipe_refresh_layout1.setProgressBackgroundColorSchemeColor(0)
-        swipe_refresh_layout1.setColorSchemeColors(0)
-        swipe_refresh_layout1.setOnRefreshListener {
+        swipe_refresh_layout.setOnRefreshListener {
             // Initialize a new Runnable
-            swipe_refresh_layout1.isRefreshing = false
             mRunnable = Runnable {
-
-
+                addAndFetchSandwiches(true)
                 // Hide swipe to refresh icon animation
-                addAndFetchSandwiches(false)
                 //swipe_refresh_layout.isRefreshing = false
                 //chowane jest w handleFetchSucces/false
             }
             // Execute the task
             mHandler.post(mRunnable)
         }
+
     }
 }
