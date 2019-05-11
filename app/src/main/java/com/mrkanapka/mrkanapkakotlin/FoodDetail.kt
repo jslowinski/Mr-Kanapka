@@ -48,6 +48,7 @@ class FoodDetail : AppCompatActivity() {
 
         val button : Button = findViewById(R.id.add_to_order_button)
         val numberButton : ElegantNumberButton = findViewById(R.id.number_button)
+        numberButton.setRange(0,99)
 
         food_detail_bar.visibility = View.GONE
         nestedScrollView.visibility = View.GONE
@@ -68,19 +69,6 @@ class FoodDetail : AppCompatActivity() {
 
 
         button.setOnClickListener{
-//            var bool : Boolean = true
-//            for (item in Cart.cartList)
-//            {
-//                if(item.title == name) {
-//                    item.quantity+=numberButton.number.toInt()
-//                    bool = false
-//                }
-//            }
-//            if(bool) {
-//                val item = CartDto(url, name, price, numberButton.number.toInt(), url, photo_url)
-//                Cart.setInfoItem(item)
-//            }
-//            Snackbar.make(root, R.string.cartSuccess, Snackbar.LENGTH_SHORT).show()
             apiService.addCart(
                 RequestAddCart(
                     token,
@@ -175,6 +163,10 @@ class FoodDetail : AppCompatActivity() {
                 var skladnik = ""
                 //region Odwoływanie się do składników
                 if (range != null && title != null ) {
+                    if (range != 0)
+                    {
+                        skladnik = "\n\nSkładniki:\n"
+                    }
                     for(i  in 0 until range){
                         skladnik += "- " + test[i].name
                         if (i == range-1)
@@ -184,7 +176,7 @@ class FoodDetail : AppCompatActivity() {
                     //endregion
                     price = priceS.toString()
                     name = title.toString()
-                    message = description + "\n\n" + skladnik
+                    message = description + skladnik
                     photoUrl = body.photo_url.toString()
 
                     val actionBar = supportActionBar
@@ -194,25 +186,23 @@ class FoodDetail : AppCompatActivity() {
                     }
                     food_name.text = name
 
-                    val priceText: TextView = findViewById(R.id.food_price)
-                    priceText.text = "$price zł"
+                    food_price.text = "$price zł"
 
-                    findViewById<TextView>(R.id.food_description).apply {
-                        text = message
+                    food_description.text = message
+
+                    //region Ukrywanie zdjęcia jak go nie ma
+                    Log.e("Url: ", photoUrl)
+                    val imageView: ImageView = findViewById(R.id.img_food)
+                    if (photoUrl.equals("https://res.cloudinary.com/daaothls9/"))
+                    {
+                        nestedScrollView.visibility = View.VISIBLE
                     }
-                        //region Ukrywanie zdjęcia jak go nie ma
-                        Log.e("Url: ", photoUrl)
-                        val imageView: ImageView = findViewById(R.id.img_food)
-                        if (photoUrl.equals("https://res.cloudinary.com/daaothls9/"))
-                        {
-                            nestedScrollView.visibility = View.VISIBLE
-                        }
-                        else{
-                            Glide.with(this@FoodDetail).load(photoUrl).into(imageView)
-                            food_detail_bar.visibility = View.VISIBLE
-                            nestedScrollView.visibility = View.VISIBLE
-                        }
-                        //endregion
+                    else{
+                        Glide.with(this@FoodDetail).load(photoUrl).into(imageView)
+                        food_detail_bar.visibility = View.VISIBLE
+                        nestedScrollView.visibility = View.VISIBLE
+                    }
+                    //endregion
                     }
                 else {
                     progressBar2.visibility = View.GONE

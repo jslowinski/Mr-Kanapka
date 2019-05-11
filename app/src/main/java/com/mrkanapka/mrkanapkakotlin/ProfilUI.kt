@@ -200,6 +200,9 @@ class ProfilUI : AppCompatActivity() {
         saveButton.visibility = View.GONE
         edit_profile.visibility = View.VISIBLE
         profile_email.setTextColor(Color.BLACK)
+        profile_phone.isEnabled = false
+        profile_firstname.isEnabled = false
+        profile_firstname.isEnabled = false
         profile_firstname.setText("")
         profile_firstname.hideKeyboard()
         profile_lastname.setText("")
@@ -212,7 +215,7 @@ class ProfilUI : AppCompatActivity() {
         flag = false
     }
 
-    fun confirmCancel() {
+    private fun confirmCancel() {
 
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
@@ -380,6 +383,7 @@ class ProfilUI : AppCompatActivity() {
                         profile_firstname.visibility = View.GONE
                         line3.visibility = View.GONE
                         imie.visibility = View.GONE
+                        profile_firstname.isEnabled = false
                     }
                     else {
                         profile_firstname.visibility = View.VISIBLE
@@ -388,11 +392,11 @@ class ProfilUI : AppCompatActivity() {
                         imie.visibility = View.VISIBLE
                         profile_firstname.setText(response.body()?.first_name)
                     }
-
                     if(response.body()?.last_name == null || response.body()!!.last_name.equals("")) {
                         profile_lastname.visibility = View.GONE
                         line5.visibility = View.GONE
                         nazwisko.visibility = View.GONE
+                        profile_lastname.isEnabled = false
                     }
                     else {
                         profile_lastname.visibility = View.VISIBLE
@@ -406,6 +410,7 @@ class ProfilUI : AppCompatActivity() {
                         profile_phone.visibility = View.GONE
                         line7.visibility = View.GONE
                         phone.visibility = View.GONE
+                        profile_phone.isEnabled = false
                     }
                     else {
                         profile_phone.visibility = View.VISIBLE
@@ -414,6 +419,7 @@ class ProfilUI : AppCompatActivity() {
                         phone.visibility = View.VISIBLE
                         profile_phone.setText(response.body()!!.telephone)
                     }
+                    profile_lastname.isEnabled = false
                     id_destination_profile = response.body()!!.id_destination
                     id_city_profile = response.body()!!.id_city
                     profile_city_spinner.isEnabled = false

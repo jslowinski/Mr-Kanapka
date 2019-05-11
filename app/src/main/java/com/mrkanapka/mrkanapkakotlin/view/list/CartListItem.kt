@@ -45,6 +45,7 @@ class CartListItem(model: ResponseCartDetail) : ModelAbstractItem<ResponseCartDe
         @SuppressLint("SetTextI18n")
         override fun bindView(item: CartListItem, payloads: MutableList<Any>) {
 
+            countButton.setRange(0,99)
             // Retrieve model.
             val model = item.model
             // Update view.

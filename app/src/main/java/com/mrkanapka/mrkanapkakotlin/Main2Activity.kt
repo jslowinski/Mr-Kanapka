@@ -1,5 +1,7 @@
 package com.mrkanapka.mrkanapkakotlin
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -49,6 +51,11 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private val tokenManager by lazy {
         TokenManager()
+    }
+
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        var menuActivity: Activity? = null
     }
 
     private var token = ""

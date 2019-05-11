@@ -163,10 +163,20 @@ class HistoryOrderActivity : AppCompatActivity() {
                     call: Call<ResponseHistory<List<ResponseHistoryList>>>,
                     response: Response<ResponseHistory<List<ResponseHistoryList>>>
                 ) {
-                    showHistory2(response.body()!!.orders)
-                    response.body()!!.orders.lastIndex
-                    progressBarHistory.visibility = View.GONE
-                    page = response.body()!!.next
+                    if(response.body()!!.orders.isEmpty())
+                    {
+                        orderIcon.visibility = View.VISIBLE
+                        emptyText1.visibility = View.VISIBLE
+                    }
+                    else{
+                        showHistory2(response.body()!!.orders)
+                        response.body()!!.orders.lastIndex
+                        progressBarHistory.visibility = View.GONE
+                        page = response.body()!!.next
+                        orderIcon.visibility = View.GONE
+                        emptyText1.visibility = View.GONE
+                    }
+
                 }
 
             })
