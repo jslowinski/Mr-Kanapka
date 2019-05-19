@@ -9,5 +9,5 @@ data class ResponseProfile (
     val telephone: String,
     val name: String,
     val street: String,
-    val house_number: Int
+    val house_number: String
 )

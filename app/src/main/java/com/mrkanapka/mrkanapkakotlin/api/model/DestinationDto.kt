@@ -8,7 +8,7 @@ data class DestinationDto(
     var city: String,
 
     @SerializedName("house_number")
-    var house_number: Int,
+    var house_number: String,
 
     @SerializedName("id_destination")
     var id_destination: Int,
