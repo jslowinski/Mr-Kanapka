@@ -196,6 +196,7 @@ class HistoryDetail : AppCompatActivity() {
                     historyOfficeText.text = response.body()!!.destination
                     historySellerText.text = response.body()!!.seller
                     historyStatusText.text = response.body()!!.name
+                    historyCommentText.text = response.body()!!.comment
                     historyTotalPriceText.text = "%.2f zł".format(response.body()!!.full_price)
                     fetchHistoryProducts(response.body()!!.products)
                     if ( response.body()!!.flag == 1)

@@ -137,7 +137,7 @@ class OrderSummaryActivity : AppCompatActivity() {
                     click = true
 
                 }else{
-                    apiService.createOrder(RequestOrder(accessToken, dayS, monthS, yearS))
+                    apiService.createOrder(RequestOrder(accessToken, dayS, monthS, yearS, editText.text.toString()))
                         .enqueue(object : Callback<ResponseOrder>{
                             override fun onFailure(call: Call<ResponseOrder>, t: Throwable) {
                                 Toast.makeText(applicationContext, "Wystąpił błąd spróbuj ponownie później", Toast.LENGTH_LONG).show()
