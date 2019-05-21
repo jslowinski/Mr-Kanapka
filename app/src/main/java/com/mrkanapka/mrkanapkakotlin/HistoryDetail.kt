@@ -155,11 +155,16 @@ class HistoryDetail : AppCompatActivity() {
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
-                    Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Błąd pobierania infomracji o zamówieniu", Toast.LENGTH_LONG).show()
+                    imageView8.visibility = View.VISIBLE
+                    textView31.visibility = View.VISIBLE
+                    progressBarHistoryDetail.visibility = View.GONE
+
 
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+
                     if (response.code() == 200) //Good token
                     {
                         showDetail(token.token, orderNumber)
@@ -185,6 +190,9 @@ class HistoryDetail : AppCompatActivity() {
                     t: Throwable
                 ) {
                     Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
+                    imageView8.visibility = View.VISIBLE
+                    textView31.visibility = View.VISIBLE
+                    progressBarHistoryDetail.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -203,6 +211,7 @@ class HistoryDetail : AppCompatActivity() {
                     {
                         buttonCancelOrder.visibility = View.VISIBLE
                     }
+
                 }
 
             })
@@ -217,6 +226,10 @@ class HistoryDetail : AppCompatActivity() {
 
         // Display result.
         adapter.setNewList(items)
+        progressBarHistoryDetail.visibility = View.GONE
+        imageView8.visibility = View.GONE
+        textView31.visibility = View.GONE
+        nestedScrollView4.visibility = View.VISIBLE
     }
 
     private fun initializeRecyclerView() {

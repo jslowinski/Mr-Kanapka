@@ -115,10 +115,15 @@ class HistoryOrderActivity : AppCompatActivity() {
                     Log.e("Status: ", "Fail connection")
                     Toast.makeText(applicationContext, "Nie można wczytać danych.\n" +
                             "Sprawdź swoje połaczenie z internetem", Toast.LENGTH_LONG).show()
+                    imageView7.visibility = View.VISIBLE
+                    textView30.visibility = View.VISIBLE
+                    progressBarHistory.visibility = View.GONE
 
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    imageView7.visibility = View.GONE
+                    textView30.visibility = View.GONE
                     if (response.code() == 200) //Good token
                     {
                         showHistory(token.token,0)

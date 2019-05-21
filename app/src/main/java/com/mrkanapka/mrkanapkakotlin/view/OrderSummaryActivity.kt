@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -58,6 +59,8 @@ class OrderSummaryActivity : AppCompatActivity() {
     private var yearS: String = ""
 
     private lateinit var orderDialog: AlertDialog
+
+    private lateinit var progressDialog: AlertDialog
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,6 +130,17 @@ class OrderSummaryActivity : AppCompatActivity() {
                 this::handleTokenCacheError
             )
             .addTo(disposables)
+
+
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
+        val message = dialogView.findViewById<TextView>(R.id.textDialog)
+        message.text = "Składanie zamówienia..."
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+        progressDialog = builder.create()
+
+
         var click = true
         order_summary_button.setOnClickListener{
             if (click){
@@ -137,11 +151,14 @@ class OrderSummaryActivity : AppCompatActivity() {
                     click = true
 
                 }else{
+                    progressDialog.show()
                     apiService.createOrder(RequestOrder(accessToken, dayS, monthS, yearS, editText.text.toString()))
                         .enqueue(object : Callback<ResponseOrder>{
                             override fun onFailure(call: Call<ResponseOrder>, t: Throwable) {
+                                progressDialog.cancel()
                                 Toast.makeText(applicationContext, "Wystąpił błąd spróbuj ponownie później", Toast.LENGTH_LONG).show()
                                 click = true
+
                             }
 
                             override fun onResponse(call: Call<ResponseOrder>, response: Response<ResponseOrder>) {
@@ -156,10 +173,12 @@ class OrderSummaryActivity : AppCompatActivity() {
                                     }
                                     Log.e("flaga", HistoryDetail.flag.toString())
                                     val productsList = response.body()!!.products // Lista składników
+                                    progressDialog.cancel()
                                     orderPopup(response.body()!!.order_number, response.body()!!.date, productsList, response.body()!!.full_price)
                                 } else if (response.code() == 202)
                                 {
                                     //print(response.body()!!.message)
+                                    progressDialog.cancel()
                                     Toast.makeText(applicationContext, response.body()!!.message, Toast.LENGTH_LONG).show()
                                     click = true
                                 }
@@ -219,6 +238,9 @@ class OrderSummaryActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
                     Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    imageView9.visibility = View.VISIBLE
+                    textView32.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
                 }
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     if (response.code() == 200) //Good token
@@ -282,6 +304,9 @@ class OrderSummaryActivity : AppCompatActivity() {
         summaryRecyclerView.itemAnimator = DefaultItemAnimator()
         summaryRecyclerView.adapter = adapter
         summaryRecyclerView.isClickable = false
+        progressBar.visibility = View.GONE
+        nestedScrollView3.visibility = View.VISIBLE
+        order_summary_button.visibility = View.VISIBLE
 
     }
     private fun showCart(token : String){
@@ -292,6 +317,7 @@ class OrderSummaryActivity : AppCompatActivity() {
                     t: Throwable
                 ) {
                     Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
+                    progressBar.visibility = View.GONE
                 }
                 @SuppressLint("SetTextI18n")
                 override fun onResponse(

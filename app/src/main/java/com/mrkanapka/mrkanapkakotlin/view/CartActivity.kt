@@ -8,12 +8,15 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
@@ -64,6 +67,7 @@ class CartActivity : AppCompatActivity() {
         var fa: Activity? = null
     }
 
+    private lateinit var progressDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +101,13 @@ class CartActivity : AppCompatActivity() {
             )
             .addTo(disposables)
 
-
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.progress_dialog, null)
+        val message = dialogView.findViewById<TextView>(R.id.textDialog)
+        message.text = "Aktualizowanie koszyka..."
+        builder.setView(dialogView)
+        builder.setCancelable(false)
+        progressDialog = builder.create()
     }
 
     private fun handleTokenCacheSuccess(token: TokenEntity) {
@@ -108,7 +118,10 @@ class CartActivity : AppCompatActivity() {
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
-                    Toast.makeText(applicationContext, "Brak internetu, tryb offline", Toast.LENGTH_LONG).show()
+                    Snackbar.make(root1, "Błąd pobierania infomacji o koszyku", Snackbar.LENGTH_LONG).show()
+                    progressBarCart.visibility = View.GONE
+                    imageView5.visibility = View.VISIBLE
+                    textView28.visibility = View.VISIBLE
 
                 }
 
@@ -140,7 +153,7 @@ class CartActivity : AppCompatActivity() {
         val items = films.map {
             CartListItem(it)
         }
-
+        progressBarCart.visibility = View.GONE
         // Display result.
         adapter.setNewList(items)
         adapter.notifyDataSetChanged()
@@ -183,6 +196,7 @@ class CartActivity : AppCompatActivity() {
                 viewHolder.itemView.run { listOf(button2) }
 
             override fun onClick(view: View?, position: Int, fastAdapter: FastAdapter<CartListItem>?, item: CartListItem?) {
+                progressDialog.show()
                 apiService.deleteProductCart(
                     RequestDeleteCart(
                         accessToken,
@@ -191,10 +205,12 @@ class CartActivity : AppCompatActivity() {
                 )
                     .enqueue(object : Callback<ResponseDefault>{
                         override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                            progressDialog.cancel()
                             Toast.makeText(applicationContext, "Wystąpił błąd.\nSpróbuj ponownie później", Toast.LENGTH_LONG).show()
                         }
 
                         override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                            progressDialog.cancel()
                             showCart(accessToken)
                         }
                     })
@@ -328,20 +344,24 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun addOne(token : String, id : Int){
+        progressDialog.show()
         apiService.addCart(RequestAddCart(token, id, 1))
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
                     Log.e("Status: ", "Fail connection")
                     Toast.makeText(applicationContext, "Sprawdź swoje połączenie z internetem", Toast.LENGTH_LONG).show()
-                    //dialog.cancel()
+                    progressDialog.cancel()
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
                     println("sukces")
                     Log.e("Kod", response.code().toString())
+                    progressDialog.cancel()
                     if (response.code() == 200) //Good token
                     {
+
                         showCart(accessToken)
+
                     }
                     if (response.code() == 400) //Bad token
                     {
@@ -353,15 +373,18 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun removeOne(token : String, id : Int){
+        progressDialog.show()
         apiService.removeOne(RequestRemoveOne(token, id))
             .enqueue(object : Callback<ResponseDefault> {
                 override fun onFailure(call: Call<ResponseDefault>, t: Throwable) {
+                    progressDialog.cancel()
                     Log.e("Status: ", "Fail connection")
                     Toast.makeText(applicationContext, "Sprawdź swoje połączenie z internetem", Toast.LENGTH_LONG).show()
                     //dialog.cancel()
                 }
 
                 override fun onResponse(call: Call<ResponseDefault>, response: Response<ResponseDefault>) {
+                    progressDialog.cancel()
                     println("sukces")
                     Log.e("Kod", response.code().toString())
                     if (response.code() == 200) //Good token

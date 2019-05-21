@@ -113,7 +113,6 @@ class ProfilUI : AppCompatActivity() {
                     if (response.code() == 200) { //Good token
 
                         getProfileData(token.token)
-                        progressDialog.cancel()
                         Log.e("Status: ", "Good token")
 
                         edit_profile.setOnClickListener{
@@ -157,7 +156,7 @@ class ProfilUI : AppCompatActivity() {
     }
 
     private fun handleTokenCacheError(throwable: Throwable) {
-
+        progressDialog.cancel()
         // Log an error.
     }
 
@@ -253,7 +252,7 @@ class ProfilUI : AppCompatActivity() {
                     )
             )
         }, 3000)
-
+        progressDialog.cancel()
     }
 
     var id2 = 0
@@ -314,6 +313,7 @@ class ProfilUI : AppCompatActivity() {
     }
 
     private fun handleFetchDestinationsError(throwable: Throwable) {
+        progressDialog.cancel()
     }
 
     var id = 0
@@ -373,6 +373,7 @@ class ProfilUI : AppCompatActivity() {
             .enqueue(object : Callback<ResponseProfile>{
                 override fun onFailure(call: Call<ResponseProfile>, t: Throwable) {
                     Toast.makeText(applicationContext, "Wystąpił błąd. Spróbuj ponownie", Toast.LENGTH_LONG).show()
+                    progressDialog.cancel()
                 }
 
                 override fun onResponse(call: Call<ResponseProfile>, response: Response<ResponseProfile>) {

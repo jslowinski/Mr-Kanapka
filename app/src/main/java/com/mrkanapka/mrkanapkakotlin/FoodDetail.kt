@@ -149,6 +149,8 @@ class FoodDetail : AppCompatActivity() {
             override fun onFailure(call: Call<ResponseDetail>, t: Throwable) {
                 progressBar2.visibility = View.GONE
                 Snackbar.make(root, "Błąd pobierania informacji o produkcie", Snackbar.LENGTH_SHORT).show()
+                imageView6.visibility = View.VISIBLE
+                textView29.visibility = View.VISIBLE
             }
 
             @SuppressLint("SetTextI18n")
