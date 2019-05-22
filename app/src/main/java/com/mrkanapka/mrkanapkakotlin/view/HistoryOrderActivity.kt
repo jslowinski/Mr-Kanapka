@@ -117,7 +117,7 @@ class HistoryOrderActivity : AppCompatActivity() {
                             "Sprawdź swoje połaczenie z internetem", Toast.LENGTH_LONG).show()
                     imageView7.visibility = View.VISIBLE
                     textView30.visibility = View.VISIBLE
-                    progressBarHistory.visibility = View.GONE
+                    progressBar3.visibility = View.GONE
 
                 }
 
@@ -161,6 +161,7 @@ class HistoryOrderActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<ResponseHistory<List<ResponseHistoryList>>>, t: Throwable) {
                     Toast.makeText(applicationContext, "Nie można wczytać danych.\nSprawdź swoje połaczenie z internetem", Toast.LENGTH_LONG).show()
                     progressBarHistory.visibility = View.GONE
+                    progressBar3.visibility = View.GONE
                     loading = true
                 }
 
@@ -177,6 +178,7 @@ class HistoryOrderActivity : AppCompatActivity() {
                         showHistory2(response.body()!!.orders)
                         response.body()!!.orders.lastIndex
                         progressBarHistory.visibility = View.GONE
+                        progressBar3.visibility = View.GONE
                         page = response.body()!!.next
                         orderIcon.visibility = View.GONE
                         emptyText1.visibility = View.GONE
