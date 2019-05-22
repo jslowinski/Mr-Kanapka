@@ -205,6 +205,12 @@ class HistoryDetail : AppCompatActivity() {
                     historySellerText.text = response.body()!!.seller
                     historyStatusText.text = response.body()!!.name
                     historyCommentText.text = response.body()!!.comment
+                    println(response.body()!!.comment)
+                    if (response.body()!!.comment == "" || response.body()!!.comment == "None") {
+                        historyCommentText.text = "Brak"
+                    } else {
+                        historyCommentText.text = response.body()!!.comment
+                    }
                     historyTotalPriceText.text = "%.2f zł".format(response.body()!!.full_price)
                     fetchHistoryProducts(response.body()!!.products)
                     if ( response.body()!!.flag == 1)
